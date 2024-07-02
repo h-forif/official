@@ -1,0 +1,64 @@
+{
+  "name": "@packages/components",
+  "description": "The world's most easiest components!",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_1e58365718419d2"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fontsource/roboto": "^5.0.13",
+    "@hookform/resolvers": "^3.6.0",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@mui/system": "^5.15.20",
+    "@mui/x-data-grid": "^7.8.0",
+    "clsx": "^2.1.1",
+    "react-hook-form": "^7.52.0",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "1.6.0",
+    "@packages/eslint-config": "workspace:*",
+    "@packages/ts-config": "workspace:*",
+    "@storybook/addon-essentials": "^8.1.11",
+    "@storybook/addon-interactions": "^8.1.11",
+    "@storybook/addon-links": "^8.1.11",
+    "@storybook/addon-onboarding": "^8.1.11",
+    "@storybook/blocks": "^8.1.11",
+    "@storybook/react": "^8.1.11",
+    "@storybook/react-vite": "^8.1.11",
+    "@storybook/test": "^8.1.11",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "chromatic": "^11.5.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "eslint-plugin-storybook": "^0.8.0",
+    "prettier": "^3.1.1",
+    "storybook": "^8.1.11",
+    "typescript": "^5.3.3"
+  },
+  "exports": {
+    "./*": "./src/*.tsx",
+    "./types/*": {
+      "types": "./types/*.d.ts",
+      "default": "./types/*.ts"
+    },
+    "./theme.ts": "./theme.ts",
+    "./typography.ts": "./typography.ts"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "This is boilerplate using the following stacks: vite, ",
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "lint": "pnpm -r lint --fix",
+    "user:add": "pnpm -F user add",
+    "user:del": "pnpm -F user remove",
+    "comp:add": "pnpm -F @packages/components add",
+    "comp:del": "pnpm -F @packages/components remove",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "pnpm -r storybook"
+  },
+  "devDependencies": {
+    "@packages/eslint-config": "workspace:*",
+    "@packages/ts-config": "workspace:*",
+    "prettier": "^3.1.1"
+  },
+  "keywords": [],
+  "author": "",
+  "packageManager": "pnpm@9.4.0",
+  "license": "ISC"
+}

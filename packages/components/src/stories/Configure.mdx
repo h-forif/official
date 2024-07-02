@@ -1,0 +1,359 @@
+import { Meta } from "@storybook/blocks";
+
+import Accessibility from "./assets/accessibility.png";
+import AddonLibrary from "./assets/addon-library.png";
+import Assets from "./assets/assets.png";
+import Context from "./assets/context.png";
+import Discord from "./assets/discord.svg";
+import Docs from "./assets/docs.png";
+import FigmaPlugin from "./assets/figma-plugin.png";
+import Github from "./assets/github.svg";
+import Share from "./assets/share.png";
+import Styling from "./assets/styling.png";
+import Testing from "./assets/testing.png";
+import Theming from "./assets/theming.png";
+import Tutorials from "./assets/tutorials.svg";
+import Youtube from "./assets/youtube.svg";
+
+export const RightArrow = () => <svg
+  viewBox="0 0 14 14"
+  width="8px"
+  height="14px"
+  style={{
+    marginLeft: '4px',
+    display: 'inline-block',
+    shapeRendering: 'inherit',
+    verticalAlign: 'middle',
+    fill: 'currentColor',
+    'path fill': 'currentColor'
+  }}
+>
+  <path d="m11.1 7.35-5.5 5.5a.5.5 0 0 1-.7-.7L10.04 7 4.9 1.85a.5.5 0 1 1 .7-.7l5.5 5.5c.2.2.2.5 0 .7Z" />
+</svg>
+
+<Meta title="Enlighten" />
+
+<div className="sb-container">
+  <div className='sb-section-title'>
+    # Enlighten
+
+    저희 프로젝트는 MUI를 사용하여 사용자 인터페이스를 디자인하고, pnpm을 통해 효율적인 모노레포 관리를 하며, Vite를 사용하여 빠르고 최적화된 빌드를 제공합니다. 아래에서는 이러한 기술들을 프로젝트에 설정하고 사용하는 방법을 안내합니다. 문제가 발생하면, 커뮤니티에서 도움을 받을 수 있는 방법도 소개합니다.
+  </div>
+  <div className="sb-section">
+    <div className="sb-section-item">
+      <img
+        src={Styling}
+        alt="다양한 스타일링 기술을 대표하는 로고의 벽"
+      />
+      <h4 className="sb-section-item-heading">MUI로 스타일링 통합</h4>
+      <p className="sb-section-item-paragraph">MUI (Material-UI)는 빠르고 쉽게 웹 개발을 할 수 있도록 종합적인 UI 컴포넌트를 제공합니다. 프로젝트에서 MUI를 통합하고 사용하는 방법을 알아보세요.</p>
+      <a
+        href="https://mui.com/getting-started/installation/"
+        target="_blank"
+      >자세히 알아보기<RightArrow /></a>
+    </div>
+    <div className="sb-section-item">
+      <img
+        src={Context}
+        alt="컴포넌트의 데이터 구성을 나타내는 추상화"
+      />
+      <h4 className="sb-section-item-heading">pnpm으로 의존성 관리</h4>
+      <p className="sb-section-item-paragraph">pnpm은 빠르고 디스크 공간 효율적인 패키지 매니저입니다. 모노레포 설정을 쉽게 할 수 있어 시간과 자원을 절약할 수 있습니다. pnpm으로 모노레포를 설정하고 관리하는 방법을 알아보세요.</p>
+      <a
+        href="https://pnpm.io/motivation"
+        target="_blank"
+      >자세히 알아보기<RightArrow /></a>
+    </div>
+    <div className="sb-section-item">
+      <img src={Assets} alt="타이포그래피와 이미지 자산의 표현" />
+      <div>
+        <h4 className="sb-section-item-heading">Vite로 성능 향상</h4>
+        <p className="sb-section-item-paragraph">Vite는 차세대 프론트엔드 툴링입니다. 매우 빠르며 개발 중에는 네이티브 ES 모듈을 활용합니다. Vite를 최적화된 빌드로 설정하는 방법을 알아보세요.</p>
+        <a
+          href="https://vitejs.dev/guide/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div className="sb-container">
+  <div className='sb-section-title'>
+    # 고급 기능 활용
+
+    기본 설정을 마쳤다면, MUI, pnpm, Vite가 제공하는 고급 기능들을 활용하여 개발 워크플로우를 더욱 향상시켜보세요. 설정을 맞춤화하고 확장하여 필요한 요구에 맞출 수 있습니다.
+  </div>
+
+  <div className="sb-section">
+    <div className="sb-features-grid">
+      <div className="sb-grid-item">
+        <img src={Docs} alt="자동 문서화 태그가 설정된 스크린샷, 문서 페이지가 생성되는 것을 나타냄" />
+        <h4 className="sb-section-item-heading">MUI 테마 설정</h4>
+        <p className="sb-section-item-paragraph">MUI의 강력한 테마 기능을 사용하여 애플리케이션의 일관된 모습과 느낌을 만들어 보세요.</p>
+        <a
+          href="https://mui.com/customization/theming/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+      <div className="sb-grid-item">
+        <img src={Share} alt="Chromatic.com URL에 Storybook이 게시된 브라우저 창" />
+        <h4 className="sb-section-item-heading">pnpm 워크스페이스</h4>
+        <p className="sb-section-item-paragraph">pnpm 워크스페이스를 활용하여 모노레포를 효율적으로 관리하고, 원활한 의존성 관리와 프로젝트 구성을 보장하세요.</p>
+        <a
+          href="https://pnpm.io/workspaces"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+      <div className="sb-grid-item">
+        <img src={FigmaPlugin} alt="Figma에서 Storybook 플러그인이 보여지는 창" />
+        <h4 className="sb-section-item-heading">Vite 플러그인</h4>
+        <p className="sb-section-item-paragraph">다양한 플러그인을 사용하여 Vite의 기능을 확장하고, 빌드 프로세스를 필요한 대로 맞춤화하세요.</p>
+        <a
+          href="https://vitejs.dev/plugins/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+      <div className="sb-grid-item">
+        <img src={Testing} alt="테스트가 통과 및 실패하는 스크린샷" />
+        <h4 className="sb-section-item-heading">MUI와 테스트</h4>
+        <p className="sb-section-item-paragraph">MUI 컴포넌트의 신뢰성과 성능을 보장하기 위해 강력한 테스트를 구현하세요.</p>
+        <a
+          href="https://mui.com/guides/testing/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+      <div className="sb-grid-item">
+        <img src={Accessibility} alt="접근성 테스트가 통과 및 실패하는 스크린샷" />
+        <h4 className="sb-section-item-heading">접근성</h4>
+        <p className="sb-section-item-paragraph">최고의 접근성 모범 사례를 따르며, 모든 사용자가 애플리케이션을 사용할 수 있도록 하세요.</p>
+        <a
+          href="https://mui.com/guides/accessibility/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+      <div className="sb-grid-item">
+        <img src={Theming} alt="라이트 모드와 다크 모드에서 Storybook이 보여지는 스크린샷" />
+        <h4 className="sb-section-item-heading">다이내믹 테마</h4>
+        <p className="sb-section-item-paragraph">다이내믹 테마를 구현하여 라이트 모드와 다크 모드 간의 전환을 원활하게 처리하세요.</p>
+        <a
+          href="https://mui.com/customization/dark-mode/"
+          target="_blank"
+        >자세히 알아보기<RightArrow /></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div className='sb-addon'>
+  <div className='sb-addon-text'>
+    <h4>애드온</h4>
+    <p className="sb-section-item-paragraph">Storybook에 도구를 통합하여 워크플로우를 연결하세요.</p>
+    <a
+        href="https://storybook.js.org/integrations/"
+        target="_blank"
+      >모든 애드온 보기<RightArrow /></a>
+  </div>
+  <div className='sb-addon-img'>
+    <img src={AddonLibrary} alt="Storybook에 도구를 통합하여 워크플로우를 연결하세요." />
+  </div>
+</div>
+
+<div className="sb-section sb-socials">
+    <div className="sb-section-item">
+      <img src={Github} alt="Github 로고" className="sb-explore-image"/>
+      UI 개발의 미래를 만들어 나가는 기여자들에 합류하세요.
+
+      <a
+        href="https://github.com/storybookjs/storybook"
+        target="_blank"
+      >GitHub에서 별 주기<RightArrow /></a>
+    </div>
+    <div className="sb-section-item">
+      <img src={Discord} alt="Discord 로고" className="sb-explore-image"/>
+      <div>
+        프론트엔드 개발자들과 지원 및 채팅을 하세요.
+
+        <a
+          href="https://discord.gg/storybook"
+          target="_blank"
+        >Discord 서버 참여하기<RightArrow /></a>
+      </div>
+    </div>
+    <div className="sb-section-item">
+      <img src={Youtube} alt="Youtube 로고" className="sb-explore-image"/>
+      <div>
+        튜토리얼, 기능 미리보기 및 인터뷰를 시청하세요.
+
+        <a
+          href="https://www.youtube.com/@chromaticui"
+          target="_blank"
+        >YouTube에서 시청하기<RightArrow /></a>
+      </div>
+    </div>
+    <div className="sb-section-item">
+      <img src={Tutorials} alt="책" className="sb-explore-image"/>
+      <p>핵심 워크플로우에 대한 가이드형 튜토리얼을 따르세요.</p>
+
+      <a
+          href="https://storybook.js.org/tutorials/"
+          target="_blank"
+        >튜토리얼 보기<RightArrow /></a>
+    </div>
+</div>
+
+<style>
+  {`
+  .sb-container {
+    margin-bottom: 48px;
+  }
+
+  .sb-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  .sb-section-title {
+    margin-bottom: 32px;
+  }
+
+  .sb-section a:not(h1 a, h2 a, h3 a) {
+    font-size: 14px;
+  }
+
+  .sb-section-item, .sb-grid-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-section-item-heading {
+    padding-top: 20px !important;
+    padding-bottom: 5px !important;
+    margin: 0 !important;
+  }
+  .sb-section-item-paragraph {
+    margin: 0;
+    padding-bottom: 10px;
+  }
+
+  .sb-chevron {
+    margin-left: 5px;
+  }
+
+  .sb-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 32px 20px;
+  }
+
+  .sb-socials {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sb-socials p {
+    margin-bottom: 10px;
+  }
+
+  .sb-explore-image {
+    max-height: 32px;
+    align-self: flex-start;
+  }
+
+  .sb-addon {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #EEF3F8;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #EEF3F8;
+    height: 180px;
+    margin-bottom: 48px;
+    overflow: hidden;
+  }
+
+  .sb-addon-text {
+    padding-left: 48px;
+    max-width: 240px;
+  }
+
+  .sb-addon-text h4 {
+    padding-top: 0px;
+  }
+
+  .sb-addon-img {
+    position: absolute;
+    left: 345px;
+    top: 0;
+    height: 100%;
+    width: 200%;
+    overflow: hidden;
+  }
+
+  .sb-addon-img img {
+    width: 650px;
+    transform: rotate(-15deg);
+    margin-left: 40px;
+    margin-top: -72px;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0);
+    backface-visibility: hidden;
+  }
+
+  @media screen and (max-width: 800px) {
+    .sb-addon-img {
+      left: 300px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .sb-section {
+      flex-direction: column;
+    }
+
+    .sb-features-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .sb-socials {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sb-addon {
+      height: 280px;
+      align-items: flex-start;
+      padding-top: 32px;
+      overflow: hidden;
+    }
+
+    .sb-addon-text {
+      padding-left: 24px;
+    }
+
+    .sb-addon-img {
+      right: 0;
+      left: 0;
+      top: 130px;
+      bottom: 0;
+      overflow: hidden;
+      height: auto;
+      width: 124%;
+    }
+
+    .sb-addon-img img {
+      width: 1200px;
+      transform: rotate(-12deg);
+      margin-left: 0;
+      margin-top: 48px;
+      margin-bottom: -40px;
+      margin-left: -24px;
+    }
+  }
+  `}
+</style>

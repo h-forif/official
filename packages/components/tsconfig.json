@@ -1,0 +1,12 @@
+{
+  "extends": "@packages/ts-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["./src/*"],
+      "@components/types/*": ["./types/*"]
+    }
+  },
+  "include": ["src", "../../apps/user/theme.ts", "typography.ts", "theme.ts"],
+  "exclude": ["node_modules"]
+}
