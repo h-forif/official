@@ -45,8 +45,11 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "prettier": "^3.1.1",
+    "sharp": "^0.33.4",
+    "svgo": "^3.3.2",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
+    "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-next-react-router": "^0.7.1",
     "vite-plugin-svgr": "^4.2.0"
   }

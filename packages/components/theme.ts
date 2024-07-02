@@ -142,7 +142,7 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
             main: '#B0B0B0',
           },
           background: {
-            default: '#0f172a',
+            default: '#09090b',
             paper: '#1E1E1E',
           },
         }),

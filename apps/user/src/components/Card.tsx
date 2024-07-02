@@ -16,26 +16,25 @@ export interface StudyCardProps {
 
 export function StudyCard({ href, image, mentor, title }: StudyCardProps) {
   return (
-    <MUICard elevation={3}>
-      <CardMedia sx={{ height: 180 }} image={image} title={title} />
-
-      <MUICardContent sx={{ textAlign: 'left' }}>
-        <Typography variant='titleMedium' color='text.primary'>
-          {title}
-        </Typography>
-        <Typography
-          variant='labelSmall'
-          sx={{ mb: 1.5 }}
-          color='text.secondary'
-        >
-          {mentor}
-        </Typography>
-      </MUICardContent>
-      <MUICardActions>
-        <Link to={href}>
+    <Link to={href} resetScroll>
+      <MUICard elevation={3}>
+        <CardMedia sx={{ height: 180 }} image={image} title={title} />
+        <MUICardContent sx={{ textAlign: 'left' }}>
+          <Typography variant='titleMedium' color='text.primary'>
+            {title}
+          </Typography>
+          <Typography
+            variant='labelSmall'
+            sx={{ mb: 1.5 }}
+            color='text.secondary'
+          >
+            {mentor}
+          </Typography>
+        </MUICardContent>
+        <MUICardActions>
           <Button size='small'>Learn More</Button>
-        </Link>
-      </MUICardActions>
-    </MUICard>
+        </MUICardActions>
+      </MUICard>
+    </Link>
   );
 }

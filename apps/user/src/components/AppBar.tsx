@@ -15,6 +15,7 @@ import { PaletteMode } from '@packages/components/PaletteMode';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { Link } from '@tanstack/react-router';
 
+import LetterIcon from '../assets/images/letter-mark.svg?react';
 import useScrollPosition from '../hooks/useScrollPosition';
 
 interface AppBarProps {
@@ -24,7 +25,7 @@ interface AppBarProps {
 
 const menus = [
   {
-    title: '포리프',
+    title: 'FORIF',
     href: '/about',
   },
   {
@@ -64,6 +65,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
             boxShadow: scrollPos === 0 ? 'none' : '',
           }}
         >
+          {/* PC / Tablet */}
           <Box
             sx={{
               flexGrow: 1,
@@ -73,20 +75,18 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               px: 0,
             }}
           >
-            <NavItem to='/'>
-              <Typography variant='titleLarge' color='text.primary'>
-                LOGO
-              </Typography>
-            </NavItem>
+            <Link to='/'>
+              <LetterIcon width={100} />
+            </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               {menus.map((menu) => (
-                <NavItem key={`${menu.title} - ${menu.href}`} to={menu.href}>
+                <Link key={`${menu.title} - ${menu.href}`} to={menu.href}>
                   <MenuItem sx={{ py: '8px', px: '12px', borderRadius: 2 }}>
                     <Typography variant='bodySmall' color='text.primary'>
                       {menu.title}
                     </Typography>
                   </MenuItem>
-                </NavItem>
+                </Link>
               ))}
             </Box>
           </Box>
@@ -110,6 +110,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               Sign up
             </Button>
           </Box>
+          {/* Mobile */}
           <Box sx={{ display: { sm: '', md: 'none' } }}>
             <Button
               variant='text'
@@ -189,7 +190,3 @@ const MyToolBar = styled(Toolbar)(({ theme }) => ({
       ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
       : '0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)',
 }));
-
-const NavItem = styled(Link)({
-  textDecoration: 'none',
-});

@@ -18,3 +18,7 @@
     'Segoe UI Symbol',
     sans-serif;
 }
+
+a {
+  text-decoration: none;
+}
