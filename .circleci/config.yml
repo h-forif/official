@@ -1,33 +1,119 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:node:.
 version: 2.1
+
 orbs:
-  node: circleci/node@5
+  node: circleci/node@5.0.2
+
 jobs:
-  test-node:
-    # Install node dependencies and run tests
-    executor: node/default
+  install-dependencies:
+    docker:
+      - image: cimg/node:18.0.0
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
       - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run:
-          name: Run tests
-          command: echo \"No test specified in package.json\"
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
+          pkg-manager: pnpm
+      - save_cache:
+          paths:
+            - node_modules
+          key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  lint:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:18.0.0
     steps:
-      # Replace this with steps to deploy to users
+      - attach_workspace:
+          at: .
       - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          name: Lint user app
+          command: pnpm --filter user lint
+      - run:
+          name: Lint components package
+          command: pnpm --filter @packages/components lint
+
+  build-user-app:
+    docker:
+      - image: cimg/node:18.0.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build user app
+          command: pnpm --filter user build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - apps/user/dist
+
+  build-storybook:
+    docker:
+      - image: cimg/node:18.0.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build Storybook
+          command: pnpm --filter @packages/components build-storybook
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/components/storybook-static
+
+  deploy-chromatic:
+    docker:
+      - image: cimg/node:18.0.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Deploy to Chromatic
+          command: pnpm --filter @packages/components chromatic
+
+  preview-user-app:
+    docker:
+      - image: cimg/node:18.0.0
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Preview user app
+          command: pnpm --filter user preview
+          background: true
+      - run:
+          name: Wait for preview server
+          command: |
+            timeout 60s bash -c '
+            until curl -s --head --request GET localhost:4173 | grep "200 OK"; do
+              echo "Waiting for preview server..."
+              sleep 5
+            done
+            '
+
 workflows:
-  build-and-test:
+  version: 2
+  build-test-deploy:
     jobs:
-      - test-node
-    # - deploy:
-    #     requires:
-    #       - test-node
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - build-user-app:
+          requires:
+            - lint
+      - build-storybook:
+          requires:
+            - lint
+      - deploy-chromatic:
+          requires:
+            - build-storybook
+          filters:
+            branches:
+              only: main
+      - preview-user-app:
+          requires:
+            - build-user-app
