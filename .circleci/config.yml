@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   install:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:20.15.0
     resource_class: large
     steps:
       - checkout
@@ -29,7 +29,7 @@ jobs:
 
   build:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:20.15.0
     resource_class: large
     steps:
       - attach_workspace:
@@ -47,7 +47,7 @@ jobs:
 
   lint:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:20.15.0
     steps:
       - attach_workspace:
           at: .
@@ -57,7 +57,7 @@ jobs:
 
   deploy-chromatic:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:20.15.0
     steps:
       - attach_workspace:
           at: .
@@ -67,7 +67,7 @@ jobs:
 
   preview-user-app:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:20.15.0
     steps:
       - attach_workspace:
           at: .
