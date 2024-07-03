@@ -153,7 +153,11 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                   />
                 </Box>
                 {menus.map((menu) => (
-                  <Link to={menu.href} onClick={toggleDrawer(false)}>
+                  <Link
+                    key={menu.title}
+                    to={menu.href}
+                    onClick={toggleDrawer(false)}
+                  >
                     <MenuItem key={menu.title} sx={{ color: 'text.primary' }}>
                       {menu.title}
                     </MenuItem>
