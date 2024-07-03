@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  install-and-build:
+  install:
     docker:
       - image: cimg/node:18.0.0
     resource_class: large
@@ -13,10 +13,7 @@ jobs:
             - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Install pnpm package manager
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest-9 --activate
-            pnpm config set store-dir .pnpm-store
+          command: corepack enable
       - run:
           name: Install Dependencies
           command: pnpm install
@@ -24,7 +21,19 @@ jobs:
           name: Save pnpm Package Cache
           key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
           paths:
-            - .pnpm-store
+            - node_modules
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  build:
+    docker:
+      - image: cimg/node:18.0.0
+    resource_class: large
+    steps:
+      - attach_workspace:
+          at: .
       - run:
           name: Build user app
           command: pnpm --filter user build
@@ -43,11 +52,8 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Lint user app
-          command: pnpm --filter user lint
-      - run:
-          name: Lint components package
-          command: pnpm --filter @packages/components lint
+          name: ESlint
+          command: pnpm lint
 
   deploy-chromatic:
     docker:
@@ -83,10 +89,13 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - install-and-build
+      - install
+      - build:
+          requires:
+            - install
       - lint:
           requires:
-            - install-and-build
+            - build
       - deploy-chromatic:
           requires:
             - lint
