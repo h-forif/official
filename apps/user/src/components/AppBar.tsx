@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { styled, useTheme } from '@mui/system';
+import { styled } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
 import { MenuItem } from '@packages/components/MenuItem';
@@ -48,7 +48,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  const theme = useTheme();
 
   return (
     <div>
