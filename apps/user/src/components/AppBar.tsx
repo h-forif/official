@@ -54,6 +54,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
           bgcolor: 'transparent',
           backgroundImage: 'none',
           width: '100%',
+          paddingX: 3,
         }}
       >
         <MyToolBar
@@ -75,14 +76,18 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               px: 0,
             }}
           >
-            <Link to='/'>
+            <Link to='/' style={{ marginRight: '60px' }}>
               <LetterIcon width={100} />
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               {menus.map((menu) => (
                 <Link key={`${menu.title} - ${menu.href}`} to={menu.href}>
                   <MenuItem sx={{ py: '8px', px: '12px', borderRadius: 2 }}>
-                    <Typography variant='bodySmall' color='text.primary'>
+                    <Typography
+                      variant='bodySmall'
+                      color='text.primary'
+                      fontWeight={500}
+                    >
                       {menu.title}
                     </Typography>
                   </MenuItem>
@@ -99,7 +104,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
           >
             <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             <Button color='primary' variant='text' size='small' component='a'>
-              Sign in
+              한양대학교 로그인
             </Button>
             <Button
               color='primary'
@@ -107,7 +112,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               size='small'
               component='a'
             >
-              Sign up
+              회원가입
             </Button>
           </Box>
           {/* Mobile */}

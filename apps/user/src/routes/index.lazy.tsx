@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -7,9 +10,10 @@ import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 
+import ChannelAddIcon from '../assets/images/channel_add_large.png';
 import StandingPerson1 from '../assets/images/peep-main-1.svg?react';
 import StandingPerson2 from '../assets/images/peep-main-2.svg?react';
-import AnimatedContainer from '../components/AnimatedContainer';
+import AnimatedContainer from '../components/AnimatedStudyContainer';
 import { StudyCard, StudyCardProps } from '../components/Card';
 import { LogoWall } from '../components/LogoWall';
 
@@ -41,6 +45,19 @@ const studies: StudyCardProps[] = [
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
+
+  const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <main>
@@ -89,9 +106,48 @@ function Home() {
           <>
             <StandingPerson1
               width={200}
+              aria-describedby={id}
               height={300}
-              style={{ position: 'fixed', right: 16, bottom: 8, zIndex: 1 }}
+              style={{
+                position: 'fixed',
+                right: 16,
+                bottom: 8,
+                zIndex: 1,
+                cursor: 'pointer',
+              }}
+              onClick={handleClick}
             />
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    backgroundColor: 'transparent',
+                    backgroundImage: 'none',
+                  },
+                },
+              }}
+            >
+              <a href='http://pf.kakao.com/_xiydUG' target='_blank'>
+                <img
+                  src={ChannelAddIcon}
+                  width={114}
+                  height={45}
+                  alt='카카오톡 채널 추가 아이콘'
+                />
+              </a>
+            </Popover>
             <StandingPerson2
               width={200}
               height={300}

@@ -5,6 +5,7 @@ import { Typography } from '@mui/material';
 import { Box, useMediaQuery, useTheme } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
+import { Link } from '@tanstack/react-router';
 import { motion, useAnimation, useInView } from 'framer-motion';
 
 const childVariants = {
@@ -41,8 +42,7 @@ const AnimatedChild = ({
       variants={childVariants}
       custom={index}
       whileHover={{
-        y: -10,
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+        y: -5,
         scale: 1.05,
         transition: { duration: 0.2 },
       }}
@@ -66,9 +66,8 @@ const AnimatedContainer = ({ children }: { children: ReactNode }) => {
   return (
     <Box
       sx={{
-        borderRadius: 1,
+        borderRadius: 2,
         padding: 2,
-        boxShadow: 3,
         border: '1px solid',
         borderColor: 'divider',
         width: '100%',
@@ -94,9 +93,11 @@ const AnimatedContainer = ({ children }: { children: ReactNode }) => {
           </AnimatedChild>
         ))}
       </Box>
-      <Button variant='contained' size='large'>
-        더 많은 스터디 보기
-      </Button>
+      <Link to='/studies'>
+        <Button variant='contained' size='large' sx={{ width: '100%' }}>
+          더 많은 스터디 보기
+        </Button>
+      </Link>
     </Box>
   );
 };

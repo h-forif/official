@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
@@ -33,6 +34,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const StudiesIndexRoute = StudiesIndexImport.update({
+  path: '/studies/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const StudiesStudyIdRoute = StudiesStudyIdImport.update({
   path: '/studies/$studyId',
@@ -88,6 +94,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesStudyIdImport
       parentRoute: typeof rootRoute
     }
+    '/studies/': {
+      id: '/studies/'
+      path: '/studies'
+      fullPath: '/studies'
+      preLoaderRoute: typeof StudiesIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -99,6 +112,7 @@ export const routeTree = rootRoute.addChildren({
   ApplyMemberRoute,
   ApplyMentorRoute,
   StudiesStudyIdRoute,
+  StudiesIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -113,7 +127,8 @@ export const routeTree = rootRoute.addChildren({
         "/about",
         "/apply/member",
         "/apply/mentor",
-        "/studies/$studyId"
+        "/studies/$studyId",
+        "/studies/"
       ]
     },
     "/": {
@@ -130,6 +145,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/$studyId": {
       "filePath": "studies/$studyId.tsx"
+    },
+    "/studies/": {
+      "filePath": "studies/index.tsx"
     }
   }
 }
