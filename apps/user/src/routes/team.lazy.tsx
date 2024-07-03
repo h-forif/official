@@ -11,9 +11,10 @@ import Box from '@mui/system/Box';
 import { Input } from '@packages/components/Input';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createLazyFileRoute } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
 
+import Avatar2 from '../assets/images/avatar/peep-11.svg';
 import Avatar1 from '../assets/images/avatar/peep-73.svg';
-import Avatar2 from '../assets/images/avatar/peep-89.svg';
 import { type TeamType, team } from '../types/team.enum';
 
 // Mock Data
@@ -21,50 +22,56 @@ const mockData = [
   {
     src: Avatar1,
     name: '표준성',
-    title: '2024-1 회장',
+    title: '회장',
     desc: '선배, 마라탕후루 사주세요. 싫어!',
     team: '회장단',
-    tags: ['리더십', 'PM'],
+    tags: ['SSR'],
+    contact: 'contact@forif.org',
   },
   {
     src: Avatar2,
     name: '배혜진',
-    title: '2024-2 부회장',
+    title: '부회장',
     desc: '안녕하세요! 저는 래빗홀 컴퍼니에서 3D Unity Manager를 맡고 있습니다.',
     team: '회장단',
-    tags: ['Unity', '3D'],
+    tags: ['Rabbithole'],
+    contact: 'contact@forif.org',
   },
   {
-    src: Avatar1,
-    name: '김전략',
-    title: '전략기획팀장',
+    src: Avatar2,
+    name: '이선주',
+    title: '전략기획팀 팀장',
     desc: '전략적 사고로 FORIF를 이끌어갑니다.',
     team: '전략기획팀',
-    tags: ['기획', '분석'],
+    tags: ['Data Analysis'],
+    contact: 'contact@forif.org',
   },
   {
     src: Avatar2,
-    name: '이마케팅',
-    title: '마케팅팀 팀원',
+    name: '김승희',
+    title: '마케팅팀 팀장',
     desc: '창의적인 마케팅 전략을 수립합니다.',
     team: '마케팅팀',
-    tags: ['SNS', '콘텐츠 제작'],
+    tags: ['Designer'],
+    contact: 'contact@forif.org',
   },
   {
     src: Avatar1,
-    name: '박스터디',
-    title: '스터디관리팀장',
+    name: '박상만',
+    title: '스터디관리팀 팀장',
     desc: '효율적인 스터디 관리를 위해 노력합니다.',
     team: '스터디관리팀',
-    tags: ['교육', '멘토링'],
+    tags: ['Stiffness'],
+    contact: 'contact@forif.org',
   },
   {
-    src: Avatar2,
-    name: '최소프트',
-    title: 'SW팀 팀원',
+    src: Avatar1,
+    name: '양병현',
+    title: 'SW팀 팀장',
     desc: '혁신적인 소프트웨어 개발에 힘씁니다.',
     team: 'SW팀',
-    tags: ['React', 'Node.js'],
+    tags: ['Soft Skill'],
+    contact: 'contact@forif.org',
   },
 ];
 
@@ -81,7 +88,7 @@ function TeamPage() {
     setSelectedTeam(event.target.value as TeamType);
   };
 
-  const filteredData =
+  const filteredTeam =
     selectedTeam === '전체 팀'
       ? mockData
       : mockData.filter((item) => item.team === selectedTeam);
@@ -112,7 +119,7 @@ function TeamPage() {
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 1, sm: 8, md: 12 }}
         >
-          {filteredData.map((item, index) => (
+          {filteredTeam.map((item, index) => (
             <Item
               key={index}
               src={item.src}
@@ -121,6 +128,7 @@ function TeamPage() {
               desc={item.desc}
               team={item.team}
               tags={item.tags}
+              contact={item.contact}
             />
           ))}
         </Grid>
@@ -136,9 +144,10 @@ interface ItemProps {
   desc: string;
   team: string;
   tags: string[];
+  contact: string;
 }
 
-function Item({ src, name, title, desc, team, tags }: ItemProps) {
+function Item({ src, name, title, desc, team, tags, contact }: ItemProps) {
   return (
     <Grid item xs={2} sm={4} md={4}>
       <Stack
@@ -151,6 +160,8 @@ function Item({ src, name, title, desc, team, tags }: ItemProps) {
           borderRadius: 4,
           p: 2,
           textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <img src={src} width={'60%'} alt={name} />
@@ -173,16 +184,36 @@ function Item({ src, name, title, desc, team, tags }: ItemProps) {
           >
             <Chip label={team} size='medium' color='primary' />
             {tags.map((tag, idx) => (
-              <Chip
-                key={idx}
-                label={tag}
-                size='medium'
-                color={idx === 0 ? 'info' : 'warning'}
-              />
+              <Chip key={idx} label={tag} size='medium' color='info' />
             ))}
           </Stack>
           <Typography variant='bodySmall'>{desc}</Typography>
         </Stack>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <Typography variant='titleSmall' color='white' gutterBottom>
+            연락처
+          </Typography>
+          <Typography variant='bodySmall' color='white'>
+            {contact}
+          </Typography>
+        </motion.div>
       </Stack>
     </Grid>
   );
