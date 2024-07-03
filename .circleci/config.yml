@@ -13,7 +13,7 @@ jobs:
             - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Install pnpm package manager
-          command: corepack enable
+          command: sudo corepack enable
       - run:
           name: Install Dependencies
           command: pnpm install
