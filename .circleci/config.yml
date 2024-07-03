@@ -1,23 +1,36 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@5.0.2
-
 jobs:
-  install-dependencies:
+  install-and-build:
     docker:
       - image: cimg/node:18.0.0
+    resource_class: large
     steps:
       - checkout
       - restore_cache:
+          name: Restore pnpm Package Cache
           keys:
             - pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
-      - node/install-packages:
-          pkg-manager: pnpm
+      - run:
+          name: Install pnpm package manager
+          command: |
+            corepack enable
+            corepack prepare pnpm@latest-9 --activate
+            pnpm config set store-dir .pnpm-store
+      - run:
+          name: Install Dependencies
+          command: pnpm install
       - save_cache:
-          paths:
-            - node_modules
+          name: Save pnpm Package Cache
           key: pnpm-packages-{{ checksum "pnpm-lock.yaml" }}
+          paths:
+            - .pnpm-store
+      - run:
+          name: Build user app
+          command: pnpm --filter user build
+      - run:
+          name: Build Storybook
+          command: pnpm --filter @packages/components build-storybook
       - persist_to_workspace:
           root: .
           paths:
@@ -35,34 +48,6 @@ jobs:
       - run:
           name: Lint components package
           command: pnpm --filter @packages/components lint
-
-  build-user-app:
-    docker:
-      - image: cimg/node:18.0.0
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build user app
-          command: pnpm --filter user build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - apps/user/dist
-
-  build-storybook:
-    docker:
-      - image: cimg/node:18.0.0
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build Storybook
-          command: pnpm --filter @packages/components build-storybook
-      - persist_to_workspace:
-          root: .
-          paths:
-            - packages/components/storybook-static
 
   deploy-chromatic:
     docker:
@@ -98,22 +83,16 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - install-dependencies
+      - install-and-build
       - lint:
           requires:
-            - install-dependencies
-      - build-user-app:
-          requires:
-            - lint
-      - build-storybook:
-          requires:
-            - lint
+            - install-and-build
       - deploy-chromatic:
           requires:
-            - build-storybook
+            - lint
           filters:
             branches:
               only: main
       - preview-user-app:
           requires:
-            - build-user-app
+            - lint
