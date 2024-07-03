@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/system';
+import { styled, useTheme } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
 import { MenuItem } from '@packages/components/MenuItem';
@@ -48,6 +48,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+  const theme = useTheme();
 
   return (
     <div>
@@ -58,7 +59,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
           bgcolor: 'transparent',
           backgroundImage: 'none',
           width: '100%',
-          paddingX: 3,
+          paddingX: { xs: 0, md: 3 },
         }}
       >
         <MyToolBar
@@ -153,9 +154,11 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                   />
                 </Box>
                 {menus.map((menu) => (
-                  <MenuItem key={menu.title} onClick={() => {}}>
-                    {menu.title}
-                  </MenuItem>
+                  <Link to={menu.href} onClick={toggleDrawer(false)}>
+                    <MenuItem key={menu.title} sx={{ color: 'text.primary' }}>
+                      {menu.title}
+                    </MenuItem>
+                  </Link>
                 ))}
                 <Divider />
                 <MenuItem>

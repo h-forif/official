@@ -5,7 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/system';
+import { Stack, useMediaQuery, useTheme } from '@mui/system';
 import Box from '@mui/system/Box';
 
 import { Input } from '@packages/components/Input';
@@ -103,13 +103,14 @@ function TeamPage() {
           textAlign: 'center',
           margin: 'auto',
           marginBottom: 12,
+          wordBreak: 'keep-all',
         }}
       >
         <Typography variant='displayLarge' sx={{ mb: 1 }}>
           FORIF TEAM
         </Typography>
         <Typography variant='labelLarge'>
-          영감을 주는 동료와 함께라면, the better life
+          영감을 주는 동료와 함께라면. The Better Life
         </Typography>
       </CenteredBox>
       <Box sx={{ paddingX: { xs: 4, sm: 8, md: 12 }, pb: 4, margin: 'auto' }}>
@@ -148,6 +149,16 @@ interface ItemProps {
 }
 
 function Item({ src, name, title, desc, team, tags, contact }: ItemProps) {
+  const [isActive, setIsActive] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleInteraction = () => {
+    if (isMobile) {
+      setIsActive(!isActive);
+    }
+  };
+
   return (
     <Grid item xs={2} sm={4} md={4}>
       <Stack
@@ -162,7 +173,9 @@ function Item({ src, name, title, desc, team, tags, contact }: ItemProps) {
           textAlign: 'center',
           position: 'relative',
           overflow: 'hidden',
+          cursor: isMobile ? 'pointer' : 'default',
         }}
+        onClick={handleInteraction}
       >
         <img src={src} width={'60%'} alt={name} />
         <Stack
@@ -192,7 +205,8 @@ function Item({ src, name, title, desc, team, tags, contact }: ItemProps) {
 
         <motion.div
           initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1 }}
+          animate={{ opacity: isActive ? 1 : 0 }}
+          whileHover={{ opacity: isMobile ? 0 : 1 }}
           transition={{ duration: 0.3 }}
           style={{
             position: 'absolute',
@@ -210,7 +224,7 @@ function Item({ src, name, title, desc, team, tags, contact }: ItemProps) {
           <Typography variant='titleSmall' color='white' gutterBottom>
             연락처
           </Typography>
-          <Typography variant='bodySmall' color='white'>
+          <Typography variant='titleLarge' color='white'>
             {contact}
           </Typography>
         </motion.div>
