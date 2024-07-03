@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -10,9 +10,10 @@ import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 
+import InstagramIcon from '../assets/images/Instagram.svg';
 import ChannelAddIcon from '../assets/images/channel_add_large.png';
-import StandingPerson1 from '../assets/images/peep-main-1.svg?react';
-import StandingPerson2 from '../assets/images/peep-main-2.svg?react';
+import StandingPerson1 from '../assets/images/peep-main-1.svg';
+import StandingPerson2 from '../assets/images/peep-main-2.svg';
 import AnimatedContainer from '../components/AnimatedStudyContainer';
 import { StudyCard, StudyCardProps } from '../components/Card';
 import { LogoWall } from '../components/LogoWall';
@@ -23,21 +24,23 @@ export const Route = createLazyFileRoute('/')({
 
 const studies: StudyCardProps[] = [
   {
+    id: 0,
     title: 'React CRUD1',
     image: 'https://imgur.com/TersiLo.png',
-    href: '/studies',
     mentor: 'Jun Seong Pyo',
   },
   {
+    id: 1,
+
     title: 'React CRUD2',
     image: 'https://imgur.com/TersiLo.png',
-    href: '/studies',
     mentor: 'Jun Seong Pyo',
   },
   {
+    id: 2,
+
     title: 'React CRUD3',
     image: 'https://imgur.com/TersiLo.png',
-    href: '/studies',
     mentor: 'Jun Seong Pyo',
   },
 ];
@@ -45,19 +48,6 @@ const studies: StudyCardProps[] = [
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-
-  const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
-
-  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <main>
@@ -94,52 +84,18 @@ function Home() {
         <AnimatedContainer>
           {studies.map((study) => (
             <StudyCard
-              key={study.title}
+              id={study.id}
+              key={study.id}
               title={study.title}
               image={study.image}
               mentor={study.mentor}
-              href={study.href}
             />
           ))}
         </AnimatedContainer>
         {matches && (
           <>
-            <StandingPerson1
-              width={200}
-              aria-describedby={id}
-              height={300}
-              style={{
-                position: 'fixed',
-                right: 16,
-                bottom: 8,
-                zIndex: 1,
-                cursor: 'pointer',
-              }}
-              onClick={handleClick}
-            />
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              slotProps={{
-                paper: {
-                  sx: {
-                    backgroundColor: 'transparent',
-                    backgroundImage: 'none',
-                  },
-                },
-              }}
-            >
-              <a href='http://pf.kakao.com/_xiydUG' target='_blank'>
+            <ImagePopover hPosition={'right'} src={StandingPerson1}>
+              <a href={'http://pf.kakao.com/_xiydUG'} target='_blank'>
                 <img
                   src={ChannelAddIcon}
                   width={114}
@@ -147,16 +103,96 @@ function Home() {
                   alt='카카오톡 채널 추가 아이콘'
                 />
               </a>
-            </Popover>
-            <StandingPerson2
-              width={200}
-              height={300}
-              style={{ position: 'fixed', left: 16, bottom: 8, zIndex: 1 }}
-            />
+            </ImagePopover>
+            <ImagePopover hPosition={'left'} src={StandingPerson2}>
+              <Stack
+                direction={'row'}
+                alignItems={'center'}
+                component={'a'}
+                href={'https://www.instagram.com/forif_hyu'}
+                target='_blank'
+              >
+                <img
+                  src={InstagramIcon}
+                  width={80}
+                  height={45}
+                  alt='카카오톡 채널 추가 아이콘'
+                />
+                <Typography variant='labelSmall' color='text.primary'>
+                  @forif_hyu
+                </Typography>
+              </Stack>
+            </ImagePopover>
           </>
         )}
       </CenteredBox>
       <LogoWall />
     </main>
+  );
+}
+
+function ImagePopover({
+  src,
+  hPosition,
+  children,
+}: {
+  children: ReactNode;
+  src: string;
+  hPosition: 'left' | 'right';
+}) {
+  const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  return (
+    <>
+      <img
+        src={src}
+        width={200}
+        aria-describedby={id}
+        height={300}
+        style={{
+          position: 'fixed',
+          bottom: 8,
+          [hPosition]: 16,
+          zIndex: 1,
+          cursor: 'pointer',
+        }}
+        onClick={handleClick}
+      />
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: 'transparent',
+              backgroundImage: 'none',
+            },
+          },
+        }}
+      >
+        {children}
+      </Popover>
+    </>
   );
 }

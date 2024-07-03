@@ -52,7 +52,7 @@ const AnimatedChild = ({
   );
 };
 
-const AnimatedContainer = ({ children }: { children: ReactNode }) => {
+const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
   const isSm = useMediaQuery(theme.breakpoints.only('sm'));
@@ -102,4 +102,4 @@ const AnimatedContainer = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AnimatedContainer;
+export default AnimatedStudyContainer;

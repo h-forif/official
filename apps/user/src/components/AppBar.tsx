@@ -29,6 +29,10 @@ const menus = [
     href: '/about',
   },
   {
+    title: 'FORIF TEAM',
+    href: '/team',
+  },
+  {
     title: '스터디 목록',
     href: '/price',
   },

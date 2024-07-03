@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
@@ -20,8 +20,14 @@ export const Route = createRootRoute({
 function RootComponent() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [mode, setMode] = useState<PaletteMode>(
-    prefersDarkMode ? 'dark' : 'light',
+    () =>
+      (localStorage.getItem('mode') as PaletteMode) ||
+      (prefersDarkMode ? 'dark' : 'light'),
   );
+
+  useEffect(() => {
+    localStorage.setItem('mode', mode);
+  }, [mode]);
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));

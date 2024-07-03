@@ -120,7 +120,7 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
             main: '#FF5449',
           },
           info: {
-            main: '#71717a',
+            main: '#1D2475',
           },
           background: {
             default: '#FFFFFF',
@@ -139,7 +139,7 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
             main: '#FF8A80',
           },
           info: {
-            main: '#B0B0B0',
+            main: '#4051ac',
           },
           background: {
             default: '#09090b',

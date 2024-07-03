@@ -1,5 +1,5 @@
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { createFileRoute, useLoaderData } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/studies/$studyId')({
   loader: ({ params }) => fetchSomething(params.studyId),
@@ -7,10 +7,13 @@ export const Route = createFileRoute('/studies/$studyId')({
 });
 
 function StudyComponent() {
-  const loaderData = useLoaderData({ from: '/studies/$studyId' });
-  console.log(loaderData);
+  const params = Route.useParams();
 
-  return <CenteredBox>{JSON.stringify(loaderData)}</CenteredBox>;
+  return (
+    <CenteredBox sx={{ height: '100vh', fontSize: '50pt' }}>
+      {params.studyId}
+    </CenteredBox>
+  );
 }
 
 function fetchSomething(studyId: string) {

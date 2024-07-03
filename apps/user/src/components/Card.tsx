@@ -8,15 +8,15 @@ import { Button } from '@packages/components/Button';
 import { Link } from '@tanstack/react-router';
 
 export interface StudyCardProps {
+  id: number;
   image: string;
   title: string;
   mentor: string;
-  href: string;
 }
 
-export function StudyCard({ href, image, mentor, title }: StudyCardProps) {
+export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
   return (
-    <Link to={href} resetScroll>
+    <Link to={`studies/${id}`} resetScroll>
       <MUICard
         elevation={3}
         sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider' }}
