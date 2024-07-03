@@ -86,12 +86,6 @@ workflows:
       - lint:
           requires:
             - build
-      - deploy-chromatic:
-          requires:
-            - lint
-          filters:
-            branches:
-              only: main
       - preview-user-app:
           requires:
             - lint
