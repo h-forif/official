@@ -55,16 +55,6 @@ jobs:
           name: ESlint
           command: pnpm lint
 
-  deploy-chromatic:
-    docker:
-      - image: cimg/node:20.15.0
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Deploy to Chromatic
-          command: pnpm --filter @packages/components chromatic
-
   preview-user-app:
     docker:
       - image: cimg/node:20.15.0
