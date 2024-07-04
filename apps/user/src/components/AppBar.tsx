@@ -17,34 +17,12 @@ import { Link } from '@tanstack/react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import LetterIcon from '../assets/images/letter-mark.svg?react';
+import { NAV_MENUS } from '../constants/nav-menu';
 
 interface AppBarProps {
   mode: PaletteMode;
   toggleColorMode: () => void;
 }
-
-const menus = [
-  {
-    title: 'FORIF',
-    href: '/club/about',
-    submenu: [
-      { title: '포리프', href: '/club/about' },
-      { title: '포리프 팀', href: '/club/team' },
-    ],
-  },
-  {
-    title: '스터디',
-    href: '/studies',
-    submenu: [
-      { title: '스터디 목록', href: '/studies' },
-      { title: '스터디 지원', href: '/apply/member' },
-    ],
-  },
-  {
-    title: '자주 묻는 질문',
-    href: '/about',
-  },
-];
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const [open, setOpen] = useState(false);
@@ -108,7 +86,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
           zIndex: 1100,
         }}
       >
-        <MyToolBar variant='dense'>
+        <MyToolBar variant='regular'>
           {/* PC / Tablet */}
           <Box
             sx={{
@@ -116,7 +94,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               display: 'flex',
               alignItems: 'center',
               gap: 2,
-              px: 0,
+              px: 3,
             }}
           >
             <Link to='/' style={{ marginRight: '60px' }}>
@@ -126,7 +104,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               sx={{ display: { xs: 'none', md: 'flex' } }}
               onMouseLeave={handleMouseLeave}
             >
-              {menus.map((menu) => (
+              {NAV_MENUS.map((menu) => (
                 <Box
                   key={`${menu.title} - ${menu.href}`}
                   onMouseEnter={() => handleMouseEnter(menu.title)}
@@ -166,7 +144,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                         }}
                       >
                         {menu.submenu.map((subItem) => (
-                          <NavItem sx={{ my: 2 }}>
+                          <NavItem sx={{ my: 2 }} key={subItem.title}>
                             <Link key={subItem.title} to={subItem.href}>
                               <Typography
                                 variant='titleLarge'
@@ -237,7 +215,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                     toggleColorMode={toggleColorMode}
                   />
                 </Box>
-                {menus.map((menu) => (
+                {NAV_MENUS.map((menu) => (
                   <Link
                     key={menu.title}
                     to={menu.href}
@@ -303,7 +281,7 @@ const MyToolBar = styled(Toolbar)(({ theme }) => ({
   zIndex: 1100,
 }));
 
-const NavItem = styled('a')(({ theme }) => ({
+const NavItem = styled('li')(({ theme }) => ({
   position: 'relative',
   display: 'block',
   width: 'fit-content',
