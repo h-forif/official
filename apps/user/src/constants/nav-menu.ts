@@ -17,6 +17,6 @@ export const NAV_MENUS = [
   },
   {
     title: '자주 묻는 질문',
-    href: '/about',
+    href: '/faq',
   },
 ];
