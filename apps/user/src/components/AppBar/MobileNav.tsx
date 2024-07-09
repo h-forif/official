@@ -6,6 +6,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  MenuItem,
   Typography,
 } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -14,13 +15,15 @@ import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/system/Stack';
 
 import { Button } from '@packages/components/Button';
-import { MenuItem } from '@packages/components/MenuItem';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { Link } from '@tanstack/react-router';
 
 import { NAV_MENUS } from '../../constants/nav-menu';
 import { useMobileNav } from '../../hooks/useMobileNav';
 import { AppBarProps } from '../../types/appBar';
+import { getCurrentTerm } from '../../utils/getCurrentTerm';
+
+const currentTerm = getCurrentTerm();
 
 export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
   const { open, toggleDrawer } = useMobileNav();
@@ -83,9 +86,8 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
             {NAV_MENUS.map((menu) => {
               const isSubMenu = menu.submenu && menu.submenu.length > 0;
               return (
-                <Link
+                <Box
                   key={menu.title}
-                  to={isSubMenu ? '' : menu.href}
                   onClick={isSubMenu ? () => {} : toggleDrawer(false)}
                 >
                   <Accordion
@@ -128,6 +130,14 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
                         <Link
                           key={submenu.title}
                           to={submenu.href}
+                          search={
+                            submenu.href === '/studies'
+                              ? {
+                                  year: Number(currentTerm.year),
+                                  semester: Number(currentTerm.semester),
+                                }
+                              : undefined
+                          }
                           onClick={toggleDrawer(false)}
                         >
                           <MenuItem sx={{ color: 'text.primary' }}>
@@ -137,7 +147,7 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
                       ))}
                     </AccordionDetails>
                   </Accordion>
-                </Link>
+                </Box>
               );
             })}
           </Stack>
