@@ -5,12 +5,12 @@ import MUIAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
+import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
-import { MenuItem } from '@packages/components/MenuItem';
 import { PaletteMode } from '@packages/components/PaletteMode';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { Link } from '@tanstack/react-router';
