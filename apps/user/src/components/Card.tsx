@@ -16,16 +16,11 @@ export interface StudyCardProps {
 
 export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
   return (
-    <Link to={`studies/${id}`} resetScroll>
-      <MUICard
-        elevation={3}
-        sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider' }}
-      >
-        <CardMedia
-          sx={{ height: 180, border: '1px solid', borderColor: 'divider' }}
-          image={image}
-          title={title}
-        />
+    <Link to={`/studies/${id}`} resetScroll>
+      <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
+        <CardMedia sx={{ height: 240 }} title={title}>
+          <img src={image} height={'100%'} width={'100%'} />
+        </CardMedia>
         <MUICardContent
           sx={{ textAlign: 'left', backgroundColor: 'background.default' }}
         >
@@ -37,7 +32,7 @@ export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
             {title}
           </Typography>
           <Typography
-            variant='labelSmall'
+            variant='labelMedium'
             sx={{ mb: 1.5 }}
             color='text.secondary'
           >
@@ -45,7 +40,18 @@ export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
           </Typography>
         </MUICardContent>
         <MUICardActions sx={{ backgroundColor: 'background.default' }}>
-          <Button size='small'>Learn More</Button>
+          <Button
+            size='small'
+            disableElevation
+            disableRipple
+            sx={{
+              '&.MuiButtonBase-root:hover': {
+                bgcolor: 'transparent',
+              },
+            }}
+          >
+            Learn More
+          </Button>
         </MUICardActions>
       </MUICard>
     </Link>
