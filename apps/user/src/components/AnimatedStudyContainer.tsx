@@ -8,6 +8,8 @@ import { Button } from '@packages/components/Button';
 import { Link } from '@tanstack/react-router';
 import { motion, useAnimation, useInView } from 'framer-motion';
 
+import { getCurrentTerm } from '../utils/getCurrentTerm';
+
 const childVariants = {
   hidden: { opacity: 0, y: 10 },
   visible: (index: number) => ({
@@ -54,6 +56,7 @@ const AnimatedChild = ({
 
 const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
+  const currentTerm = getCurrentTerm();
   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
   const isSm = useMediaQuery(theme.breakpoints.only('sm'));
 
@@ -93,7 +96,14 @@ const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
           </AnimatedChild>
         ))}
       </Box>
-      <Link to='/studies'>
+      <Link
+        to='/studies'
+        search={{
+          year: Number(currentTerm.year),
+          semester: Number(currentTerm.semester),
+          level: 0,
+        }}
+      >
         <Button variant='contained' size='large' sx={{ width: '100%' }}>
           더 많은 스터디 보기
         </Button>

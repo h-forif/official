@@ -31,12 +31,18 @@ const LEVEL_OPTIONS: SelectOption[] = [
   })),
 ];
 
-export function StudyFilter() {
+export function StudyFilter({
+  year,
+  semester,
+}: {
+  year: number;
+  semester: number;
+}) {
   const currentTerm = getCurrentTerm();
 
   const [filter, setFilter] = useState({
-    year: currentTerm.year,
-    semester: currentTerm.semester,
+    year: year.toString(),
+    semester: semester.toString(),
     level: LEVEL_OPTIONS[0]!.value,
   });
 
@@ -49,7 +55,7 @@ export function StudyFilter() {
       alignItems={'center'}
       sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4 }}
     >
-      <Stack direction={'row'} alignItems={'center'} gap={2}>
+      <Stack direction={'row'} alignItems={'center'} gap={2} flexWrap={'wrap'}>
         <Select
           val={filter.year}
           setVal={(value) => setFilter((prev) => ({ ...prev, year: value }))}
