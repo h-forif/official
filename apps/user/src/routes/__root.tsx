@@ -9,7 +9,7 @@ import { darkTheme, lightTheme } from '@packages/components/theme.ts';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-import AppBar from '../components/AppBar';
+import AppBar from '../components/AppBar/AppBar';
 import ErrorPage from '../components/Error';
 
 export const Route = createRootRoute({

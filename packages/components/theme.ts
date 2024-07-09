@@ -262,6 +262,13 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
         },
       },
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+        },
+      },
+    },
   },
   status: {
     danger: orange[500],
