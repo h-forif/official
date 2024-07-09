@@ -26,9 +26,9 @@ export default function NavItem({ children }: NavItemProps) {
   );
 }
 
-const NavItemWrapper = styled('div')(({ theme }) => ({
+const NavItemWrapper = styled('div')({
   position: 'relative',
   display: 'block',
   width: 'fit-content',
   margin: '8px 0',
-}));
+});
