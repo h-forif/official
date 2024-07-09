@@ -1,11 +1,10 @@
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/system';
+import { styled, useTheme } from '@mui/system';
 
 import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 
 import { SubMenuItem } from '../../types/appBar';
-import NavItem from './NavItem';
 
 interface SubMenuProps {
   items: SubMenuItem[];
@@ -37,14 +36,38 @@ export default function SubMenu({ items }: SubMenuProps) {
       }}
     >
       {items.map((subItem) => (
-        <NavItem key={subItem.title}>
+        <SubMenuWrapper key={subItem.title}>
           <Link to={subItem.href}>
             <Typography variant='titleLarge' color='text.primary'>
               {subItem.title}
             </Typography>
           </Link>
-        </NavItem>
+        </SubMenuWrapper>
       ))}
     </motion.div>
   );
 }
+
+const SubMenuWrapper = styled('div')(({ theme }) => ({
+  position: 'relative',
+  display: 'block',
+  width: 'fit-content',
+  margin: '12px 0',
+  '& > *': {
+    display: 'block',
+    padding: '4px 0',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    width: '0',
+    height: '3px',
+    bottom: '-2px',
+    left: '0',
+    backgroundColor: theme.palette.primary.main,
+    transition: 'width 0.2s ease',
+  },
+  '&:hover::after': {
+    width: '100%',
+  },
+}));

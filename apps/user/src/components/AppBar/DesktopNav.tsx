@@ -7,17 +7,19 @@ import { NAV_MENUS } from '../../constants/nav-menu';
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
 
+interface DesktopNavProps {
+  activeMenu: string | null;
+  handleMouseEnter: (menuTitle: string) => void;
+  handleMouseLeave: () => void;
+  handleClick: () => void;
+}
+
 export function DesktopNav({
   activeMenu,
   handleMouseEnter,
   handleMouseLeave,
   handleClick,
-}: {
-  activeMenu: any;
-  handleMouseEnter: any;
-  handleMouseLeave: any;
-  handleClick: any;
-}) {
+}: DesktopNavProps) {
   return (
     <>
       <Box
