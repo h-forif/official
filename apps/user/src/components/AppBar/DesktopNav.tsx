@@ -1,12 +1,17 @@
+import { useEffect, useState } from 'react';
+
 import Box from '@mui/system/Box';
 
-import { AUTH_NAV_MENUS, NAV_MENUS, NavMenu } from '@constants/nav-menu.constant';
+import {
+  AUTH_NAV_MENUS,
+  NAV_MENUS,
+  NavMenu,
+} from '@constants/nav-menu.constant';
 import { User } from '@packages/components/types/user';
 import { Link } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { AnimatePresence } from 'framer-motion';
 
-import { useEffect, useState } from 'react';
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
 
