@@ -5,7 +5,7 @@
   "description": "This is boilerplate using the following stacks: vite, ",
   "scripts": {
     "dev": "pnpm -r dev",
-    "lint": "pnpm -r lint --fix",
+    "lint": "pnpm -r lint",
     "user:add": "pnpm -F user add",
     "user:del": "pnpm -F user remove",
     "comp:add": "pnpm -F @packages/components add",

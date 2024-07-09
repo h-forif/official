@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
+import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
 
@@ -23,6 +24,7 @@ import { Route as ApplyMemberImport } from './routes/apply/member'
 const TeamLazyImport = createFileRoute('/team')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
+const ClubTeamLazyImport = createFileRoute('/club/team')()
 
 // Create/Update Routes
 
@@ -46,8 +48,18 @@ const StudiesIndexRoute = StudiesIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ClubTeamLazyRoute = ClubTeamLazyImport.update({
+  path: '/club/team',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/club/team.lazy').then((d) => d.Route))
+
 const StudiesStudyIdRoute = StudiesStudyIdImport.update({
   path: '/studies/$studyId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClubAboutRoute = ClubAboutImport.update({
+  path: '/club/about',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -100,11 +112,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApplyMentorImport
       parentRoute: typeof rootRoute
     }
+    '/club/about': {
+      id: '/club/about'
+      path: '/club/about'
+      fullPath: '/club/about'
+      preLoaderRoute: typeof ClubAboutImport
+      parentRoute: typeof rootRoute
+    }
     '/studies/$studyId': {
       id: '/studies/$studyId'
       path: '/studies/$studyId'
       fullPath: '/studies/$studyId'
       preLoaderRoute: typeof StudiesStudyIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/club/team': {
+      id: '/club/team'
+      path: '/club/team'
+      fullPath: '/club/team'
+      preLoaderRoute: typeof ClubTeamLazyImport
       parentRoute: typeof rootRoute
     }
     '/studies/': {
@@ -125,7 +151,9 @@ export const routeTree = rootRoute.addChildren({
   TeamLazyRoute,
   ApplyMemberRoute,
   ApplyMentorRoute,
+  ClubAboutRoute,
   StudiesStudyIdRoute,
+  ClubTeamLazyRoute,
   StudiesIndexRoute,
 })
 
@@ -142,7 +170,9 @@ export const routeTree = rootRoute.addChildren({
         "/team",
         "/apply/member",
         "/apply/mentor",
+        "/club/about",
         "/studies/$studyId",
+        "/club/team",
         "/studies/"
       ]
     },
@@ -161,8 +191,14 @@ export const routeTree = rootRoute.addChildren({
     "/apply/mentor": {
       "filePath": "apply/mentor.tsx"
     },
+    "/club/about": {
+      "filePath": "club/about.tsx"
+    },
     "/studies/$studyId": {
       "filePath": "studies/$studyId.tsx"
+    },
+    "/club/team": {
+      "filePath": "club/team.lazy.tsx"
     },
     "/studies/": {
       "filePath": "studies/index.tsx"
