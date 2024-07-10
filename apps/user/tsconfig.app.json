@@ -13,7 +13,17 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true, // for vite
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+
+    "baseUrl": "./",
+    "paths": {
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@routes/*": ["src/routes/*"]
+    }
   },
   "include": ["src", "svg.d.ts"],
   "exclude": ["node_modules", "dist"]

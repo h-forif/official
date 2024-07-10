@@ -1,10 +1,10 @@
 import Box from '@mui/system/Box';
 
+import { NAV_MENUS } from '@constants/nav-menu';
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { AnimatePresence } from 'framer-motion';
 
-import { NAV_MENUS } from '../../constants/nav-menu';
-import { getCurrentTerm } from '../../utils/getCurrentTerm';
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
 

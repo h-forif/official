@@ -8,13 +8,13 @@ import Typography from '@mui/material/Typography';
 import { Stack, useMediaQuery, useTheme } from '@mui/system';
 import Box from '@mui/system/Box';
 
+import Avatar2 from '@assets/images/avatar/peep-11.svg';
+import Avatar1 from '@assets/images/avatar/peep-73.svg';
 import { Input } from '@packages/components/Input';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 
-import Avatar2 from '../../assets/images/avatar/peep-11.svg';
-import Avatar1 from '../../assets/images/avatar/peep-73.svg';
 import { type TeamType, team } from '../../types/team.enum';
 
 // Mock Data

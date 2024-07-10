@@ -14,14 +14,15 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/system/Stack';
 
+import { NAV_MENUS } from '@constants/nav-menu';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 
-import { NAV_MENUS } from '../../constants/nav-menu';
-import { useMobileNav } from '../../hooks/useMobileNav';
+import { useMobileNav } from '@hooks/useMobileNav';
+
 import { AppBarProps } from '../../types/appBar';
-import { getCurrentTerm } from '../../utils/getCurrentTerm';
 
 const currentTerm = getCurrentTerm();
 

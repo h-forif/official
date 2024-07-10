@@ -6,9 +6,8 @@ import { Box, useMediaQuery, useTheme } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { motion, useAnimation, useInView } from 'framer-motion';
-
-import { getCurrentTerm } from '../utils/getCurrentTerm';
 
 const childVariants = {
   hidden: { opacity: 0, y: 10 },
