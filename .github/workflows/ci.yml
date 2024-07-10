@@ -44,6 +44,9 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          
+      - name: 의존 패키지를 설치합니다
+        run: pnpm install
 
       - name: ESLINT를 실행합니다.
         run: pnpm run lint
