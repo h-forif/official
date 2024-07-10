@@ -16,14 +16,10 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import AppBar from '@components/AppBar/AppBar';
-<<<<<<< HEAD
 import NotFoundPage from '@components/NotFound';
 import Toast from '@components/common/Toast';
 
 import useInitializeAuth from '@hooks/useInitializeAuth';
-=======
-import ErrorPage from '@components/Error';
->>>>>>> 614846d (chore: add tsconfig-path-ailas)
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
