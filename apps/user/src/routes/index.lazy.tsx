@@ -6,17 +6,17 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Stack } from '@mui/system';
 
+import InstagramIcon from '@assets/images/Instagram.svg';
+import ChannelAddIcon from '@assets/images/channel_add_large.png';
+import StandingPerson1 from '@assets/images/peep-main-1.svg';
+import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 
-import InstagramIcon from '../assets/images/Instagram.svg';
-import ChannelAddIcon from '../assets/images/channel_add_large.png';
-import StandingPerson1 from '../assets/images/peep-main-1.svg';
-import StandingPerson2 from '../assets/images/peep-main-2.svg';
-import AnimatedContainer from '../components/AnimatedStudyContainer';
-import { LogoWall } from '../components/LogoWall';
-import { StudyCard, StudyCardProps } from '../components/study/StudyCard';
+import AnimatedContainer from '@components/AnimatedStudyContainer';
+import { LogoWall } from '@components/LogoWall';
+import { StudyCard, StudyCardProps } from '@components/study/StudyCard';
 
 export const Route = createLazyFileRoute('/')({
   component: Home,

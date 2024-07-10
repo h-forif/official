@@ -1,10 +1,9 @@
 import { Typography } from '@mui/material';
 
+import ErrorPerson from '@assets/images/peep-error.svg?react';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link } from '@tanstack/react-router';
-
-import ErrorPerson from '../assets/images/peep-error.svg?react';
 
 export default function ErrorPage() {
   return (

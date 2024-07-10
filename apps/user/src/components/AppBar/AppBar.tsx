@@ -5,13 +5,14 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { styled } from '@mui/system';
 
+import LetterIcon from '@assets/images/letter-mark.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { motion, useAnimation } from 'framer-motion';
 
-import LetterIcon from '../../assets/images/letter-mark.svg?react';
-import { useNavMenu } from '../../hooks/useNavMenu';
-import useScrollPosition from '../../hooks/useScrollPosition';
+import { useNavMenu } from '@hooks/useNavMenu';
+import useScrollPosition from '@hooks/useScrollPosition';
+
 import { AppBarProps } from '../../types/appBar';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';

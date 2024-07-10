@@ -1,16 +1,11 @@
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Stack from '@mui/system/Stack';
 
+import { LEVELS, POSSIBLE_YEARS, SEMESTERS } from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import { Select, SelectOption } from '@packages/components/Select';
+import { StudySearch } from '@routes/studies/index.lazy';
 import { useNavigate } from '@tanstack/react-router';
-
-import {
-  LEVELS,
-  POSSIBLE_YEARS,
-  SEMESTERS,
-} from '../../constants/filter.constant';
-import { StudySearch } from '../../routes/studies/index.lazy';
 
 const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({
   value: year.toString(),
@@ -33,14 +28,14 @@ export function StudyFilter({ year, semester, level }: StudySearch) {
     <Stack
       component={'section'}
       justifyContent={'space-between'}
-      direction={{ md: 'row', sm: 'column' }}
+      direction={{ md: 'row', xs: 'column' }}
       alignItems={'center'}
       gap={2}
       sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4 }}
     >
       <Stack
-        direction={'row'}
-        alignItems={'center'}
+        direction={{ xs: 'column', md: 'row' }}
+        alignItems={'flex-start'}
         gap={2}
         flexWrap={'wrap'}
         width={'100%'}
@@ -66,6 +61,7 @@ export function StudyFilter({ year, semester, level }: StudySearch) {
           options={SEMESTER_OPTIONS}
         />
         <Select
+          variant='outlined'
           val={level.toString()}
           setVal={(value) => {
             navigate({

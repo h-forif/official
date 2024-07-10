@@ -2,10 +2,10 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/system';
 
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { motion } from 'framer-motion';
 
 import { SubMenuItem } from '../../types/appBar';
-import { getCurrentTerm } from '../../utils/getCurrentTerm';
 
 interface SubMenuProps {
   items: SubMenuItem[];

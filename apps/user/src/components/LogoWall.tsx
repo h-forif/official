@@ -1,11 +1,10 @@
 import { Typography } from '@mui/material';
 import { Stack, useTheme } from '@mui/system';
 
+import AutoEverLogo from '@assets/images/autoever.png';
+import HYUSimbol from '@assets/images/hyu-simbol.svg';
+import LeapSimbol from '@assets/images/leap-simbol.png';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-
-import AutoEverLogo from '../assets/images/autoever.png';
-import HYUSimbol from '../assets/images/hyu-simbol.svg';
-import LeapSimbol from '../assets/images/leap-simbol.png';
 
 export function LogoWall() {
   const theme = useTheme();
