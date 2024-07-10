@@ -13,7 +13,7 @@ import { motion, useAnimation } from 'framer-motion';
 import { useNavMenu } from '@hooks/useNavMenu';
 import useScrollPosition from '@hooks/useScrollPosition';
 
-import { AppBarProps } from '../../types/appBar';
+import { AppBarProps } from '../../types/app-bar.type';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
 

@@ -22,7 +22,7 @@ import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { useMobileNav } from '@hooks/useMobileNav';
 
-import { AppBarProps } from '../../types/appBar';
+import { AppBarProps } from '../../types/app-bar.type';
 
 const currentTerm = getCurrentTerm();
 
