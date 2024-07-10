@@ -101,7 +101,7 @@ const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
         search={{
           year: Number(currentTerm.year),
           semester: Number(currentTerm.semester),
-          level: 0,
+          level: '전체',
         }}
       >
         <Button variant='contained' size='large' sx={{ width: '100%' }}>
