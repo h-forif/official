@@ -19,7 +19,12 @@ export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
     <Link to={`/studies/${id}`} resetScroll>
       <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
         <CardMedia sx={{ height: 240 }} title={title}>
-          <img src={image} height={'100%'} width={'100%'} />
+          <img
+            src={image}
+            height={'100%'}
+            width={'100%'}
+            style={{ objectFit: 'cover' }}
+          />
         </CardMedia>
         <MUICardContent
           sx={{ textAlign: 'left', backgroundColor: 'background.default' }}

@@ -3,33 +3,27 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
 
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { createFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
 import Image from '../../assets/images/title.png';
-import { StudyCard } from '../../components/Card';
+import { StudyCard } from '../../components/study/StudyCard';
 import { StudyFilter } from '../../components/study/StudyFilter';
+import { LEVEL_TYPES } from '../../constants/filter.constant';
 
-type StudySearchLevelOptions = 0 | 1 | 2 | 3 | 4 | 5;
-
-type StudySearch = {
+export type StudySearch = {
   year: number;
   semester: number;
-  level: StudySearchLevelOptions;
+  level: LEVEL_TYPES;
 };
 
-export const Route = createFileRoute('/studies/')({
-  validateSearch: (search: Record<string, unknown>): StudySearch => {
-    return {
-      year: Number(search?.year ?? 2024),
-      semester: Number(search?.semester ?? 1),
-      level: (search.level as StudySearchLevelOptions) || 0,
-    };
-  },
+export const Route = createLazyFileRoute('/studies/')({
   component: StudiesPage,
 });
 
 function StudiesPage() {
-  const { year, semester } = Route.useSearch();
+  const { year, semester, level }: StudySearch = Route.useSearch();
+  console.log(year, semester, level);
+
   return (
     <Box>
       <CenteredBox
@@ -50,11 +44,11 @@ function StudiesPage() {
           영감을 주는 동료와 함께라면. The Better Life
         </Typography>
       </CenteredBox>
-      <StudyFilter year={year} semester={semester} />
+      <StudyFilter year={year} semester={semester} level={level} />
       <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
         <Grid container spacing={{ sm: 2, xl: 4 }}>
-          {items.map((item) => (
-            <Grid key={item} item xl={2.4} md={4} sm={6} xs={12}>
+          {[1, 2, 3, 4].map((item) => (
+            <Grid key={item} item xl={3} md={4} sm={6} xs={12}>
               <StudyCard
                 id={2}
                 image={Image}
@@ -68,5 +62,3 @@ function StudiesPage() {
     </Box>
   );
 }
-
-const items = [1, 2, 3, 4];
