@@ -1,11 +1,14 @@
 import Box from '@mui/system/Box';
 
+import { NAV_MENUS } from '@constants/nav-menu';
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { AnimatePresence } from 'framer-motion';
 
-import { NAV_MENUS } from '../../constants/nav-menu';
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
+
+const currentTerm = getCurrentTerm();
 
 interface DesktopNavProps {
   activeMenu: string | null;
@@ -32,9 +35,22 @@ export function DesktopNav({
             onMouseEnter={() => handleMouseEnter(menu.title)}
             onClick={handleClick}
           >
-            <Link to={menu.href}>
-              <NavItem>{menu.title}</NavItem>
-            </Link>
+            {menu.href === '/studies' ? (
+              <Link
+                to={menu.href}
+                search={{
+                  year: Number(currentTerm.year),
+                  semester: Number(currentTerm.semester),
+                  level: '전체',
+                }}
+              >
+                <NavItem>{menu.title}</NavItem>
+              </Link>
+            ) : (
+              <Link to={menu.href}>
+                <NavItem>{menu.title}</NavItem>
+              </Link>
+            )}
             <AnimatePresence>
               {activeMenu === menu.title && menu.submenu && (
                 <SubMenu items={menu.submenu} />

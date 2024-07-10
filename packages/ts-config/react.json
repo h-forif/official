@@ -8,10 +8,5 @@
     "allowJs": true,
     "jsx": "preserve",
     "noEmit": true,
-    "paths": {
-      "@components/*": [
-        "../../packages/components/*"
-      ]
-    }
   },
 }

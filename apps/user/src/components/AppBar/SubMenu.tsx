@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/system';
 
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { motion } from 'framer-motion';
 
 import { SubMenuItem } from '../../types/appBar';
@@ -9,6 +10,8 @@ import { SubMenuItem } from '../../types/appBar';
 interface SubMenuProps {
   items: SubMenuItem[];
 }
+
+const currentTerm = getCurrentTerm();
 
 export default function SubMenu({ items }: SubMenuProps) {
   const theme = useTheme();
@@ -37,11 +40,27 @@ export default function SubMenu({ items }: SubMenuProps) {
     >
       {items.map((subItem) => (
         <SubMenuWrapper key={subItem.title}>
-          <Link to={subItem.href}>
-            <Typography variant='titleLarge' color='text.primary'>
-              {subItem.title}
-            </Typography>
-          </Link>
+          {subItem.href === '/studies' ? (
+            <Link
+              to={subItem.href}
+              search={{
+                year: Number(currentTerm.year),
+                semester: Number(currentTerm.semester),
+                level: '전체',
+              }}
+            >
+              <Typography variant='titleLarge' color='text.primary'>
+                {subItem.title}
+              </Typography>
+            </Link>
+          ) : (
+            <Link to={subItem.href}>
+              <Typography variant='titleLarge' color='text.primary'>
+                {subItem.title}
+              </Typography>
+            </Link>
+          )}
+          <Link to={subItem.href}></Link>
         </SubMenuWrapper>
       ))}
     </motion.div>
