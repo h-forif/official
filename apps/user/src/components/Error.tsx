@@ -1,15 +1,12 @@
-import { Typography } from '@mui/material';
-
 import ErrorPerson from '@assets/images/peep-error.svg?react';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { Link } from '@tanstack/react-router';
 
-export default function ErrorPage() {
+export default function ErrorPage({ onClick }: { onClick?: any }) {
   return (
     <CenteredBox
       sx={{
-        paddingTop: '128px',
+        paddingTop: '68px',
         gap: 2,
         textAlign: 'center',
         maxWidth: '780px',
@@ -17,16 +14,31 @@ export default function ErrorPage() {
         paddingX: 3,
       }}
     >
-      <Typography variant='displayLarge' color='text.primary'>
+      <h1
+        style={{
+          fontSize: '57pt',
+          lineHeight: '64pt',
+          letterSpacing: '-0.25pt',
+          margin: 0,
+        }}
+      >
         We lost this page
-      </Typography>
-      <Typography variant='displaySmall' fontWeight={300} color='text.primary'>
+      </h1>
+      <h2
+        style={{
+          fontSize: '36pt',
+          lineHeight: '44pt',
+          fontWeight: 500,
+        }}
+      >
         We searched but couldn't find what you're looking for. Let's find a
         better place for you to go.
-      </Typography>
-      <Link to='/'>
-        <Button variant='contained'>Go Back To Home</Button>
-      </Link>
+      </h2>
+      <a href='/'>
+        <Button size='large' variant='outlined' onClick={onClick}>
+          Go Back To Home
+        </Button>
+      </a>
       <ErrorPerson />
     </CenteredBox>
   );

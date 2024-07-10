@@ -5,7 +5,10 @@ import Box from '@mui/system/Box';
 import Image from '@assets/images/title.png';
 import { LEVEL_TYPES } from '@constants/filter.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { useQuery } from '@tanstack/react-query';
 import { createLazyFileRoute } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
+import { getAllStudies } from 'src/services/study.service';
 
 import { StudyCard } from '@components/study/StudyCard';
 import { StudyFilter } from '@components/study/StudyFilter';
@@ -16,13 +19,28 @@ export type StudySearch = {
   level: LEVEL_TYPES;
 };
 
+const currentTerm = getCurrentTerm();
+
 export const Route = createLazyFileRoute('/studies/')({
+  validateSearch: (search: Record<string, unknown>): StudySearch => {
+    return {
+      year: Number(search?.year ?? currentTerm.year),
+      semester: Number(search?.semester ?? currentTerm.semester),
+      level: (search.level as LEVEL_TYPES) || '전체',
+    };
+  },
   component: StudiesPage,
 });
 
 function StudiesPage() {
   const { year, semester, level }: StudySearch = Route.useSearch();
-  console.log(year, semester, level);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['studies'],
+    queryFn: getAllStudies,
+  });
+
+  if (isLoading) {
+  }
 
   return (
     <Box>
