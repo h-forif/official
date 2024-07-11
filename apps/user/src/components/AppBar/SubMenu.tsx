@@ -17,6 +17,8 @@ export default function SubMenu({ items }: SubMenuProps) {
   const theme = useTheme();
   const backgroundColor = theme.palette.mode === 'light' ? 'white' : 'black';
 
+  const columns = Math.ceil(items.length / 3);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -36,6 +38,8 @@ export default function SubMenu({ items }: SubMenuProps) {
           theme.palette.mode === 'light'
             ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
             : '0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)',
+        display: 'grid',
+        gridTemplateColumns: `repeat(${columns}, auto)`,
       }}
     >
       {items.map((subItem) => (
