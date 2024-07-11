@@ -4,7 +4,9 @@ import MUICardActions from '@mui/material/CardActions';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
+import FallbackImage from '@assets/images/cutie.svg';
 import { Button } from '@packages/components/Button';
+import Image from '@packages/components/Image';
 import { Link } from '@tanstack/react-router';
 
 export interface StudyCardProps {
@@ -18,14 +20,18 @@ export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
   return (
     <Link to={`/studies/${id}`} resetScroll>
       <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
-        <CardMedia
-          component='img'
-          height={240}
-          image={image}
-          title={title}
-          alt={`card-image-${title}`}
-          loading='lazy'
-        />
+        <CardMedia component={'picture'} sx={{ width: '100%', height: 240 }}>
+          <Image
+            src={image}
+            fallback={FallbackImage}
+            height={'100%'}
+            alt={`card-image-${title}`}
+            loading='lazy'
+            title={title}
+            width={'100%'}
+            style={{ objectFit: 'cover' }}
+          />
+        </CardMedia>
         <MUICardContent
           sx={{ textAlign: 'left', backgroundColor: 'background.default' }}
         >
