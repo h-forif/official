@@ -41,12 +41,12 @@ export function StudyList({ year, semester, level }: StudyProps) {
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
       <Grid container spacing={{ xs: 2, xl: 4 }}>
         {data!.map((study) => (
-          <Grid key={study.studyId} item xl={3} md={4} sm={6} xs={12}>
+          <Grid key={study.id} item xl={3} md={4} sm={6} xs={12}>
             <StudyCard
-              id={study.studyId}
+              id={study.id}
               image={study.image!}
               mentor={study.mentorName}
-              title={study.studyName}
+              title={study.name}
             />
           </Grid>
         ))}

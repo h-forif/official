@@ -51,7 +51,7 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route));
 
-const StudiesIndexLazyRoute = StudiesIndexLazyImport.update({
+const StudiesIndexRoute = StudiesIndexImport.update({
   path: '/studies/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
