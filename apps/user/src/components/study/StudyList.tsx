@@ -19,8 +19,6 @@ export function StudyList({ year, semester, level }: StudyProps) {
     retry: false,
   });
 
-  console.log(data, error, isLoading);
-
   if (isLoading) {
     return (
       <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
