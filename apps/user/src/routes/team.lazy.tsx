@@ -98,7 +98,7 @@ function TeamPage() {
       <CenteredBox
         component={'section'}
         sx={{
-          paddingTop: 12,
+          paddingTop: 4,
           paddingX: 6,
           textAlign: 'center',
           margin: 'auto',
