@@ -54,7 +54,7 @@ function RootComponent() {
             <ThemeProvider theme={mode === 'light' ? lightTheme : darkTheme}>
               <CssBaseline />
               <AppBar mode={mode} toggleColorMode={toggleColorMode} />
-              <div style={{ marginTop: 60 }}>
+              <div style={{ marginTop: 64 }}>
                 <Outlet />
               </div>
               <TanStackRouterDevtools />
