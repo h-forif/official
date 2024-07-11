@@ -14,8 +14,8 @@ import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 
-import AnimatedContainer from '@components/AnimatedStudyContainer';
 import { LogoWall } from '@components/LogoWall';
+import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 import { StudyCard, StudyCardProps } from '@components/study/StudyCard';
 
 export const Route = createLazyFileRoute('/')({

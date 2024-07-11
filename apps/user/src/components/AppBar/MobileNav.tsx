@@ -136,7 +136,6 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
                               ? {
                                   year: Number(currentTerm.year),
                                   semester: Number(currentTerm.semester),
-                                  level: '전체',
                                 }
                               : undefined
                           }

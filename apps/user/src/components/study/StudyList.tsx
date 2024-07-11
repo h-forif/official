@@ -1,23 +1,23 @@
-import { Skeleton, Typography } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
 
-import NotFoundCharacter from '@assets/images/peep-not-found.svg?react';
-import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import type { Study } from '@packages/components/types/study';
-import { StudySearch } from '@routes/studies/index';
+import { StudyProps } from '@routes/studies/index';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { getAllStudies } from 'src/services/study.service';
+
+import ErrorComponent from '@components/Error';
 
 import { StudyCard } from './StudyCard';
 
-export function StudyList({ year, semester, level }: StudySearch) {
-  const { data, error, isLoading } = useQuery<Study[]>({
+export function StudyList({ year, semester, level }: StudyProps) {
+  const { data, error, isLoading } = useQuery<Study[], AxiosError>({
     queryKey: ['studies', year, semester, level],
-    queryFn: () => getAllStudies({ year, semester, level }),
+    queryFn: () => getAllStudies({ year, semester }),
+    retry: false,
   });
-
-  console.log(data, error, isLoading);
 
   if (isLoading) {
     return (
@@ -33,6 +33,10 @@ export function StudyList({ year, semester, level }: StudySearch) {
     );
   }
 
+  if (error) {
+    return ErrorComponent({ status: error.response!.status });
+  }
+
   return (
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
       <Grid container spacing={{ xs: 2, xl: 4 }}>
@@ -46,15 +50,6 @@ export function StudyList({ year, semester, level }: StudySearch) {
             />
           </Grid>
         ))}
-        {!data ||
-          (data.length === 0 && (
-            <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
-              <NotFoundCharacter />
-              <Typography variant='headlineLarge' textAlign={'center'}>
-                존재하는 스터디가 없어요.
-              </Typography>
-            </CenteredBox>
-          ))}
       </Grid>
     </Box>
   );

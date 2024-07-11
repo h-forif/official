@@ -4,7 +4,7 @@ import Stack from '@mui/system/Stack';
 import { LEVELS, POSSIBLE_YEARS, SEMESTERS } from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import { Select, SelectOption } from '@packages/components/Select';
-import { StudySearch } from '@routes/studies/index.lazy';
+import { StudyProps } from '@routes/studies/index';
 import { useNavigate } from '@tanstack/react-router';
 
 const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({
@@ -22,7 +22,16 @@ const LEVEL_OPTIONS: SelectOption[] = LEVELS.map((level) => ({
   label: level,
 }));
 
-export function StudyFilter({ year, semester, level }: StudySearch) {
+interface StudyFilterProps extends StudyProps {
+  setLevel: (val: string) => void;
+}
+
+export function StudyFilter({
+  year,
+  semester,
+  level,
+  setLevel,
+}: StudyFilterProps) {
   const navigate = useNavigate({ from: '/studies' });
   return (
     <Stack
@@ -63,11 +72,7 @@ export function StudyFilter({ year, semester, level }: StudySearch) {
         <Select
           variant='outlined'
           val={level.toString()}
-          setVal={(value) => {
-            navigate({
-              search: (prev) => ({ ...prev, level: value }),
-            });
-          }}
+          setVal={(val) => setLevel(val)}
           placeholder='난이도'
           options={LEVEL_OPTIONS}
         />
