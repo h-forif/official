@@ -4,18 +4,20 @@ import Box from '@mui/system/Box';
 
 import NotFoundCharacter from '@assets/images/peep-not-found.svg?react';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import type { Study } from '@packages/components/types/study';
 import { StudySearch } from '@routes/studies/index';
 import { useQuery } from '@tanstack/react-query';
 import { getAllStudies } from 'src/services/study.service';
-import { Data } from 'src/types/product.type';
 
 import { StudyCard } from './StudyCard';
 
 export function StudyList({ year, semester, level }: StudySearch) {
-  const { data, isLoading } = useQuery<Data>({
-    queryKey: ['studies'],
-    queryFn: getAllStudies,
+  const { data, error, isLoading } = useQuery<Study[]>({
+    queryKey: ['studies', year, semester, level],
+    queryFn: () => getAllStudies({ year, semester, level }),
   });
+
+  console.log(data, error, isLoading);
 
   if (isLoading) {
     return (
@@ -31,32 +33,28 @@ export function StudyList({ year, semester, level }: StudySearch) {
     );
   }
 
-  console.log(year, semester, level);
-  const filteredProducts = data!.products.filter(
-    (product) => product.category === 'beauty',
-  );
-
   return (
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
       <Grid container spacing={{ xs: 2, xl: 4 }}>
-        {filteredProducts.map((product) => (
-          <Grid key={product.id} item xl={3} md={4} sm={6} xs={12}>
+        {data!.map((study) => (
+          <Grid key={study.studyId} item xl={3} md={4} sm={6} xs={12}>
             <StudyCard
-              id={product.id}
-              image={product.images[0]!}
-              mentor={product.availabilityStatus}
-              title={product.title}
+              id={study.studyId}
+              image={study.image!}
+              mentor={study.mentorName}
+              title={study.studyName}
             />
           </Grid>
         ))}
-        {filteredProducts.length === 0 && (
-          <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
-            <NotFoundCharacter />
-            <Typography variant='headlineLarge' textAlign={'center'}>
-              존재하는 스터디가 없어요.
-            </Typography>
-          </CenteredBox>
-        )}
+        {!data ||
+          (data.length === 0 && (
+            <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
+              <NotFoundCharacter />
+              <Typography variant='headlineLarge' textAlign={'center'}>
+                존재하는 스터디가 없어요.
+              </Typography>
+            </CenteredBox>
+          ))}
       </Grid>
     </Box>
   );
