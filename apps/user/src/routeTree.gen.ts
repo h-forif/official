@@ -264,7 +264,8 @@ export const routeTree = rootRoute.addChildren({
         "/club/about",
         "/studies/$studyId",
         "/club/team",
-        "/studies/"
+        "/studies/",
+        "/hackathon/"
       ]
     },
     "/": {

@@ -11,9 +11,10 @@ import Box from '@mui/system/Box';
 import Avatar2 from '@assets/images/avatar/peep-11.svg';
 import Avatar1 from '@assets/images/avatar/peep-73.svg';
 import { Input } from '@packages/components/Input';
-import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
+
+import { Title } from '@components/Title';
 
 import { type TeamType, team } from '../../types/team.enum';
 
@@ -95,24 +96,7 @@ function TeamPage() {
 
   return (
     <Box>
-      <CenteredBox
-        component={'section'}
-        sx={{
-          paddingTop: 12,
-          paddingX: 6,
-          textAlign: 'center',
-          margin: 'auto',
-          marginBottom: 12,
-          wordBreak: 'keep-all',
-        }}
-      >
-        <Typography variant='displayLarge' sx={{ mb: 1 }}>
-          FORIF TEAM
-        </Typography>
-        <Typography variant='labelLarge'>
-          영감을 주는 동료와 함께라면. The Better Life
-        </Typography>
-      </CenteredBox>
+      <Title title='FORIF TEAM' />
       <Box sx={{ paddingX: { xs: 4, sm: 8, md: 12 }, pb: 4, margin: 'auto' }}>
         <TeamSelect selectedTeam={selectedTeam} onChange={handleTeamChange} />
         <Grid

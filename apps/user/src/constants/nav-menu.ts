@@ -17,6 +17,10 @@ export const NAV_MENUS = [
     ],
   },
   {
+    title: '포리톤',
+    href: '/hackathon',
+  },
+  {
     title: '자주 묻는 질문',
     href: '/faq',
   },
