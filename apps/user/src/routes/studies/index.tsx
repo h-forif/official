@@ -1,17 +1,13 @@
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
 
-import Image from '@assets/images/title.png';
 import { LEVEL_TYPES } from '@constants/filter.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { useQuery } from '@tanstack/react-query';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
-import { getAllStudies } from 'src/services/study.service';
 
-import { StudyCard } from '@components/study/StudyCard';
 import { StudyFilter } from '@components/study/StudyFilter';
+import { StudyList } from '@components/study/StudyList';
 
 export type StudySearch = {
   year: number;
@@ -21,7 +17,7 @@ export type StudySearch = {
 
 const currentTerm = getCurrentTerm();
 
-export const Route = createLazyFileRoute('/studies/')({
+export const Route = createFileRoute('/studies/')({
   validateSearch: (search: Record<string, unknown>): StudySearch => {
     return {
       year: Number(search?.year ?? currentTerm.year),
@@ -34,13 +30,6 @@ export const Route = createLazyFileRoute('/studies/')({
 
 function StudiesPage() {
   const { year, semester, level }: StudySearch = Route.useSearch();
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['studies'],
-    queryFn: getAllStudies,
-  });
-
-  if (isLoading) {
-  }
 
   return (
     <Box>
@@ -63,20 +52,7 @@ function StudiesPage() {
         </Typography>
       </CenteredBox>
       <StudyFilter year={year} semester={semester} level={level} />
-      <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
-        <Grid container spacing={{ xs: 2, xl: 4 }}>
-          {[1, 2, 3, 4].map((item) => (
-            <Grid key={item} item xl={3} md={4} sm={6} xs={12}>
-              <StudyCard
-                id={2}
-                image={Image}
-                mentor='표준성'
-                title='REACT + CRUD'
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      <StudyList year={year} semester={semester} level={level} />
     </Box>
   );
 }

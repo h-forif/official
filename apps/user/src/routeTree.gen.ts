@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
@@ -23,7 +24,6 @@ import { Route as ApplyMemberImport } from './routes/apply/member'
 const TeamLazyImport = createFileRoute('/team')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
-const StudiesIndexLazyImport = createFileRoute('/studies/')()
 const ClubTeamLazyImport = createFileRoute('/club/team')()
 
 // Create/Update Routes
@@ -43,10 +43,10 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const StudiesIndexLazyRoute = StudiesIndexLazyImport.update({
+const StudiesIndexRoute = StudiesIndexImport.update({
   path: '/studies/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/studies/index.lazy').then((d) => d.Route))
+} as any)
 
 const ClubTeamLazyRoute = ClubTeamLazyImport.update({
   path: '/club/team',
@@ -137,7 +137,7 @@ declare module '@tanstack/react-router' {
       id: '/studies/'
       path: '/studies'
       fullPath: '/studies'
-      preLoaderRoute: typeof StudiesIndexLazyImport
+      preLoaderRoute: typeof StudiesIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -154,7 +154,7 @@ export const routeTree = rootRoute.addChildren({
   ClubAboutRoute,
   StudiesStudyIdRoute,
   ClubTeamLazyRoute,
-  StudiesIndexLazyRoute,
+  StudiesIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -201,7 +201,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "club/team.lazy.tsx"
     },
     "/studies/": {
-      "filePath": "studies/index.lazy.tsx"
+      "filePath": "studies/index.tsx"
     }
   }
 }

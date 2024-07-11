@@ -2,7 +2,7 @@ import ErrorPerson from '@assets/images/peep-error.svg?react';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 
-export default function ErrorPage({ onClick }: { onClick?: any }) {
+export default function ErrorPage({ onClick }: { onClick?: () => void }) {
   return (
     <CenteredBox
       sx={{
