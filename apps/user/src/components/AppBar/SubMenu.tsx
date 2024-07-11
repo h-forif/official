@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { motion } from 'framer-motion';
 
-import { SubMenuItem } from '../../types/appBar';
+import { SubMenuItem } from '../../types/app-bar.type';
 
 interface SubMenuProps {
   items: SubMenuItem[];
