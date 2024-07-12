@@ -16,11 +16,11 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import AppBar from '@components/AppBar/AppBar';
-import ErrorPage from '@components/Error';
+import NotFoundPage from '@components/NotFound';
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
-  notFoundComponent: () => <ErrorPage />,
+  notFoundComponent: () => <NotFoundPage />,
 });
 
 function RootComponent() {
@@ -48,7 +48,7 @@ function RootComponent() {
           <ErrorBoundary
             onReset={reset}
             fallbackRender={({ resetErrorBoundary }) => (
-              <ErrorPage onClick={resetErrorBoundary} />
+              <NotFoundPage onClick={resetErrorBoundary} />
             )}
           >
             <ThemeProvider theme={mode === 'light' ? lightTheme : darkTheme}>

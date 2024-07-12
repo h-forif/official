@@ -50,7 +50,6 @@ export default function SubMenu({ items }: SubMenuProps) {
               search={{
                 year: Number(currentTerm.year),
                 semester: Number(currentTerm.semester),
-                level: '전체',
               }}
             >
               <Typography variant='titleLarge' color='text.primary'>

@@ -41,7 +41,6 @@ export function DesktopNav({
                 search={{
                   year: Number(currentTerm.year),
                   semester: Number(currentTerm.semester),
-                  level: '전체',
                 }}
               >
                 <NavItem>{menu.title}</NavItem>

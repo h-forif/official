@@ -1,21 +1,21 @@
-import { Skeleton, Typography } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
 
-import NotFoundCharacter from '@assets/images/peep-not-found.svg?react';
-import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import type { Study } from '@packages/components/types/study';
-import { StudySearch } from '@routes/studies/index';
+import { StudyProps } from '@routes/studies/index';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getAllStudies } from 'src/services/study.service';
 
+import ErrorComponent from '@components/Error';
+
 import { StudyCard } from './StudyCard';
 
-export function StudyList({ year, semester, level }: StudySearch) {
+export function StudyList({ year, semester, level }: StudyProps) {
   const { data, error, isLoading } = useQuery<Study[], AxiosError>({
     queryKey: ['studies', year, semester, level],
-    queryFn: () => getAllStudies({ year, semester, level }),
+    queryFn: () => getAllStudies({ year, semester }),
     retry: false,
   });
 
@@ -34,25 +34,7 @@ export function StudyList({ year, semester, level }: StudySearch) {
   }
 
   if (error) {
-    if (error.response!.status === 404) {
-      return (
-        <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
-          <NotFoundCharacter />
-          <Typography variant='headlineLarge' textAlign={'center'}>
-            존재하는 스터디가 없어요.
-          </Typography>
-        </CenteredBox>
-      );
-    } else {
-      return (
-        <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
-          <NotFoundCharacter />
-          <Typography variant='headlineLarge' textAlign={'center'}>
-            예상하지 못한 오류가 발생했어요.
-          </Typography>
-        </CenteredBox>
-      );
-    }
+    return ErrorComponent({ status: error.response!.status });
   }
 
   return (
