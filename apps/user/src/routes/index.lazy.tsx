@@ -16,15 +16,9 @@ import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { signIn } from 'src/services/auth.service';
 
-<<<<<<< HEAD
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 import { StudyCard } from '@components/study/StudyCard';
-=======
-import AnimatedContainer from '@components/AnimatedStudyContainer';
-import { LogoWall } from '@components/LogoWall';
-import { StudyCard, StudyCardProps } from '@components/study/StudyCard';
->>>>>>> 614846d (chore: add tsconfig-path-ailas)
 
 export const Route = createLazyFileRoute('/')({
   component: Home,
