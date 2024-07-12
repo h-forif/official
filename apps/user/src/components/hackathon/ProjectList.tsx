@@ -1,27 +1,25 @@
+import { Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/system/Box';
+import Stack from '@mui/system/Stack';
 
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getProjects } from 'src/services/project.service';
-import { Project } from 'src/types/project.type';
 
+import ErrorComponent from '@components/Error';
 import { ProjectCard } from '@components/hackathon/ProjectCard';
 
 export function ProjectList() {
-  const { data, error, isLoading } = useQuery<Project[], AxiosError>({
+  const { data, error, isLoading } = useQuery<any, AxiosError>({
     queryKey: ['projects'],
     queryFn: getProjects,
     retry: false,
   });
+
   if (error) {
-    switch (error.response!.status) {
-      case 404:
-        return <Box>FAILED</Box>;
-      default:
-        return <Box>Uncaught error</Box>;
-    }
+    return <ErrorComponent status={error.response!.status} />;
   }
 
   if (isLoading) {
@@ -37,23 +35,38 @@ export function ProjectList() {
       </Box>
     );
   }
+
   return (
-    <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
-      <Grid container spacing={{ xs: 2, xl: 4 }}>
-        {data!.map((project) => (
-          <Grid key={project.id} item xl={3} md={4} sm={6} xs={12}>
-            <ProjectCard
-              id={project.id}
-              title={project.title}
-              desc={project.desc}
-              image={project.image}
-              study={project.study}
-              year={project.year}
-              semester={project.semester}
-            />
+    <Stack
+      direction={'column'}
+      justifyContent={'flex-start'}
+      sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}
+    >
+      <Box>
+        <Typography variant='displayMedium' sx={{ pb: 1 }}>
+          2024-1 : 청춘
+        </Typography>
+        <Typography variant='labelLarge' sx={{ mb: 8 }}>
+          2024년도는 색다른 해였습니다.
+        </Typography>
+        <Box>
+          <Grid container spacing={{ xs: 2, xl: 4 }}>
+            {data!.products.map((project: any) => (
+              <Grid key={project.id} item xl={3} md={4} sm={6} xs={12}>
+                <ProjectCard
+                  id={project.id}
+                  title={project.title}
+                  desc={project.description}
+                  image={project.images[0]}
+                  study={project.category}
+                  year={project.year}
+                  semester={project.semester}
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-    </Box>
+        </Box>
+      </Box>
+    </Stack>
   );
 }

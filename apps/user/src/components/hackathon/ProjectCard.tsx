@@ -2,6 +2,7 @@ import { CardMedia, Chip } from '@mui/material';
 import MUICard from '@mui/material/Card';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { Stack } from '@mui/system';
 
 import { Project } from 'src/types/project.type';
 
@@ -41,8 +42,10 @@ export function ProjectCard({ desc, image, study, title }: Project) {
         >
           {desc}
         </Typography>
-        <Chip label={study} />
-        <Chip label='WEB' />
+        <Stack direction={'row'} alignItems={'center'} gap={1}>
+          <Chip label={study} />
+          <Chip label='WEB' />
+        </Stack>
       </MUICardContent>
     </MUICard>
   );
