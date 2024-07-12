@@ -3,14 +3,9 @@ import MUICard from '@mui/material/Card';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-interface HackathonCard {
-  image: string;
-  title: string;
-  type: string;
-  desc: string;
-}
+import { Project } from 'src/types/project.type';
 
-export function HackathonCard({ image, title, desc, type }: HackathonCard) {
+export function ProjectCard({ desc, image, study, title }: Project) {
   return (
     <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
       <CardMedia
@@ -46,6 +41,7 @@ export function HackathonCard({ image, title, desc, type }: HackathonCard) {
         >
           {desc}
         </Typography>
+        <Chip label={study} />
         <Chip label='WEB' />
       </MUICardContent>
     </MUICard>

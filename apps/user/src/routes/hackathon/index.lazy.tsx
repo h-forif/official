@@ -3,7 +3,7 @@ import Box from '@mui/system/Box';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
 import { Title } from '@components/Title';
-import { HackathonList } from '@components/hackathon/HackathonList';
+import { ProjectList } from '@components/hackathon/ProjectList';
 
 export const Route = createLazyFileRoute('/hackathon/')({
   component: HackathonPage,
@@ -16,7 +16,7 @@ function HackathonPage() {
         title='포리톤'
         label='포리톤은 포리프에서 한 학기가 종료되고 진행되는 해커톤 행사입니다.'
       />
-      <HackathonList />
+      <ProjectList />
     </Box>
   );
 }
