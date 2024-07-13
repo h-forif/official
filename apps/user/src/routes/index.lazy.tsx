@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -21,6 +21,8 @@ import { StudyCard, StudyCardProps } from '@components/study/StudyCard';
 export const Route = createLazyFileRoute('/')({
   component: Home,
 });
+
+const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 const studies: StudyCardProps[] = [
   {
@@ -49,6 +51,20 @@ function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
 
+  const handlePrompt = () => {
+    google.accounts.id.prompt((notification) => {
+      console.log(notification);
+    });
+  };
+
+  useEffect(() => {
+    google.accounts.id.initialize({
+      client_id: CLIENT_ID,
+      auto_select: false,
+      callback: (res) => console.log(res),
+      use_fedcm_for_prompt: true,
+    });
+  }, []);
   return (
     <main>
       <CenteredBox
@@ -74,9 +90,9 @@ function Home() {
           선순환에 동참해주세요.
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Link to='/apply/member'>
-            <Button variant='contained'>부원 신청하기</Button>
-          </Link>
+          <Button variant='outlined' onClick={handlePrompt}>
+            부원 가입하기
+          </Button>
           <Link to='/apply/mentor'>
             <Button variant='outlined'>멘토 신청하기</Button>
           </Link>
