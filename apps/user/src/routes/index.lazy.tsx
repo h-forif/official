@@ -13,6 +13,7 @@ import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
+import { handleSignIn } from 'src/services/auth.service';
 
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
@@ -50,10 +51,17 @@ const studies: StudyCardProps[] = [
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-
   const handlePrompt = () => {
     google.accounts.id.prompt((notification) => {
-      console.log(notification);
+      if (notification.isSkippedMoment) {
+        console.log('The prompt was skipped');
+        // 여기에 추가적인 논리 추가
+      } else if (notification.isDismissedMoment) {
+        console.log('The prompt was dismissed');
+        // 여기에 추가적인 논리 추가
+      } else {
+        console.log(notification);
+      }
     });
   };
 
@@ -61,7 +69,7 @@ function Home() {
     google.accounts.id.initialize({
       client_id: CLIENT_ID,
       auto_select: false,
-      callback: (res) => console.log(res),
+      callback: handleSignIn,
       use_fedcm_for_prompt: true,
     });
   }, []);
@@ -90,7 +98,7 @@ function Home() {
           선순환에 동참해주세요.
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Button variant='outlined' onClick={handlePrompt}>
+          <Button variant='contained' onClick={handlePrompt}>
             부원 가입하기
           </Button>
           <Link to='/apply/mentor'>
