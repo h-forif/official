@@ -5,5 +5,5 @@ export interface Project {
   title: string;
   desc: string;
   image: string;
-  study: string;
+  team_name: string;
 }
