@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -17,62 +17,28 @@ import { handleSignIn } from 'src/services/auth.service';
 
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
-import { StudyCard, StudyCardProps } from '@components/study/StudyCard';
+import { StudyCard } from '@components/study/StudyCard';
+
+const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export const Route = createLazyFileRoute('/')({
   component: Home,
 });
 
-const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
-
-const studies: StudyCardProps[] = [
-  {
-    id: 0,
-    title: 'React CRUD1',
-    image: 'https://imgur.com/TersiLo.png',
-    mentor: 'Jun Seong Pyo',
-  },
-  {
-    id: 1,
-
-    title: 'React CRUD2',
-    image: 'https://imgur.com/TersiLo.png',
-    mentor: 'Jun Seong Pyo',
-  },
-  {
-    id: 2,
-
-    title: 'React CRUD3',
-    image: 'https://imgur.com/TersiLo.png',
-    mentor: 'Jun Seong Pyo',
-  },
-];
-
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-  const handlePrompt = () => {
-    google.accounts.id.prompt((notification) => {
-      if (notification.isSkippedMoment) {
-        console.log('The prompt was skipped');
-        // 여기에 추가적인 논리 추가
-      } else if (notification.isDismissedMoment) {
-        console.log('The prompt was dismissed');
-        // 여기에 추가적인 논리 추가
-      } else {
-        console.log(notification);
-      }
-    });
+
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/userinfo.profile',
+    callback: handleSignIn,
+  });
+
+  const requstAccessToken = () => {
+    client.requestAccessToken();
   };
 
-  useEffect(() => {
-    google.accounts.id.initialize({
-      client_id: CLIENT_ID,
-      auto_select: false,
-      callback: handleSignIn,
-      use_fedcm_for_prompt: true,
-    });
-  }, []);
   return (
     <main>
       <CenteredBox
@@ -98,7 +64,7 @@ function Home() {
           선순환에 동참해주세요.
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Button variant='contained' onClick={handlePrompt}>
+          <Button variant='contained' onClick={requstAccessToken}>
             부원 가입하기
           </Button>
           <Link to='/apply/mentor'>
@@ -106,15 +72,7 @@ function Home() {
           </Link>
         </Stack>
         <AnimatedContainer>
-          {studies.map((study) => (
-            <StudyCard
-              id={study.id}
-              key={study.id}
-              title={study.title}
-              image={study.image}
-              mentor={study.mentor}
-            />
-          ))}
+          <StudyCard id={5} title={'리액트 배우기'} mentor={'표준성'} />
         </AnimatedContainer>
         {matches && (
           <>

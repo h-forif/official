@@ -8,7 +8,9 @@ export const api = axios.create({
 });
 
 export const authApi = axios.create({
-  baseURL: 'https://api.example.com/auth',
+  baseURL: BASE_URL,
   timeout: 5000,
-  headers: { 'X-Custom-Header': 'foobar' },
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });

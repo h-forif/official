@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubAboutImport } from './routes/club/about'
+import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
 
@@ -60,6 +61,11 @@ const StudiesStudyIdRoute = StudiesStudyIdImport.update({
 
 const ClubAboutRoute = ClubAboutImport.update({
   path: '/club/about',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthSignUpRoute = AuthSignUpImport.update({
+  path: '/auth/sign-up',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -112,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApplyMentorImport
       parentRoute: typeof rootRoute
     }
+    '/auth/sign-up': {
+      id: '/auth/sign-up'
+      path: '/auth/sign-up'
+      fullPath: '/auth/sign-up'
+      preLoaderRoute: typeof AuthSignUpImport
+      parentRoute: typeof rootRoute
+    }
     '/club/about': {
       id: '/club/about'
       path: '/club/about'
@@ -151,6 +164,7 @@ export const routeTree = rootRoute.addChildren({
   TeamLazyRoute,
   ApplyMemberRoute,
   ApplyMentorRoute,
+  AuthSignUpRoute,
   ClubAboutRoute,
   StudiesStudyIdRoute,
   ClubTeamLazyRoute,
@@ -170,6 +184,7 @@ export const routeTree = rootRoute.addChildren({
         "/team",
         "/apply/member",
         "/apply/mentor",
+        "/auth/sign-up",
         "/club/about",
         "/studies/$studyId",
         "/club/team",
@@ -190,6 +205,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/apply/mentor": {
       "filePath": "apply/mentor.tsx"
+    },
+    "/auth/sign-up": {
+      "filePath": "auth/sign-up.tsx"
     },
     "/club/about": {
       "filePath": "club/about.tsx"

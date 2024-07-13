@@ -1,31 +1,41 @@
-// src/types/google.d.ts
-
-interface GoogleAccountsId {
-  initialize: (config: {
-    client_id: string;
-    auto_select?: boolean;
-    callback?: (response: GoogleSignInResponse) => void;
-    use_fedcm_for_prompt?: boolean;
-  }) => void;
-  prompt: (callback: (notification: PromptNotification) => void) => void;
+interface TokenResponse {
+  access_token: string;
+  expires_in: number;
+  token_type: string;
+  scope: string;
+  error?: string;
+  error_description?: string;
+  error_uri?: string;
+}
+interface TokenClientConfig {
+  client_id: string;
+  scope: string;
+  callback?: (response: TokenResponse) => void;
 }
 
-interface GoogleSignInResponse {
-  credential: string;
-  select_by: string;
-}
-
-interface PromptNotification {
-  isSkippedMoment: boolean;
-  isDismissedMoment: boolean;
+interface TokenClient {
+  initTokenClient: (config: TokenClientConfig) => TokenClient;
+  requestAccessToken: () => void;
 }
 
 interface GoogleAccounts {
   id: GoogleAccountsId;
+  oauth2: TokenClient;
 }
 
 interface Google {
   accounts: GoogleAccounts;
+}
+
+interface TokenInfo {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  hd: string;
 }
 
 declare const google: Google;

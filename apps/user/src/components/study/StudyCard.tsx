@@ -11,7 +11,7 @@ import { Link } from '@tanstack/react-router';
 
 export interface StudyCardProps {
   id: number;
-  image: string;
+  image?: string;
   title: string;
   mentor: string;
 }
@@ -22,7 +22,7 @@ export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
       <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
         <CardMedia component={'picture'} sx={{ width: '100%', height: 240 }}>
           <Image
-            src={image}
+            src={image!}
             fallback={FallbackImage}
             height={'100%'}
             alt={`card-image-${title}`}
