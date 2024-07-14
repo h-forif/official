@@ -12,13 +12,15 @@ import StandingPerson1 from '@assets/images/peep-main-1.svg';
 import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { useUserStore } from '@store/userStore';
-import { Link, createLazyFileRoute } from '@tanstack/react-router';
+import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
+import { AxiosError } from 'axios';
 import { handleSignIn } from 'src/services/auth.service';
 
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 import { StudyCard } from '@components/study/StudyCard';
+
+import { useToast } from '@hooks/useToast';
 
 const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
@@ -29,18 +31,47 @@ export const Route = createLazyFileRoute('/')({
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-  const userInfo = useUserStore();
+
+  const { showToast, ToastComponent } = useToast();
+  const navigate = useNavigate();
+
+  const handleSignInWrapper = async (response: TokenResponse) => {
+    try {
+      await handleSignIn(response.access_token);
+      showToast({ severity: 'success', message: '구글 로그인 성공!' });
+    } catch (err) {
+      const error = err as AxiosError;
+      let errorMessage = '로그인 실패: ';
+      switch (error.message) {
+        case 'UserNotFound':
+          navigate({ to: '/auth/sign-up' });
+          errorMessage = '유저 정보 없음: 회원가입 페이지로 이동합니다.';
+          showToast({
+            severity: 'info',
+            message: errorMessage,
+          });
+          break;
+        default:
+          errorMessage += (error as Error).message;
+          showToast({
+            severity: 'error',
+            message: errorMessage,
+          });
+      }
+
+      throw error;
+    }
+  };
+
   const client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/userinfo.profile',
-    callback: handleSignIn,
+    callback: handleSignInWrapper,
   });
 
   const requstAccessToken = () => {
     client.requestAccessToken();
   };
-
-  console.log(userInfo);
 
   return (
     <main>
@@ -112,6 +143,7 @@ function Home() {
         )}
       </CenteredBox>
       <LogoWall />
+      {ToastComponent}
     </main>
   );
 }

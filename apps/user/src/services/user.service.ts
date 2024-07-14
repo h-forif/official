@@ -1,21 +1,19 @@
 import { User } from '@packages/components/types/user';
-import { createJwt } from '@utils/createJwt';
 import axios from 'axios';
 
 import { api } from './axios-instance';
 
 // 사용자 정보 관련 API 요청 함수 (예: 사용자 정보 조회, 사용자 업데이트 등)
-const getGoogleUserInfo = async (accessToken: string): Promise<TokenInfo> => {
+const getGoogleUserInfo = async (oauth_token: string): Promise<TokenInfo> => {
   try {
     const response = await axios.get(
       'https://www.googleapis.com/oauth2/v2/userinfo',
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${oauth_token}`,
         },
       },
     );
-
     return response.data;
   } catch (error) {
     console.error('Error fetching user info:', error);
@@ -23,11 +21,10 @@ const getGoogleUserInfo = async (accessToken: string): Promise<TokenInfo> => {
   }
 };
 
-const getUserInfo = async (googleUserInfo: TokenInfo) => {
-  const accessToken = await createJwt(googleUserInfo);
+const getUserInfo = async (accessToken: string) => {
   const userInfo: User = await api
     .post(
-      '/signin',
+      '/auth/sign-in',
       {},
       {
         headers: {

@@ -51,18 +51,28 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
 
   const handleSignInWrapper = async (response: TokenResponse) => {
     try {
-      await handleSignIn(response);
+      await handleSignIn(response.access_token);
       showToast({ severity: 'success', message: '구글 로그인 성공!' });
     } catch (err) {
       const error = err as AxiosError;
-      if (error.response?.status === 500) {
-        navigate({ to: '/auth/sign-up' });
-      } else {
-        showToast({
-          severity: 'error',
-          message: '로그인 실패: ' + (error as Error).message,
-        });
+      let errorMessage = '로그인 실패: ';
+      switch (error.message) {
+        case 'UserNotFound':
+          navigate({ to: '/auth/sign-up' });
+          errorMessage = '유저 정보 없음: 회원가입 페이지로 이동합니다.';
+          showToast({
+            severity: 'info',
+            message: errorMessage,
+          });
+          break;
+        default:
+          errorMessage += (error as Error).message;
+          showToast({
+            severity: 'error',
+            message: errorMessage,
+          });
       }
+
       throw error;
     }
   };

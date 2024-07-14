@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "pnpm -r dev",
     "lint": "pnpm -r lint",
+    "build": "pnpm -r build",
     "user:add": "pnpm -F user add",
     "user:del": "pnpm -F user remove",
     "comp:add": "pnpm -F @packages/components add",

@@ -10,8 +10,8 @@ export const getStudyInfo = async (studyId: string) => {
   return response.data;
 };
 
-export const getAllStudies = ({ year, semester, level }: StudySearch) => {
-  const params = { year, semester, level };
+export const getAllStudies = ({ year, semester }: StudySearch) => {
+  const params = { year, semester };
   const data = api
     .get('/studies/all', { params })
     .then((res: AxiosResponse<Study[]>) => res.data);
