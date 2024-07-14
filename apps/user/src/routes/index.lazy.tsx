@@ -12,6 +12,7 @@ import StandingPerson1 from '@assets/images/peep-main-1.svg';
 import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { useUserStore } from '@store/userStore';
 import { Link, createLazyFileRoute } from '@tanstack/react-router';
 import { handleSignIn } from 'src/services/auth.service';
 
@@ -28,7 +29,7 @@ export const Route = createLazyFileRoute('/')({
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-
+  const userInfo = useUserStore();
   const client = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/userinfo.profile',
@@ -38,6 +39,8 @@ function Home() {
   const requstAccessToken = () => {
     client.requestAccessToken();
   };
+
+  console.log(userInfo);
 
   return (
     <main>

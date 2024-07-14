@@ -2,13 +2,15 @@ import { Typography } from '@mui/material';
 
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 
+interface TitleProps {
+  title: string;
+  label?: string;
+}
+
 export function Title({
   title,
   label = '영감을 주는 동료와 함께라면. The Better Life',
-}: {
-  title: string;
-  label?: string;
-}) {
+}: TitleProps) {
   return (
     <CenteredBox
       component={'section'}

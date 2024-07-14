@@ -2,6 +2,17 @@ import { forwardRef } from 'react';
 
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 
-export const Input = forwardRef<HTMLInputElement, TextFieldProps>(
-  (props, ref) => <TextField {...props} ref={ref} />,
+type InputProps = TextFieldProps & {
+  errorMessage?: string;
+};
+
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ errorMessage, ...props }, ref) => (
+    <TextField
+      {...props}
+      ref={ref}
+      error={!!errorMessage}
+      helperText={errorMessage || ''}
+    />
+  ),
 );

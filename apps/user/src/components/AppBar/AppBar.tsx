@@ -55,7 +55,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
       showToast({ severity: 'success', message: '구글 로그인 성공!' });
     } catch (err) {
       const error = err as AxiosError;
-      if (error.response?.status === 400) {
+      if (error.response?.status === 500) {
         navigate({ to: '/auth/sign-up' });
       } else {
         showToast({

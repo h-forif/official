@@ -22,7 +22,8 @@
       "@constants/*": ["src/constants/*"],
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@store/*": ["src/store/*"]
     }
   },
   "include": ["src", "svg.d.ts"],

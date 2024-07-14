@@ -7,12 +7,12 @@ type UserAction = {
 };
 
 const useUserStore = create<User & UserAction>((set) => ({
-  name: '',
-  user_id: 0,
+  name: '홍길동',
+  id: 0,
   department: '정보시스템학과',
-  auth_lv: 1,
+  userAuthorization: '유저',
   email: 'user@hanyang.ac.kr',
-  phone_num: '010-0000-0000',
+  phoneNumber: '010-0000-0000',
   updateName: (name) => set(() => ({ name: name })),
   updateDepartment: (department) => set(() => ({ department: department })),
 }));

@@ -1,8 +1,8 @@
 export interface User {
-  user_id: number;
+  userAuthorization: string;
   name: string;
-  auth_lv: number;
   email: string;
-  phone_num: string;
+  phoneNumber: string;
   department: string;
+  id: number;
 }

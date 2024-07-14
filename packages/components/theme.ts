@@ -269,6 +269,11 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
         },
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: { color: 'red' },
+      },
+    },
   },
   status: {
     danger: orange[500],

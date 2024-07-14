@@ -1,5 +1,8 @@
 import { User } from '@packages/components/types/user';
+import { createJwt } from '@utils/createJwt';
 import axios from 'axios';
+
+import { api } from './axios-instance';
 
 // 사용자 정보 관련 API 요청 함수 (예: 사용자 정보 조회, 사용자 업데이트 등)
 const getGoogleUserInfo = async (accessToken: string): Promise<TokenInfo> => {
@@ -20,17 +23,19 @@ const getGoogleUserInfo = async (accessToken: string): Promise<TokenInfo> => {
   }
 };
 
-const getUserInfo = async () => {
-  const body = JSON.stringify({
-    username: 'emilys',
-    password: 'emilyspass1',
-  });
-  const userInfo: User = await axios
-    .post('https://dummyjson.com/auth/login', body, {
-      headers: {
-        'Content-Type': 'application/json',
+const getUserInfo = async (googleUserInfo: TokenInfo) => {
+  const accessToken = await createJwt(googleUserInfo);
+  const userInfo: User = await api
+    .post(
+      '/signin',
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: accessToken,
+        },
       },
-    })
+    )
     .then((res) => res.data);
   return userInfo;
 };
