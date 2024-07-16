@@ -1,37 +1,54 @@
 import { User } from '@packages/components/types/user';
-import { createJwt } from '@utils/createJwt';
-import { parseGoogleUserName } from '@utils/parseGoogleUserName';
-import { verifyAccessToken } from '@utils/verifyCredential';
+import { setAccessToken, setRefreshToken } from '@store/token.store';
+import { setUser } from '@store/user.store';
 import axios from 'axios';
-import { useUserStore } from 'src/store/userStore';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 
 import { api } from './axios-instance';
-import { getGoogleUserInfo, getUserInfo } from './user.service';
 
-const handleSignIn = async (oauth_token: string) => {
+interface SignInResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+// TO-DO: replace to error handling
+const SignInResponseExample: SignInResponse = {
+  accessToken:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIyMDIzMDYzODQ1IiwiaWF0IjoxNzIxMjM5MDIyLCJleHAiOjE3MjEzMzkwMjJ9.66y82lXK0lFtaOjd7IRbDtAa12UcOFo3kh9HIg80T4A',
+  refreshToken:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIyMDIzMDYzODQ1IiwiaWF0IjoxNzIxMjM5MDIyLCJleHAiOjE3MjEzMzkwMjJ9.66y82lXK0lFtaOjd7IRbDtAa12UcOFo3kh9HIg80T4A',
+  user: {
+    id: 2023063845,
+    name: '양병현',
+    email: 'zxvm5962@hanyang.ac.kr',
+    department: '컴퓨터공학과',
+    phoneNumber: '010-1234-5678',
+    userAuthorization: '관리자',
+  },
+};
+
+const signIn = async (g_access_token: string | null | undefined) => {
   try {
-    // 아래부터 구글 로그인 시작!
-    await verifyAccessToken(oauth_token);
-    const googleUserInfo = await getGoogleUserInfo(oauth_token);
-    // if (googleUserInfo.hd !== AUTH_CONSTANT.EMAIL_DOMAIN)
-    //   throw new Error('허용되지 않는 이메일입니다.');
-    const { name, department } = parseGoogleUserName(googleUserInfo);
-
-    useUserStore.setState({ email: googleUserInfo.email, name, department });
-    // 아래부터 FORIF API 통신!
-    const accessToken = await createJwt(googleUserInfo);
-    const userInfo = await getUserInfo(accessToken);
-
-    useUserStore.setState(userInfo);
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 500) {
-      throw new Error('UserNotFound'); // 사용자 정보를 찾을 수 없음을 나타내는 에러를 던짐
-    } else {
-      console.error('An error occurred:', error);
-      throw error;
+    const { user, accessToken, refreshToken } = await api
+      .post<SignInResponse>('/auth/sign-in', {
+        g_access_token,
+      })
+      .then((res) => res.data);
+    setUser(user);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      //TO-DO: 다 지워야 함.
+      const { user, accessToken, refreshToken } = SignInResponseExample;
+      setUser(user);
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
     }
+    // if (err.response?.status === 404) {
+    //   throw new Error('UserNotFound');
+    // }
   }
 };
 
@@ -64,4 +81,4 @@ const handleSignUp = async (
   }
 };
 
-export { handleSignIn, handleSignUp };
+export { handleSignUp, signIn };

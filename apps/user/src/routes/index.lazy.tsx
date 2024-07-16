@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -12,17 +12,16 @@ import StandingPerson1 from '@assets/images/peep-main-1.svg';
 import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import useGoogleOAuthStore, { useOAuthToken } from '@store/oauth.store';
 import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
-import { AxiosError } from 'axios';
-import { handleSignIn } from 'src/services/auth.service';
+import { handleGlobalError } from '@utils/handleGlobalError';
+import { signIn } from 'src/services/auth.service';
 
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 import { StudyCard } from '@components/study/StudyCard';
 
-import { useToast } from '@hooks/useToast';
-
-const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
+import { useGoogleOAuthClient } from '@hooks/useInitializeOAuth';
 
 export const Route = createLazyFileRoute('/')({
   component: Home,
@@ -31,47 +30,36 @@ export const Route = createLazyFileRoute('/')({
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
-
-  const { showToast, ToastComponent } = useToast();
   const navigate = useNavigate();
 
-  const handleSignInWrapper = async (response: TokenResponse) => {
-    try {
-      await handleSignIn(response.access_token);
-      showToast({ severity: 'success', message: '구글 로그인 성공!' });
-    } catch (err) {
-      const error = err as AxiosError;
-      let errorMessage = '로그인 실패: ';
-      switch (error.message) {
-        case 'UserNotFound':
-          navigate({ to: '/auth/sign-up' });
-          errorMessage = '유저 정보 없음: 회원가입 페이지로 이동합니다.';
-          showToast({
-            severity: 'info',
-            message: errorMessage,
-          });
-          break;
-        default:
-          errorMessage += (error as Error).message;
-          showToast({
-            severity: 'error',
-            message: errorMessage,
-          });
-      }
+  const client = useGoogleOAuthClient();
+  const google_access_token = useOAuthToken();
+  const isTokenRequestCompleted = useGoogleOAuthStore(
+    (state) => state.isTokenRequestCompleted,
+  );
 
-      throw error;
+  const handleSignIn = useCallback(async () => {
+    if (client) {
+      client.requestAccessToken();
+    } else {
+      console.error('Google OAuth2 client is not initialized.');
     }
-  };
+  }, [client]);
 
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.profile',
-    callback: handleSignInWrapper,
-  });
+  useEffect(() => {
+    const signInWithToken = async () => {
+      if (google_access_token && isTokenRequestCompleted) {
+        try {
+          await signIn(google_access_token);
+          navigate({ to: '/about' });
+        } catch (err) {
+          handleGlobalError(err);
+        }
+      }
+    };
 
-  const requstAccessToken = () => {
-    client.requestAccessToken();
-  };
+    signInWithToken();
+  }, [google_access_token, isTokenRequestCompleted, navigate]);
 
   return (
     <main>
@@ -98,7 +86,7 @@ function Home() {
           선순환에 동참해주세요.
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Button variant='contained' onClick={requstAccessToken}>
+          <Button variant='contained' onClick={handleSignIn}>
             부원 가입하기
           </Button>
           <Link to='/apply/mentor'>
@@ -143,7 +131,6 @@ function Home() {
         )}
       </CenteredBox>
       <LogoWall />
-      {ToastComponent}
     </main>
   );
 }

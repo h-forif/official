@@ -16,6 +16,7 @@ interface TokenClientConfig {
 interface TokenClient {
   initTokenClient: (config: TokenClientConfig) => TokenClient;
   requestAccessToken: () => void;
+  callback?: (response: TokenResponse) => void;
 }
 
 interface GoogleAccounts {
@@ -36,6 +37,10 @@ interface TokenInfo {
   family_name: string;
   picture: string;
   hd: string;
+}
+
+interface Window {
+  google: Google;
 }
 
 declare const google: Google;

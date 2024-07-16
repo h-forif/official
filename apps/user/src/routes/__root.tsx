@@ -17,6 +17,9 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
+import Toast from '@components/common/Toast';
+
+import useInitializeGoogleOAuth from '@hooks/useInitializeOAuth';
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
@@ -40,6 +43,7 @@ function RootComponent() {
   };
 
   const queryClient = new QueryClient();
+  useInitializeGoogleOAuth();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -55,6 +59,7 @@ function RootComponent() {
               <CssBaseline />
               <AppBar mode={mode} toggleColorMode={toggleColorMode} />
               <Outlet />
+              <Toast />
               <TanStackRouterDevtools />
             </ThemeProvider>
           </ErrorBoundary>

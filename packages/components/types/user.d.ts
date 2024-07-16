@@ -1,5 +1,5 @@
 export interface User {
-  userAuthorization: string;
+  userAuthorization: '관리자' | '유저' | '운영진' | '';
   name: string;
   email: string;
   phoneNumber: string;

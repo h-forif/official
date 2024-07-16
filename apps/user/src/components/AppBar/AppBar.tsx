@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import MUIAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,25 +8,25 @@ import { styled } from '@mui/system';
 import LetterIcon from '@assets/images/letter-mark.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
+import useGoogleOAuthStore, { useOAuthToken } from '@store/oauth.store';
 import { useNavigate } from '@tanstack/react-router';
-import { AxiosError } from 'axios';
+import { handleGlobalError } from '@utils/handleGlobalError';
 import { motion, useAnimation } from 'framer-motion';
-import { handleSignIn } from 'src/services/auth.service';
+import { signIn } from 'src/services/auth.service';
 
+import { useGoogleOAuthClient } from '@hooks/useInitializeOAuth';
 import { useNavMenu } from '@hooks/useNavMenu';
 import useScrollPosition from '@hooks/useScrollPosition';
-import { useToast } from '@hooks/useToast';
 
 import { AppBarProps } from '../../types/app-bar.type';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
 
-const CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
-
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const scrollPosition = useScrollPosition();
   const [isVisible, setIsVisible] = useState(true);
   const controls = useAnimation();
+  const navigate = useNavigate();
   const { activeMenu, handleMouseEnter, handleMouseLeave, handleClick } =
     useNavMenu();
 
@@ -46,48 +46,34 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
     }
   }, [isVisible, controls]);
 
-  const { showToast, ToastComponent } = useToast();
-  const navigate = useNavigate();
+  const client = useGoogleOAuthClient();
+  const google_access_token = useOAuthToken();
+  const isTokenRequestCompleted = useGoogleOAuthStore(
+    (state) => state.isTokenRequestCompleted,
+  );
 
-  const handleSignInWrapper = async (response: TokenResponse) => {
-    try {
-      await handleSignIn(response.access_token);
-      showToast({ severity: 'success', message: '구글 로그인 성공!' });
-    } catch (err) {
-      const error = err as AxiosError;
-      let errorMessage = '로그인 실패: ';
-      switch (error.message) {
-        case 'UserNotFound':
-          navigate({ to: '/auth/sign-up' });
-          errorMessage = '유저 정보 없음: 회원가입 페이지로 이동합니다.';
-          showToast({
-            severity: 'info',
-            message: errorMessage,
-          });
-          break;
-        default:
-          errorMessage += (error as Error).message;
-          showToast({
-            severity: 'error',
-            message: errorMessage,
-          });
-      }
-
-      throw error;
+  const handleSignIn = useCallback(async () => {
+    if (client) {
+      client.requestAccessToken();
+    } else {
+      console.error('Google OAuth2 client is not initialized.');
     }
-  };
+  }, [client]);
 
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope:
-      'https://www.googleapis.com/auth/userinfo.profile\
-            https://www.googleapis.com/auth/userinfo.email',
-    callback: handleSignInWrapper,
-  });
+  useEffect(() => {
+    const signInWithToken = async () => {
+      if (google_access_token && isTokenRequestCompleted) {
+        try {
+          await signIn(google_access_token);
+          navigate({ to: '/about' });
+        } catch (err) {
+          handleGlobalError(err);
+        }
+      }
+    };
 
-  const requstAccessToken = () => {
-    client.requestAccessToken();
-  };
+    signInWithToken();
+  }, [google_access_token, isTokenRequestCompleted, navigate]);
 
   return (
     <>
@@ -144,7 +130,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                 variant='text'
                 size='small'
                 component='a'
-                onClick={requstAccessToken}
+                onClick={handleSignIn}
               >
                 한양대학교 로그인
               </Button>
@@ -153,6 +139,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                 variant='contained'
                 size='small'
                 component='a'
+                onClick={handleSignIn}
               >
                 회원가입
               </Button>
@@ -174,7 +161,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
           />
         )}
       </motion.div>
-      {ToastComponent}
     </>
   );
 }

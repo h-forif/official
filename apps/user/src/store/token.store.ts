@@ -43,7 +43,7 @@ const useAccessTokenStore = create<
   },
 }));
 
-const useTokenStore = create<TokenAction>((set) => ({
+const useTokenStore = create<TokenAction>(() => ({
   setAccessToken: (token) => {
     useAccessTokenStore.getState().setAccessToken(token);
   },
@@ -55,7 +55,7 @@ const useTokenStore = create<TokenAction>((set) => ({
   },
 }));
 
-export const useSetRefreshToken = (token: string | null) => {
+export const setRefreshToken = (token: string | null) => {
   useRefreshTokenStore.getState().setRefreshToken(token);
 };
 
@@ -63,7 +63,7 @@ export const useRefreshToken = () => {
   return useRefreshTokenStore((state) => state.refreshToken);
 };
 
-export const useSetAccessToken = (token: string | null) => {
+export const setAccessToken = (token: string | null) => {
   useAccessTokenStore.getState().setAccessToken(token);
 };
 
