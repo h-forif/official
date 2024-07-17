@@ -1,10 +1,12 @@
 import Box from '@mui/system/Box';
 
-import { NAV_MENUS } from '@constants/nav-menu';
+import { AUTH_NAV_MENUS, NAV_MENUS, NavMenu } from '@constants/nav-menu.constant';
+import { User } from '@packages/components/types/user';
 import { Link } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { AnimatePresence } from 'framer-motion';
 
+import { useEffect, useState } from 'react';
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
 
@@ -15,6 +17,7 @@ interface DesktopNavProps {
   handleMouseEnter: (menuTitle: string) => void;
   handleMouseLeave: () => void;
   handleClick: () => void;
+  userState: User['state'];
 }
 
 export function DesktopNav({
@@ -22,14 +25,21 @@ export function DesktopNav({
   handleMouseEnter,
   handleMouseLeave,
   handleClick,
+  userState,
 }: DesktopNavProps) {
+  const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[]>([]);
+
+  useEffect(() => {
+    const navMenus = userState === 'sign-out' ? NAV_MENUS : AUTH_NAV_MENUS;
+    setSelectedNavMenus(navMenus);
+  }, [userState]); // This effect runs whenever `userState` changes.
   return (
     <>
       <Box
         sx={{ display: { xs: 'none', md: 'flex' } }}
         onMouseLeave={handleMouseLeave}
       >
-        {NAV_MENUS.map((menu) => (
+        {selectedNavMenus.map((menu) => (
           <Box
             key={`${menu.title} - ${menu.href}`}
             onMouseEnter={() => handleMouseEnter(menu.title)}

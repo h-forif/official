@@ -28,4 +28,8 @@ export function useOAuthToken() {
   return useGoogleOAuthStore((state) => state.oauthToken);
 }
 
+export function useTokenRequestCompleted() {
+  return useGoogleOAuthStore((state) => state.isTokenRequestCompleted);
+}
+
 export default useGoogleOAuthStore;

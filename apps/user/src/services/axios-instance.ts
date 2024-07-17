@@ -1,3 +1,4 @@
+import { useAccessToken } from '@store/token.store';
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -13,4 +14,13 @@ export const authApi = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+authApi.interceptors.request.use((config) => {
+  const accessToken = useAccessToken();
+  // const refreshToken = localStorage.getItem('refreshToken');
+  if (accessToken) {
+    config.headers.Authorization = accessToken;
+  }
+  return config;
 });

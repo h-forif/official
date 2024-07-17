@@ -25,6 +25,7 @@ import { Route as ApplyMemberImport } from './routes/apply/member'
 const TeamLazyImport = createFileRoute('/team')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
+const ProfileIndexLazyImport = createFileRoute('/profile/')()
 const ClubTeamLazyImport = createFileRoute('/club/team')()
 
 // Create/Update Routes
@@ -43,6 +44,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const ProfileIndexLazyRoute = ProfileIndexLazyImport.update({
+  path: '/profile/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/profile/index.lazy').then((d) => d.Route))
 
 const StudiesIndexRoute = StudiesIndexImport.update({
   path: '/studies/',
@@ -153,6 +159,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesIndexImport
       parentRoute: typeof rootRoute
     }
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -169,6 +182,7 @@ export const routeTree = rootRoute.addChildren({
   StudiesStudyIdRoute,
   ClubTeamLazyRoute,
   StudiesIndexRoute,
+  ProfileIndexLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -188,7 +202,8 @@ export const routeTree = rootRoute.addChildren({
         "/club/about",
         "/studies/$studyId",
         "/club/team",
-        "/studies/"
+        "/studies/",
+        "/profile/"
       ]
     },
     "/": {
@@ -220,6 +235,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/": {
       "filePath": "studies/index.tsx"
+    },
+    "/profile/": {
+      "filePath": "profile/index.lazy.tsx"
     }
   }
 }

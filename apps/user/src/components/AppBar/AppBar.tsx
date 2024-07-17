@@ -8,19 +8,21 @@ import { styled } from '@mui/system';
 import LetterIcon from '@assets/images/letter-mark.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
-import useGoogleOAuthStore, { useOAuthToken } from '@store/oauth.store';
+import { setRefreshToken } from '@store/token.store';
+import { clearUser, getUserState } from '@store/user.store';
 import { useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { motion, useAnimation } from 'framer-motion';
 import { signIn } from 'src/services/auth.service';
 
-import { useGoogleOAuthClient } from '@hooks/useInitializeOAuth';
 import { useNavMenu } from '@hooks/useNavMenu';
 import useScrollPosition from '@hooks/useScrollPosition';
 
 import { AppBarProps } from '../../types/app-bar.type';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const scrollPosition = useScrollPosition();
@@ -46,11 +48,22 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
     }
   }, [isVisible, controls]);
 
-  const client = useGoogleOAuthClient();
-  const google_access_token = useOAuthToken();
-  const isTokenRequestCompleted = useGoogleOAuthStore(
-    (state) => state.isTokenRequestCompleted,
-  );
+  const userState = getUserState();
+
+  const signInWithToken = async (tokenResponse: TokenResponse) => {
+    try {
+      await signIn(tokenResponse.access_token);
+      navigate({ to: '/profile' });
+    } catch (err) {
+      handleGlobalError(err);
+    }
+  };
+
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/userinfo.email',
+    callback: signInWithToken,
+  });
 
   const handleSignIn = useCallback(async () => {
     if (client) {
@@ -60,20 +73,11 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
     }
   }, [client]);
 
-  useEffect(() => {
-    const signInWithToken = async () => {
-      if (google_access_token && isTokenRequestCompleted) {
-        try {
-          await signIn(google_access_token);
-          navigate({ to: '/about' });
-        } catch (err) {
-          handleGlobalError(err);
-        }
-      }
-    };
-
-    signInWithToken();
-  }, [google_access_token, isTokenRequestCompleted, navigate]);
+  const handleSignOut = () => {
+    setRefreshToken(null);
+    clearUser();
+    navigate({ to: '/' });
+  };
 
   return (
     <>
@@ -114,6 +118,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                 handleClick={handleClick}
                 handleMouseEnter={handleMouseEnter}
                 handleMouseLeave={handleMouseLeave}
+                userState={userState}
               />
             </Box>
             <MobileNav mode={mode} toggleColorMode={toggleColorMode} />
@@ -125,24 +130,35 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-              <Button
-                color='primary'
-                variant='text'
-                size='small'
-                component='a'
-                onClick={handleSignIn}
-              >
-                한양대학교 로그인
-              </Button>
-              <Button
-                color='primary'
-                variant='contained'
-                size='small'
-                component='a'
-                onClick={handleSignIn}
-              >
-                회원가입
-              </Button>
+              {userState === 'sign-out' ? (
+                <>
+                  <Button
+                    color='primary'
+                    variant='text'
+                    size='small'
+                    onClick={handleSignIn}
+                  >
+                    한양대학교 로그인
+                  </Button>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    size='small'
+                    onClick={handleSignIn}
+                  >
+                    회원가입
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  color='primary'
+                  variant='contained'
+                  size='small'
+                  onClick={handleSignOut}
+                >
+                  로그아웃
+                </Button>
+              )}
             </Box>
           </MyToolBar>
         </MUIAppBar>

@@ -24,7 +24,7 @@ const useRefreshTokenStore = create(
     }),
     {
       name: 'refreshToken',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

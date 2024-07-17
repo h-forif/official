@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -12,7 +12,6 @@ import StandingPerson1 from '@assets/images/peep-main-1.svg';
 import StandingPerson2 from '@assets/images/peep-main-2.svg';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import useGoogleOAuthStore, { useOAuthToken } from '@store/oauth.store';
 import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { signIn } from 'src/services/auth.service';
@@ -21,22 +20,30 @@ import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 import { StudyCard } from '@components/study/StudyCard';
 
-import { useGoogleOAuthClient } from '@hooks/useInitializeOAuth';
-
 export const Route = createLazyFileRoute('/')({
   component: Home,
 });
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 function Home() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('lg'));
   const navigate = useNavigate();
 
-  const client = useGoogleOAuthClient();
-  const google_access_token = useOAuthToken();
-  const isTokenRequestCompleted = useGoogleOAuthStore(
-    (state) => state.isTokenRequestCompleted,
-  );
+  const signInWithToken = async (tokenResponse: TokenResponse) => {
+    try {
+      await signIn(tokenResponse.access_token);
+      navigate({ to: '/profile' });
+    } catch (err) {
+      handleGlobalError(err);
+    }
+  };
+
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/userinfo.email',
+    callback: signInWithToken,
+  });
 
   const handleSignIn = useCallback(async () => {
     if (client) {
@@ -45,21 +52,6 @@ function Home() {
       console.error('Google OAuth2 client is not initialized.');
     }
   }, [client]);
-
-  useEffect(() => {
-    const signInWithToken = async () => {
-      if (google_access_token && isTokenRequestCompleted) {
-        try {
-          await signIn(google_access_token);
-          navigate({ to: '/about' });
-        } catch (err) {
-          handleGlobalError(err);
-        }
-      }
-    };
-
-    signInWithToken();
-  }, [google_access_token, isTokenRequestCompleted, navigate]);
 
   return (
     <main>

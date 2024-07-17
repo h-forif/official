@@ -19,8 +19,6 @@ import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
 import Toast from '@components/common/Toast';
 
-import useInitializeGoogleOAuth from '@hooks/useInitializeOAuth';
-
 export const Route = createRootRoute({
   component: () => <RootComponent />,
   notFoundComponent: () => <NotFoundPage />,
@@ -43,7 +41,6 @@ function RootComponent() {
   };
 
   const queryClient = new QueryClient();
-  useInitializeGoogleOAuth();
 
   return (
     <QueryClientProvider client={queryClient}>
