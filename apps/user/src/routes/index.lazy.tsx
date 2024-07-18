@@ -31,6 +31,8 @@ function Home() {
   const navigate = useNavigate();
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
+    console.log(tokenResponse.access_token);
+
     try {
       await signIn(tokenResponse.access_token);
       navigate({ to: '/profile' });

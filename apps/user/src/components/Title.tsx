@@ -5,21 +5,27 @@ import { CenteredBox } from '@packages/components/elements/CenteredBox';
 interface TitleProps {
   title: string;
   label?: string;
+  pt?: number;
+  px?: number;
+  mb?: number;
 }
 
 export function Title({
   title,
   label = '영감을 주는 동료와 함께라면. The Better Life',
+  pt = 12,
+  px = 6,
+  mb = 12,
 }: TitleProps) {
   return (
     <CenteredBox
       component={'section'}
       sx={{
-        paddingTop: 12,
-        paddingX: 6,
+        paddingTop: pt,
+        paddingX: px,
         textAlign: 'center',
         margin: 'auto',
-        marginBottom: 12,
+        marginBottom: mb,
         wordBreak: 'keep-all',
       }}
     >

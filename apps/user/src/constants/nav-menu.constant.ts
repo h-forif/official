@@ -4,7 +4,7 @@ export interface NavMenu {
   submenu?: NavMenu[];
 }
 
-export const NAV_MENUS:NavMenu[] = [
+export const NAV_MENUS: NavMenu[] = [
   {
     title: 'FORIF',
     href: '/club/about',
@@ -36,21 +36,30 @@ export const NAV_MENUS:NavMenu[] = [
   },
 ];
 
-export const AUTH_NAV_MENUS:NavMenu[] = [
+export const AUTH_NAV_MENUS: NavMenu[] = [
   ...NAV_MENUS,
 
   {
     title: '프로필',
     href: '/profile',
-    submenu: [
-      {
-        title: '프로필',
-        href: '/profile',
-      },
-      {
-        title: '인증서',
-        href: '/certification',
-      },
-    ],
+  },
+];
+
+export const PROFILE_NAV_MENUS: NavMenu[] = [
+  {
+    title: '홈',
+    href: '/profile',
+  },
+  {
+    title: '계정',
+    href: '/profile/account',
+  },
+  {
+    title: '스터디',
+    href: '/profile/study',
+  },
+  {
+    title: '인증서',
+    href: '/profile/certificate',
   },
 ];

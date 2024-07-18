@@ -6,13 +6,7 @@ type TokenStore = {
   refreshToken: string | null;
 };
 
-type TokenAction = {
-  setAccessToken: (token: TokenStore['accessToken']) => void;
-  setRefreshToken: (token: TokenStore['refreshToken']) => void;
-  clearTokens: () => void;
-};
-
-const useRefreshTokenStore = create(
+export const refreshTokenStore = create(
   persist<
     Partial<TokenStore> & {
       setRefreshToken: (token: TokenStore['refreshToken']) => void;
@@ -29,7 +23,7 @@ const useRefreshTokenStore = create(
   ),
 );
 
-const useAccessTokenStore = create<
+export const accessTokenStore = create<
   Partial<TokenStore> & {
     setAccessToken: (token: TokenStore['accessToken']) => void;
     clearTokens: () => void;
@@ -38,37 +32,23 @@ const useAccessTokenStore = create<
   accessToken: null,
   setAccessToken: (token) => set({ accessToken: token }),
   clearTokens: () => {
-    useRefreshTokenStore.getState().setRefreshToken(null);
+    refreshTokenStore.getState().setRefreshToken(null);
     set({ accessToken: null });
   },
 }));
 
-const useTokenStore = create<TokenAction>(() => ({
-  setAccessToken: (token) => {
-    useAccessTokenStore.getState().setAccessToken(token);
-  },
-  setRefreshToken: (token) => {
-    useRefreshTokenStore.getState().setRefreshToken(token);
-  },
-  clearTokens: () => {
-    useAccessTokenStore.getState().clearTokens();
-  },
-}));
-
 export const setRefreshToken = (token: string | null) => {
-  useRefreshTokenStore.getState().setRefreshToken(token);
+  refreshTokenStore.getState().setRefreshToken(token);
 };
 
 export const useRefreshToken = () => {
-  return useRefreshTokenStore((state) => state.refreshToken);
+  return refreshTokenStore((state) => state.refreshToken);
 };
 
 export const setAccessToken = (token: string | null) => {
-  useAccessTokenStore.getState().setAccessToken(token);
+  accessTokenStore.getState().setAccessToken(token);
 };
 
 export const useAccessToken = () => {
-  return useAccessTokenStore((state) => state.accessToken);
+  return accessTokenStore((state) => state.accessToken);
 };
-
-export default useTokenStore;

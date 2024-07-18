@@ -51,6 +51,8 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const userState = getUserState();
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
+    console.log(tokenResponse.access_token);
+
     try {
       await signIn(tokenResponse.access_token);
       navigate({ to: '/profile' });
