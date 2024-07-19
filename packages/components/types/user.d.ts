@@ -4,6 +4,11 @@ export interface User {
   email: string | null;
   phoneNumber: string | null;
   department: string | null;
-  id: number | null;
-  state: 'sign-in' | 'sign-out' | 'loading';
+  id: string | null;
+  state?: 'sign-in' | 'sign-out' | 'loading';
+}
+
+export interface UserProfile
+  extends Pick<User, Exclude<keyof User, 'state' | 'userAuthorization'>> {
+  picture: string | null;
 }

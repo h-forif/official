@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 
 import { PROFILE_NAV_MENUS } from '@constants/nav-menu.constant';
 import {
@@ -43,7 +43,8 @@ function LinkTab(props: LinkTabProps) {
 
 function ProfileLayout() {
   const pathname = useLocation().pathname;
-
+  const theme = useTheme();
+  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
   const tabValue = PROFILE_NAV_MENUS.findIndex(
     (menu) => menu.href === pathname,
   );
@@ -53,13 +54,14 @@ function ProfileLayout() {
       sx={{
         flexGrow: 1,
         display: 'flex',
+        flexDirection: isPhone ? 'column' : 'row',
         height: '100%',
-        pt: 8,
+        pt: isPhone ? 0 : 8,
       }}
     >
       <Tabs
         value={tabValue}
-        orientation='vertical'
+        orientation={isPhone ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'
         centered
         sx={{
@@ -81,7 +83,14 @@ function ProfileLayout() {
           />
         ))}
       </Tabs>
-      <Box sx={{ flexGrow: 1, display: 'flex', width: '100%' }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          width: '100%',
+          pt: isPhone ? 4 : 0,
+        }}
+      >
         <Outlet />
       </Box>
     </Box>
