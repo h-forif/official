@@ -14,7 +14,6 @@ export const Route = createFileRoute('/_layout')({
   component: ProfileLayout,
 });
 
-// LinkTab Component
 interface LinkTabProps {
   label?: string;
   href?: string;
@@ -63,6 +62,7 @@ function ProfileLayout() {
         value={tabValue}
         orientation={isPhone ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'
+        variant={isPhone ? 'scrollable' : 'standard'}
         centered
         sx={{
           '.MuiTab-root': {
