@@ -19,6 +19,8 @@ import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
 import Toast from '@components/common/Toast';
 
+import useInitializeAuth from '@hooks/useInitializeAuth';
+
 export const Route = createRootRoute({
   component: () => <RootComponent />,
   notFoundComponent: () => <NotFoundPage />,
@@ -35,6 +37,8 @@ function RootComponent() {
   useEffect(() => {
     localStorage.setItem('mode', mode);
   }, [mode]);
+
+  useInitializeAuth();
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));

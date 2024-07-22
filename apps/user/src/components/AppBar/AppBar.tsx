@@ -51,13 +51,15 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const userState = getUserState();
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
-    console.log(tokenResponse.access_token);
-
     try {
       await signIn(tokenResponse.access_token);
       navigate({ to: '/profile' });
     } catch (err) {
-      handleGlobalError(err);
+      if (err === 'UserNotFound') {
+        navigate({ to: '/auth/sign-up' });
+      } else {
+        handleGlobalError(err);
+      }
     }
   };
 

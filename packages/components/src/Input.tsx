@@ -7,12 +7,12 @@ type InputProps = TextFieldProps & {
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ errorMessage, ...props }, ref) => (
+  ({ errorMessage, error, ...props }, ref) => (
     <TextField
       {...props}
       ref={ref}
-      error={!!errorMessage}
-      helperText={errorMessage || ''}
+      error={error}
+      helperText={(error && errorMessage) || ''}
     />
   ),
 );

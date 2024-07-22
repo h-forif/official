@@ -8,52 +8,32 @@ import { z } from 'zod';
 import { api } from './axios-instance';
 
 interface SignInResponse {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  image: string;
-  token: string;
+  accessToken: string;
   refreshToken: string;
+  user: User;
 }
 
 const signIn = async (g_access_token: string | null | undefined) => {
   try {
-    // const { user, accessToken, refreshToken } = await api
-    //   .post<SignInResponse>('/auth/sign-in', {
-    //     g_access_token,
-    //   })
-    //   .then((res) => res.data);
-    console.log(g_access_token);
-    const { id, token, refreshToken, username, email }: SignInResponse =
-      await axios
-        .post('https://dummyjson.com/auth/login', {
-          username: 'emilys',
-          password: 'emilyspass',
-          expiresInMins: 30, // optional, defaults to 60
-        })
-        .then((res) => res.data);
-    setUser({
-      id: id,
-      name: username,
-      email: email,
-      state: 'sign-in',
-      department: 'd',
-      phoneNumber: '010-1234-5678',
-      userAuthorization: '유저',
-    });
+    const { user, accessToken, refreshToken } = await api
+      .get<SignInResponse>('/auth/sign-in', {
+        params: {
+          access_token: g_access_token,
+        },
+      })
+      .then((res) => res.data);
+
+    console.log(user);
+
+    setUser(user);
     setUserState('sign-in');
-    setAccessToken(token);
+    setAccessToken(accessToken);
     setRefreshToken(refreshToken);
   } catch (err) {
-    if (axios.isAxiosError(err)) {
-      console.error(err);
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      throw new Error('UserNotFound');
     }
-    // if (err.response?.status === 404) {
-    //   throw new Error('UserNotFound');
-    // }
+    throw err;
   }
 };
 

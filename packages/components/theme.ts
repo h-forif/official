@@ -111,13 +111,13 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       ? {
           // 라이트 모드 팔레트
           primary: {
-            main: '#0f172a',
+            main: '#1E4CF4',
           },
           secondary: {
-            main: '#8ba6ba',
+            main: '#8BA6BA',
           },
           error: {
-            main: '#FF5449',
+            main: '#DC0000',
           },
           info: {
             main: '#1D2475',
@@ -130,16 +130,16 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       : {
           // 다크 모드 팔레트
           primary: {
-            main: '#f8fafc',
+            main: '#F8FAFC',
           },
           secondary: {
-            main: '#0f172a',
+            main: '#0F172A',
           },
           error: {
             main: '#FF8A80',
           },
           info: {
-            main: '#4051ac',
+            main: '#4051AC',
           },
           background: {
             default: '#09090b',

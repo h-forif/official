@@ -37,6 +37,9 @@ function Home() {
       await signIn(tokenResponse.access_token);
       navigate({ to: '/profile' });
     } catch (err) {
+      if (err === 'UserNotFound') {
+        navigate({ to: '/auth/sign-up' });
+      }
       handleGlobalError(err);
     }
   };

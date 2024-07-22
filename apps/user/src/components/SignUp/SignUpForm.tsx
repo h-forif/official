@@ -12,8 +12,9 @@ import { Input } from '@packages/components/Input';
 import { useAccessToken } from '@store/token.store';
 import { useUserStore } from '@store/user.store';
 import { useNavigate } from '@tanstack/react-router';
+import regex from '@utils/regex';
 import { handleSignUp } from 'src/services/auth.service';
-import { SignUpSchema, phoneRegex } from 'src/types/sign-up.schema';
+import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 
 import { useToast } from '@hooks/useToast';
@@ -39,8 +40,11 @@ export function SignUpForm() {
   const onSubmit = async (formData: z.infer<typeof SignUpSchema>) => {
     const { phoneNumber } = formData;
 
-    if (phoneRegex.test(phoneNumber)) {
-      formData.phoneNumber = phoneNumber.replace(phoneRegex, '01$1-$2-$3');
+    if (regex.phoneNumber.test(phoneNumber)) {
+      formData.phoneNumber = phoneNumber.replace(
+        regex.phoneNumber,
+        '01$1-$2-$3',
+      );
     }
     try {
       const data = await handleSignUp(formData, accessToken);

@@ -1,52 +1,22 @@
-import React from 'react';
-
 import { Box, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
+import { styled } from '@mui/system';
 
 import { PROFILE_NAV_MENUS } from '@constants/nav-menu.constant';
 import {
+  Link,
   Outlet,
   createFileRoute,
   useLocation,
-  useNavigate,
 } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_layout')({
   component: ProfileLayout,
 });
 
-interface LinkTabProps {
-  label?: string;
-  href?: string;
-  selected?: boolean;
-}
-
-function LinkTab(props: LinkTabProps) {
-  const navigate = useNavigate();
-
-  const handleClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  ) => {
-    event.preventDefault();
-    navigate({ to: props.href! });
-  };
-
-  return (
-    <Tab
-      component='a'
-      onClick={handleClick}
-      aria-current={props.selected ? 'page' : undefined}
-      {...props}
-    />
-  );
-}
-
 function ProfileLayout() {
   const pathname = useLocation().pathname;
   const theme = useTheme();
   const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
-  const tabValue = PROFILE_NAV_MENUS.findIndex(
-    (menu) => menu.href === pathname,
-  );
 
   return (
     <Box
@@ -59,9 +29,10 @@ function ProfileLayout() {
       }}
     >
       <Tabs
-        value={tabValue}
+        value={pathname}
         orientation={isPhone ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'
+        role='navigation'
         variant={isPhone ? 'scrollable' : 'standard'}
         centered
         sx={{
@@ -74,13 +45,8 @@ function ProfileLayout() {
           },
         }}
       >
-        {PROFILE_NAV_MENUS.map((menu) => (
-          <LinkTab
-            key={menu.title}
-            label={menu.title}
-            href={menu.href}
-            selected={pathname === menu.href}
-          />
+        {PROFILE_NAV_MENUS.map((menu, index) => (
+          <Tab label={menu.title} />
         ))}
       </Tabs>
       <Box
@@ -96,3 +62,12 @@ function ProfileLayout() {
     </Box>
   );
 }
+
+const LinkTab = styled(Link)(({ theme }) => ({
+  padding: theme.spacing(3),
+  fontSize: 16,
+  textAlign: 'center',
+  whiteSpace: 'nowrap',
+  width: '100%',
+  color: theme.palette.text.primary,
+}));
