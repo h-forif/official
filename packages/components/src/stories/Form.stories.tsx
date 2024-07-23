@@ -38,15 +38,3 @@ export const Login: Story = {
     onSubmit: (data) => console.log(data),
   },
 };
-
-const signupSchema = z
-  .object({
-    username: z.string().min(2, '사용자 이름은 최소 2자 이상이어야 합니다.'),
-    email: z.string().email('올바른 이메일 주소를 입력해주세요.'),
-    password: z.string().min(8, '비밀번호는 최소 8자 이상이어야 합니다.'),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: '비밀번호가 일치하지 않습니다.',
-    path: ['confirmPassword'],
-  });
