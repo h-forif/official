@@ -38,13 +38,12 @@ function RootComponent() {
     localStorage.setItem('mode', mode);
   }, [mode]);
 
-  useInitializeAuth();
-
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   const queryClient = new QueryClient();
+  useInitializeAuth();
 
   return (
     <QueryClientProvider client={queryClient}>

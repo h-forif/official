@@ -5,11 +5,11 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { styled } from '@mui/system';
 
-import LetterIcon from '@assets/images/letter-mark.svg?react';
+import LetterIcon from '@assets/logos/forif-letter.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
-import { setRefreshToken } from '@store/token.store';
-import { clearUser, getUserState } from '@store/user.store';
+import { setRefreshToken, useAccessToken } from '@store/token.store';
+import { clearUser, getUserState, setUserState } from '@store/user.store';
 import { useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { motion, useAnimation } from 'framer-motion';
@@ -28,6 +28,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const scrollPosition = useScrollPosition();
   const [isVisible, setIsVisible] = useState(true);
   const controls = useAnimation();
+
   const navigate = useNavigate();
   const { activeMenu, handleMouseEnter, handleMouseLeave, handleClick } =
     useNavMenu();
@@ -49,6 +50,13 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   }, [isVisible, controls]);
 
   const userState = getUserState();
+  const accessToken = useAccessToken();
+
+  useEffect(() => {
+    if (accessToken) {
+      setUserState('sign-in');
+    }
+  }, [accessToken]);
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
     try {
@@ -114,8 +122,15 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                 px: 3,
               }}
             >
-              <a href='/' style={{ marginRight: 64 }}>
-                <LetterIcon width={100} />
+              <a
+                href='/'
+                style={{
+                  marginRight: 64,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <LetterIcon width={100} height={'64'} />
               </a>
               <DesktopNav
                 activeMenu={activeMenu}

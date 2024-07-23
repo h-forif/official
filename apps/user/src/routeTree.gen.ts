@@ -20,6 +20,7 @@ import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
+import { Route as LayoutProfileAccountImport } from './routes/_layout/profile/account'
 
 // Create Virtual Routes
 
@@ -31,9 +32,6 @@ const LayoutProfileIndexLazyImport = createFileRoute('/_layout/profile/')()
 const LayoutProfileStudyLazyImport = createFileRoute('/_layout/profile/study')()
 const LayoutProfileCertificateLazyImport = createFileRoute(
   '/_layout/profile/certificate',
-)()
-const LayoutProfileAccountLazyImport = createFileRoute(
-  '/_layout/profile/account',
 )()
 
 // Create/Update Routes
@@ -115,12 +113,10 @@ const LayoutProfileCertificateLazyRoute =
     import('./routes/_layout/profile/certificate.lazy').then((d) => d.Route),
   )
 
-const LayoutProfileAccountLazyRoute = LayoutProfileAccountLazyImport.update({
+const LayoutProfileAccountRoute = LayoutProfileAccountImport.update({
   path: '/profile/account',
   getParentRoute: () => LayoutRoute,
-} as any).lazy(() =>
-  import('./routes/_layout/profile/account.lazy').then((d) => d.Route),
-)
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -207,7 +203,7 @@ declare module '@tanstack/react-router' {
       id: '/_layout/profile/account'
       path: '/profile/account'
       fullPath: '/profile/account'
-      preLoaderRoute: typeof LayoutProfileAccountLazyImport
+      preLoaderRoute: typeof LayoutProfileAccountImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/profile/certificate': {
@@ -239,7 +235,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   LayoutRoute: LayoutRoute.addChildren({
-    LayoutProfileAccountLazyRoute,
+    LayoutProfileAccountRoute,
     LayoutProfileCertificateLazyRoute,
     LayoutProfileStudyLazyRoute,
     LayoutProfileIndexLazyRoute,
@@ -316,7 +312,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "studies/index.tsx"
     },
     "/_layout/profile/account": {
-      "filePath": "_layout/profile/account.lazy.tsx",
+      "filePath": "_layout/profile/account.tsx",
       "parent": "/_layout"
     },
     "/_layout/profile/certificate": {

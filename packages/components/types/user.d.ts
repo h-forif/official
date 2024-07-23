@@ -10,5 +10,5 @@ export interface User {
 
 export interface UserProfile
   extends Pick<User, Exclude<keyof User, 'state' | 'userAuthorization'>> {
-  picture: string | null;
+  image: string | null;
 }

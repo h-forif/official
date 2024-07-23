@@ -25,16 +25,15 @@ authApi.interceptors.request.use(async (config) => {
   const accessToken = accessTokenStore.getState().accessToken;
 
   if (accessToken) {
+    config.headers.Authorization = accessToken;
     return config;
   } else {
     try {
-      const accessToken = await api
-        .post('/auth/refresh', { refreshToken })
+      const { access_token } = await api
+        .post('/auth/token', { refresh_token: refreshToken })
         .then((res) => res.data);
-      console.log(accessToken);
-
-      config.headers.Authorization = accessToken;
-      setAccessToken(accessToken);
+      config.headers.Authorization = access_token;
+      setAccessToken(access_token);
       return config;
     } catch (err) {
       // window.location.href = '/';

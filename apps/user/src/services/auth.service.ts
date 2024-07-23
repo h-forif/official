@@ -8,14 +8,16 @@ import { z } from 'zod';
 import { api } from './axios-instance';
 
 interface SignInResponse {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
   user: User;
 }
 
 const signIn = async (g_access_token: string | null | undefined) => {
+  console.log(g_access_token);
+
   try {
-    const { user, accessToken, refreshToken } = await api
+    const { user, access_token, refresh_token } = await api
       .get<SignInResponse>('/auth/sign-in', {
         params: {
           access_token: g_access_token,
@@ -23,12 +25,10 @@ const signIn = async (g_access_token: string | null | undefined) => {
       })
       .then((res) => res.data);
 
-    console.log(user);
-
     setUser(user);
     setUserState('sign-in');
-    setAccessToken(accessToken);
-    setRefreshToken(refreshToken);
+    setAccessToken(access_token);
+    setRefreshToken(refresh_token);
   } catch (err) {
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       throw new Error('UserNotFound');

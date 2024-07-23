@@ -7,13 +7,13 @@ import {
   AccordionDetails,
   AccordionSummary,
   MenuItem,
-  Typography,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/system/Stack';
 
+import LetterIcon from '@assets/logos/forif-letter.svg?react';
 import { NAV_MENUS } from '@constants/nav-menu.constant';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
@@ -53,16 +53,10 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
             direction={'row'}
             justifyContent={'space-between'}
             alignItems={'center'}
-            sx={{ pl: 2, mb: 4 }}
+            sx={{ ml: 1, mb: 4 }}
           >
-            <a href='/'>
-              <Typography
-                variant='titleMedium'
-                color={'text.primary'}
-                fontWeight={700}
-              >
-                포리프
-              </Typography>
+            <a href='/' style={{ display: 'flex', alignItems: 'center' }}>
+              <LetterIcon width={80} height={'100%'} />
             </a>
             <Box
               sx={{
@@ -75,7 +69,19 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-              <CloseIcon />
+              <Box
+                onClick={toggleDrawer(false)}
+                sx={{
+                  p: 0,
+                  border: 'none',
+                  bgcolor: 'transparent',
+                  cursor: 'pointer',
+                  width: 24,
+                  height: 24,
+                }}
+              >
+                <CloseIcon />
+              </Box>
             </Box>
           </Stack>
           <Stack

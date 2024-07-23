@@ -1,5 +1,6 @@
+import { useState } from 'react';
+
 import { Box, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
-import { styled } from '@mui/system';
 
 import { PROFILE_NAV_MENUS } from '@constants/nav-menu.constant';
 import {
@@ -17,6 +18,7 @@ function ProfileLayout() {
   const pathname = useLocation().pathname;
   const theme = useTheme();
   const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
+  const [, setValue] = useState(pathname);
 
   return (
     <Box
@@ -26,15 +28,19 @@ function ProfileLayout() {
         flexDirection: isPhone ? 'column' : 'row',
         height: '100%',
         pt: isPhone ? 0 : 8,
+        width: '100%',
       }}
     >
       <Tabs
         value={pathname}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
         orientation={isPhone ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'
         role='navigation'
         variant={isPhone ? 'scrollable' : 'standard'}
-        centered
+        centered={isPhone ? false : true}
         sx={{
           '.MuiTab-root': {
             paddingX: 6,
@@ -46,7 +52,13 @@ function ProfileLayout() {
         }}
       >
         {PROFILE_NAV_MENUS.map((menu, index) => (
-          <Tab label={menu.title} />
+          <Tab
+            component={Link}
+            to={menu.href}
+            key={index}
+            label={menu.title}
+            value={menu.href}
+          />
         ))}
       </Tabs>
       <Box
@@ -62,12 +74,3 @@ function ProfileLayout() {
     </Box>
   );
 }
-
-const LinkTab = styled(Link)(({ theme }) => ({
-  padding: theme.spacing(3),
-  fontSize: 16,
-  textAlign: 'center',
-  whiteSpace: 'nowrap',
-  width: '100%',
-  color: theme.palette.text.primary,
-}));

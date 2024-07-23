@@ -19,13 +19,12 @@ const useInitializeAuth = () => {
       }
       if (refreshToken) {
         try {
-          const { accessToken } = await api
-            .post('/auth/refresh', { refreshToken })
+          const { access_token } = await api
+            .post('/auth/token', { refresh_token: refreshToken })
             .then((res) => res.data);
-          if (accessToken) {
-            setAccessToken(accessToken);
-            setUserState('sign-in');
-          }
+          setAccessToken(access_token);
+
+          setUserState('sign-in');
         } catch (error) {
           console.error('Error refreshing access token:', error);
           // 여기서 필요한 경우 로그아웃 처리를 할 수 있습니다.
