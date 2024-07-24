@@ -11,4 +11,7 @@ export interface User {
 export interface UserProfile
   extends Pick<User, Exclude<keyof User, 'state' | 'userAuthorization'>> {
   image: string | null;
+  myStudy: number | null; // 멘토로써 진행하고 있는 스터디
+  currentStudyId: number | null; // 현재 내가 듣고 있는 스터디
+  passedStudyId: number[] | null;
 }

@@ -30,7 +30,7 @@ function ProfileAccount() {
     <Box width={'100%'}>
       <Title
         title='계정'
-        label='정보, 개인 정보 보호 및 보안 설정을 관리하여 나에게 맞는 방식으로 Google을 사용할 수 있습니다.'
+        label='정보, 개인 정보 보호 및 보안 설정을 관리하여 나에게 맞는 방식으로 포리프 웹사이트를 사용할 수 있습니다.'
         pt={0}
       />
       <Box
@@ -59,8 +59,8 @@ function ProfileAccount() {
                   기본정보
                 </Typography>
                 <Typography variant='bodyMedium' sx={{ mb: 2 }}>
-                  일부 정보가 Google 서비스를 사용하는 다른 사람에게 표시될 수
-                  있습니다.
+                  일부 정보가 포리프 웹사이트 서비스를 사용하는 다른 사람에게
+                  표시될 수 있습니다.
                 </Typography>
                 <Stack divider={<Divider />}>
                   <PictureDialog previousImage={user.image!} />

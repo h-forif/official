@@ -4,10 +4,6 @@ import { CenteredBox } from '@packages/components/elements/CenteredBox';
 
 export function LogoWall() {
   const theme = useTheme();
-  const textColor =
-    theme.palette.mode === 'dark'
-      ? theme.palette.common.black
-      : theme.palette.common.white;
   return (
     <CenteredBox
       sx={{

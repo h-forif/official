@@ -12,13 +12,12 @@ import {
 export const Route = createLazyFileRoute('/_layout/profile/')({
   component: Profile,
 });
-
 function Profile() {
   return (
     <Box width={'100%'}>
       <Title
         title='프로필'
-        label='정보, 개인 정보 보호 및 보안 설정을 관리하여 나에게 맞는 방식으로 Google을 사용할 수 있습니다.'
+        label='정보, 개인 정보 보호 및 보안 설정을 관리하여 나에게 맞는 방식으로 포리프 웹사이트를 사용할 수 있습니다.'
         pt={0}
       />
       <Box

@@ -4,14 +4,13 @@ import { Dialog, DialogTitle, Stack, Typography } from '@mui/material';
 
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
-import useToastStore from '@store/toast.store';
 
 export function PictureDialog({ previousImage }: { previousImage: string }) {
   const [open, setOpen] = useState(false);
   const [picture, setPicture] = useState<string | ArrayBuffer | null>(
     previousImage,
   );
-  const { showToast } = useToastStore();
+  // const { showToast } = useToastStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
