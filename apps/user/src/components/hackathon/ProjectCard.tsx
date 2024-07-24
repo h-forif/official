@@ -1,12 +1,14 @@
+import React from 'react';
+
 import { CardMedia, Chip } from '@mui/material';
 import MUICard from '@mui/material/Card';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/system';
 
-import { Project } from 'src/types/project.type';
+import type { Project } from './../../types/project.type';
 
-export function ProjectCard({ desc, image, study, title }: Project) {
+export default function ProjectCard({ desc, image, title }: Project) {
   return (
     <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
       <CardMedia
@@ -43,7 +45,6 @@ export function ProjectCard({ desc, image, study, title }: Project) {
           {desc}
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Chip label={study} />
           <Chip label='WEB' />
         </Stack>
       </MUICardContent>

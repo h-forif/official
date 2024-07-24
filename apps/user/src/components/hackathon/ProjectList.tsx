@@ -7,12 +7,12 @@ import Stack from '@mui/system/Stack';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getProjects } from 'src/services/project.service';
+import { Project } from 'src/types/project.type';
 
 import ErrorComponent from '@components/Error';
-import { ProjectCard } from '@components/hackathon/ProjectCard';
 
 export function ProjectList() {
-  const { data, error, isLoading } = useQuery<any, AxiosError>({
+  const { data, error, isLoading } = useQuery<Project[], AxiosError>({
     queryKey: ['projects'],
     queryFn: getProjects,
     retry: false,
@@ -21,6 +21,8 @@ export function ProjectList() {
   if (error) {
     return <ErrorComponent status={error.response!.status} />;
   }
+
+  console.log(data);
 
   if (isLoading) {
     return (
@@ -64,7 +66,7 @@ export function ProjectList() {
             },
           }}
         >
-          {data!.products.map((project: any) => (
+          {/* {data!.products.map((project: Project) => (
             <Grid key={project.id} item xl={3} md={4} sm={6} xs={12}>
               <ProjectCard
                 id={project.id}
@@ -76,7 +78,7 @@ export function ProjectList() {
                 semester={project.semester}
               />
             </Grid>
-          ))}
+          ))} */}
         </Grid>
       </Box>
     </Stack>

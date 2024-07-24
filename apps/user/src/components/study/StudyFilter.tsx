@@ -53,7 +53,8 @@ export function StudyFilter({
           val={year.toString()}
           setVal={(value) => {
             navigate({
-              search: (prev) => ({ ...prev, year: Number(value) }),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              search: (prev: any) => ({ ...prev, year: Number(value) }),
             });
           }}
           placeholder='스터디 진행 연도'
@@ -63,7 +64,8 @@ export function StudyFilter({
           val={semester.toString()}
           setVal={(value) => {
             navigate({
-              search: (prev) => ({ ...prev, semester: Number(value) }),
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              search: (prev: any) => ({ ...prev, semester: Number(value) }),
             });
           }}
           placeholder='스터디 진행 학기'

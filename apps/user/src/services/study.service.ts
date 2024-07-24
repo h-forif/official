@@ -13,7 +13,7 @@ export const getStudyInfo = async (studyId: number) => {
 export const getAllStudies = ({ year, semester }: StudySearch) => {
   const params = { year, semester };
   const data = api
-    .get('/studies/all', { params })
+    .get('/studies', { params })
     .then((res: AxiosResponse<Study[]>) => res.data);
   return data;
 };
