@@ -1,0 +1,81 @@
+name: DEPLOY
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: 빌드 및 배포
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: 환경 변수 설정
+        run: |
+          echo "VITE_BASE_URL=$VITE_BASE_URL" >> .env.production
+          echo "VITE_OAUTH_CLIENT_ID=$VITE_OAUTH_CLIENT_ID" >> .env.production
+          echo "VITE_OAUTH_CLIENT_SECRET=$VITE_OAUTH_CLIENT_SECRET" >> .env.production
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env.production
+          echo "AWS_ACCESS_KEY_SECRET=$AWS_ACCESS_KEY_SECRET" >> .env.production
+          echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> .env.production
+          echo "AWS_ROLE_TO_ASSUME=$AWS_ROLE_TO_ASSUME" >> .env.production
+          echo "AWS_STAGING_BUCKET_NAME=$AWS_STAGING_BUCKET_NAME" >> .env.production
+          echo "REMOTE_IP=$REMOTE_IP" >> .env.production
+          echo "REMOTE_PRIVATE_KEY=$REMOTE_PRIVATE_KEY" >> .env.production
+          echo "REMOTE_SSH_PORT=$REMOTE_SSH_PORT" >> .env.production
+          echo "REMOTE_USER=$REMOTE_USER" >> .env.production
+        env:
+          VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+          VITE_OAUTH_CLIENT_ID: ${{ secrets.VITE_OAUTH_CLIENT_ID }}
+          VITE_OAUTH_CLIENT_SECRET: ${{ secrets.VITE_OAUTH_CLIENT_SECRET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          AWS_STAGING_BUCKET_NAME: ${{ secrets.AWS_STAGING_BUCKET_NAME }}
+          REMOTE_IP: ${{ secrets.REMOTE_IP }}
+          REMOTE_PRIVATE_KEY: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          REMOTE_SSH_PORT: ${{ secrets.REMOTE_SSH_PORT }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          
+      - uses: pnpm/action-setup@v4
+        name: pnpm을 설치합니다.
+        with:
+          run_install: false
+
+      - name: Node.js를 설치합니다.
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: 의존 패키지 설치
+        run: pnpm install
+
+      - name: 린트
+        run: pnpm run lint
+
+      - name: 타입 체크
+        run: pnpm run type-check
+
+      - name: 빌드
+        run: pnpm run build
+
+      - name: AWS Credential 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION}}
+          output-credentials: true
+      
+      - name: S3에 배포
+        run: |
+          aws s3 sync \
+            ./apps/user/dist s3://${{ secrets.AWS_STAGING_BUCKET_NAME}}
