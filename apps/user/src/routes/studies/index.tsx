@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/system/Box';
 
+import { DIFFICULTY, DIFFICULTY_TYPES } from '@constants/filter.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
@@ -16,7 +17,7 @@ export interface StudySearch {
 }
 
 export interface StudyProps extends StudySearch {
-  level: string;
+  difficulty: number;
 }
 
 const currentTerm = getCurrentTerm();
@@ -33,7 +34,9 @@ export const Route = createFileRoute('/studies/')({
 
 function StudiesPage() {
   const { year, semester }: StudySearch = Route.useSearch();
-  const [level, setLevel] = useState('전체');
+  const [difficulty, setDifficulty] = useState<DIFFICULTY_TYPES>(
+    DIFFICULTY['전체'],
+  );
 
   return (
     <Box>
@@ -58,10 +61,14 @@ function StudiesPage() {
       <StudyFilter
         year={year}
         semester={semester}
-        level={level}
-        setLevel={setLevel}
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
       />
-      <StudyList year={year} semester={semester} level={level} />
+      <StudyList
+        year={year}
+        semester={semester}
+        difficulty={Number(difficulty)}
+      />
     </Box>
   );
 }

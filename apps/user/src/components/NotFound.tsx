@@ -1,4 +1,4 @@
-import ErrorPerson from '@assets/images/peep-error.svg?react';
+import ErrorPeeps from '@assets/images/avatar/peep-error.svg?react';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 
@@ -38,7 +38,7 @@ export default function NotFoundPage({ onClick }: { onClick?: () => void }) {
           메인 화면으로 돌아가기
         </Button>
       </a>
-      <ErrorPerson />
+      <ErrorPeeps />
     </CenteredBox>
   );
 }
