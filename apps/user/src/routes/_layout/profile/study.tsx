@@ -7,7 +7,7 @@ import { UserProfile } from '@packages/components/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
-import getWeekDayAsString from '@utils/getWeekDayAsString';
+import { getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
 import { getStudyInfo } from 'src/services/study.service';
 import { getUserInfo } from 'src/services/user.service';
@@ -24,7 +24,7 @@ function MyStudy() {
   const currentTerm = getCurrentTerm();
   const { data, isLoading } = useQuery<Study, AxiosError>({
     queryKey: ['currentStudy'],
-    queryFn: () => getStudyInfo(2),
+    queryFn: () => getStudyInfo(user.currentStudyId?.toString() || ''),
   });
   console.log(user);
 
