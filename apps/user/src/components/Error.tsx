@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 
-import NotFoundCharacter from '@assets/images/peep-not-found.svg?react';
+import NotFoundPeeps from '@assets/images/avatar/peep-not-found.svg?react';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 
 interface ErrorProps {
@@ -23,7 +23,7 @@ export default function ErrorComponent({ status }: ErrorProps) {
 
   return (
     <CenteredBox sx={{ width: '100%', height: '400px', my: 12 }}>
-      <NotFoundCharacter />
+      <NotFoundPeeps />
       <Typography variant='headlineLarge' textAlign={'center'}>
         {message}
       </Typography>

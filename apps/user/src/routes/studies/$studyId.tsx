@@ -54,17 +54,32 @@ function StudyComponent() {
       day.isSame(dayjs(STUDY_START_DATE), 'day') ||
       day.isAfter(dayjs(STUDY_START_DATE), 'day');
 
+    if (!isSameOrAfterToday) {
+      return <PickersDay {...props} />;
+    }
+
+    const startDate = dayjs(STUDY_START_DATE).startOf('day');
+    const diffInDays = day.diff(startDate, 'day');
+    const index = Math.floor(diffInDays / 7);
+
+    if (index >= study.weeklyPlans.length) {
+      return <PickersDay {...props} disabled />;
+    }
+
+    const weeklyPlan = study.weeklyPlans[index];
+    const backgroundColor = weeklyPlan === '' ? 'error.light' : 'primary.light';
+
     return (
       <PickersDay
         {...props}
         sx={{
-          ...(isSelectedWeekDay &&
-            isSameOrAfterToday && {
-              backgroundColor: 'primary.light',
-              ':hover': {
-                backgroundColor: 'primary.dark',
-              },
-            }),
+          ...(isSelectedWeekDay && {
+            backgroundColor,
+            ':hover': {
+              backgroundColor:
+                weeklyPlan === '' ? 'error.dark' : 'primary.dark',
+            },
+          }),
         }}
       />
     );
@@ -74,20 +89,14 @@ function StudyComponent() {
     if (!date) return '';
     const startDate = dayjs(STUDY_START_DATE).startOf('day');
     const diffInDays = date.diff(startDate, 'day');
-    const index = Math.floor(diffInDays / 7) % study.weeklyPlans.length;
+    const index = Math.floor(diffInDays / 7);
+    if (index >= study.weeklyPlans.length) return '';
     if (study.weeklyPlans[index] === '') return '휴강';
     return study.weeklyPlans[index]!;
   };
 
-  const content = `# 한국이 자바 공화국인 이유
-    한국정부는 정보통신산업을 중요한 경제 성장 동력으로 인식하고, 이를 육성하기 위한 다양한 정책을 추진해왔습니다.   
-    자바는 다양한 플랫폼과 환경에서 사용할 수 있는 범용 프로그래밍 언어로서, 이러한 정보통신산업 육성 정책의 일환으로 자바 개발을 촉진하고 지원해왔습니다.   
-       
-    전자정부프레임워크는 한국 공공기관의 정보화 프로젝트를 위한 프레임워크로, 자바를 기반으로 개발되었습니다.   
-    이 프레임워크의 활용으로 인해 자바가 한국 공공기관의 정보 시스템 개발에서 중요한 역할을 하게 되었고, 이로써 "자바공화국"이라는 명칭이 생겨났습니다.
-       
-    Spring Boot는 엔터프라이즈용 Java 애플리케이션 개발을 편하게 할 수 있게 해주는 오픈소스 경량급 애플리케이션 프레임워크입니다.
-  `;
+  const content =
+    '한국정부는 정보통신산업을 중요한 경제 성장 동력으로 인식하고, 이를 육성하기 위한 다양한 정책을 추진해왔습니다.자바는 다양한 플랫폼과 환경에서 사용할 수 있는 범용 프로그래밍 언어로서, 이러한 정보통신산업 육성 정책의 일환으로 자바 개발을 촉진하고 지원해왔습니다.';
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -153,6 +162,7 @@ function StudyComponent() {
           value={tab}
           onChange={handleTabClick}
           aria-label='Study Tabs'
+          variant='scrollable'
           role='navigation'
           sx={{
             position: 'sticky',
@@ -167,15 +177,21 @@ function StudyComponent() {
           <Tab component='a' label='FAQ' value={'#faq'} />
         </Tabs>
         <Stack direction={'row'} gap={4} justifyContent={'space-between'}>
-          <Box flex={1}>
-            <Stack>
+          <Box flex={1} width={'100%'}>
+            <Stack width={'100%'}>
               <Typography variant='bodyMedium' mt={4}>
                 스터디 소개
               </Typography>
               <Typography variant='titleLarge' mb={2}>
                 {study.name}
               </Typography>
-              <Stack p={3} borderRadius={4} border={1} borderColor={'divider'}>
+              <Stack
+                p={3}
+                borderRadius={4}
+                border={1}
+                borderColor={'divider'}
+                width={'100%'}
+              >
                 <Markdown>{content}</Markdown>
               </Stack>
             </Stack>
@@ -198,7 +214,17 @@ function StudyComponent() {
                 {formatStudyTimeToKorean(study.startTime)} -{' '}
                 {formatStudyTimeToKorean(study.endTime)}
               </Typography>
-              <Stack direction={'row'} flexWrap={'wrap'} gap={6} mt={4}>
+              <Stack
+                display={'flex'}
+                sx={{
+                  flexDirection: {
+                    xs: 'column',
+                    md: 'row',
+                  },
+                }}
+                gap={6}
+                mt={4}
+              >
                 <LocalizationProvider
                   dateAdapter={AdapterDayjs}
                   adapterLocale='ko'
@@ -209,6 +235,11 @@ function StudyComponent() {
                     slots={{ day: renderPickerDay }}
                     sx={{
                       margin: 0,
+                      '& .MuiPickersDay-root': {
+                        '&.Mui-selected': {
+                          backgroundColor: 'black',
+                        },
+                      },
                     }}
                   />
                 </LocalizationProvider>
@@ -323,6 +354,7 @@ function StudySideBox(study: Study) {
       height={'fit-content'}
       position={'sticky'}
       top={64}
+      display={{ xs: 'none', md: 'flex' }}
     >
       <Chip label='자바' sx={{ width: 'fit-content' }} color='primary' />
       <Typography variant='labelLarge'>{study.name}</Typography>

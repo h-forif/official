@@ -1,7 +1,12 @@
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import Stack from '@mui/system/Stack';
 
-import { LEVELS, POSSIBLE_YEARS, SEMESTERS } from '@constants/filter.constant';
+import {
+  DIFFICULTY,
+  DIFFICULTY_TYPES,
+  POSSIBLE_YEARS,
+  SEMESTERS,
+} from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import { Select, SelectOption } from '@packages/components/Select';
 import { StudyProps } from '@routes/studies/index';
@@ -17,20 +22,22 @@ const SEMESTER_OPTIONS: SelectOption[] = SEMESTERS.map((semester) => ({
   label: `${semester}학기`,
 }));
 
-const LEVEL_OPTIONS: SelectOption[] = LEVELS.map((level) => ({
-  value: level,
-  label: level,
-}));
+const DIFFICULTY_OPTIONS: SelectOption[] = Object.entries(DIFFICULTY).map(
+  ([key, value]) => ({
+    value: value.toString(), // Convert the value to a string
+    label: key.replace(/_/g, ' '), // Convert key to a more readable label
+  }),
+);
 
 interface StudyFilterProps extends StudyProps {
-  setLevel: (val: string) => void;
+  setDifficulty: (val: DIFFICULTY_TYPES) => void;
 }
 
 export function StudyFilter({
   year,
   semester,
-  level,
-  setLevel,
+  difficulty,
+  setDifficulty,
 }: StudyFilterProps) {
   const navigate = useNavigate({ from: '/studies' });
   return (
@@ -73,10 +80,10 @@ export function StudyFilter({
         />
         <Select
           variant='outlined'
-          val={level.toString()}
-          setVal={(val) => setLevel(val)}
+          val={difficulty.toString()}
+          setVal={(val) => setDifficulty(val as unknown as DIFFICULTY_TYPES)}
           placeholder='난이도'
-          options={LEVEL_OPTIONS}
+          options={DIFFICULTY_OPTIONS}
         />
       </Stack>
       <Stack direction={'row'} justifyContent={'flex-end'} width={'100%'}>
