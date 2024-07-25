@@ -1,0 +1,12 @@
+{
+  "extends": "@packages/ts-config/react.json",
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true
+  },
+  "include": ["vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}
