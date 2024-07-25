@@ -41,7 +41,7 @@ export function DesktopNav({
   return (
     <>
       <Box
-        sx={{ display: { xs: 'none', md: 'flex' } }}
+        sx={{ display: { xs: 'none', md: 'flex', zIndex: 999 } }}
         onMouseLeave={handleMouseLeave}
       >
         {selectedNavMenus.map((menu) => (

@@ -29,7 +29,7 @@ export function Title({
         wordBreak: 'keep-all',
       }}
     >
-      <Typography variant='displayLarge' sx={{ mb: 1 }}>
+      <Typography variant='displaySmall' sx={{ mb: 1 }}>
         {title}
       </Typography>
       <Typography variant='labelLarge'>{label}</Typography>

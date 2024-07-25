@@ -89,9 +89,9 @@ export function ModalTitle({ children }: { children: ReactNode }) {
 
 export function ModalDescription({ children }: { children: ReactNode }) {
   return (
-    <DescTypography variant='labelSmall' id='modal-modal-description'>
+    <Typography variant='labelSmall' id='modal-modal-description'>
       {children}
-    </DescTypography>
+    </Typography>
   );
 }
 
@@ -102,19 +102,14 @@ const HeaderContainer = styled('div')({
   marginBottom: '16px',
 });
 
-const DescTypography = styled(Typography)(({ theme }) => ({
-  color: theme.palette.info.main,
-}));
-
-const Close = styled(CloseIcon)(({ theme }) => ({
-  color: theme.palette.info.main,
+const Close = styled(CloseIcon)({
   position: 'absolute',
   width: '1rem',
   height: '1rem',
   top: '16px',
   right: '16px',
   cursor: 'pointer',
-}));
+});
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
