@@ -34,7 +34,6 @@ export const Route = createFileRoute('/studies/')({
 function StudiesPage() {
   const { year, semester }: StudySearch = Route.useSearch();
   const [level, setLevel] = useState('전체');
-  console.log(level);
 
   return (
     <Box>

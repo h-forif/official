@@ -9,4 +9,6 @@ export interface Study {
   weekDay: number;
   image?: string;
   studyStatus: string;
+  weeklyPlans: string[];
+  location: string;
 }

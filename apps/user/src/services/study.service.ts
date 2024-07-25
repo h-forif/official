@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 
 import { api } from './axios-instance';
 
-export const getStudyInfo = async (studyId: number) => {
+export const getStudyInfo = async (studyId: string) => {
   const response = await api.get(`/studies/${studyId}`);
   return response.data;
 };

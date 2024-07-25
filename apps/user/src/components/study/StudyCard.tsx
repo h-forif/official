@@ -17,8 +17,12 @@ export interface StudyCardProps {
 }
 
 export function StudyCard({ id, image, mentor, title }: StudyCardProps) {
+  const handleLinkClick = () => {
+    window.scrollTo(0, 0); // 페이지 이동 시 스크롤을 최상단으로 이동
+  };
+
   return (
-    <Link to={`/studies/${id}`} resetScroll>
+    <Link to={`/studies/${id}`} onClick={handleLinkClick}>
       <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
         <CardMedia component={'picture'} sx={{ width: '100%', height: 240 }}>
           <Image
