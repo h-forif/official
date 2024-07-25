@@ -4,7 +4,7 @@ import MUICardActions from '@mui/material/CardActions';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-import FallbackImage from '@assets/images/cutie.svg';
+import FallbackImage from '@assets/logos/forif-letter.svg';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { Link } from '@tanstack/react-router';

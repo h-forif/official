@@ -15,7 +15,6 @@ import { signIn } from 'src/services/auth.service';
 
 import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
-import { StudyCard } from '@components/study/StudyCard';
 
 export const Route = createLazyFileRoute('/')({
   component: Home,
@@ -87,9 +86,7 @@ function Home() {
             <Button variant='outlined'>멘토 신청하기</Button>
           </Link>
         </Stack>
-        <AnimatedContainer>
-          <StudyCard id={5} title={'리액트 배우기'} mentor={'표준성'} />
-        </AnimatedContainer>
+        <AnimatedContainer>스터디 목록이 들어갈 자리입니다.</AnimatedContainer>
         {matches && (
           <>
             <MainPeeps1
