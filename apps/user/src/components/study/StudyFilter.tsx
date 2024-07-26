@@ -66,6 +66,7 @@ export function StudyFilter({
           }}
           placeholder='스터디 진행 연도'
           options={YEAR_OPTIONS}
+          minWidth={120}
         />
         <Select
           val={semester.toString()}
@@ -77,6 +78,7 @@ export function StudyFilter({
           }}
           placeholder='스터디 진행 학기'
           options={SEMESTER_OPTIONS}
+          minWidth={120}
         />
         <Select
           variant='outlined'
@@ -84,6 +86,7 @@ export function StudyFilter({
           setVal={(val) => setDifficulty(val as unknown as DIFFICULTY_TYPES)}
           placeholder='난이도'
           options={DIFFICULTY_OPTIONS}
+          minWidth={120}
         />
       </Stack>
       <Stack direction={'row'} justifyContent={'flex-end'} width={'100%'}>

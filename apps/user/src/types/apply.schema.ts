@@ -9,7 +9,7 @@ export const ApplyMemberSchema = z
       .max(500, '500자 이하로 입력해주세요.'),
     secondaryStudy: z.string().optional(),
     secondaryIntro: z.string().optional(),
-    from: z.string().min(1, '지원 경로는 필수값입니다.'),
+    applyPath: z.string().min(1, '지원 경로는 필수값입니다.'),
     isPrimaryStudyOnly: z.boolean().optional(),
   })
   .refine(

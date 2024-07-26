@@ -15,6 +15,7 @@ import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
 import { Select, SelectOption } from '@packages/components/Select';
 import { createFileRoute, useBlocker } from '@tanstack/react-router';
+import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
 import { getUserInfo } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
@@ -26,9 +27,14 @@ import BlockModal from '@components/common/BlockModal';
 
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
-    const userInfo = await getUserInfo();
-    const studies = await getAllStudies({ year: 2024, semester: 1 });
+    const [userInfo, studies] = await Promise.all([
+      getUserInfo(),
+      getAllStudies({ year: 2024, semester: 1 }),
+    ]);
     return { userInfo, studies };
+  },
+  onError: ({ error }) => {
+    console.error(error);
   },
   component: ApplyMember,
 });
@@ -44,7 +50,7 @@ function ApplyMember() {
       primaryIntro: '',
       secondaryStudy: '',
       secondaryIntro: '',
-      from: '',
+      applyPath: '',
       isPrimaryStudyOnly: false,
     },
   });
@@ -68,7 +74,7 @@ function ApplyMember() {
     })),
   ];
 
-  const fromOptions: SelectOption[] = [
+  const applyPathOptions: SelectOption[] = [
     {
       value: 'everytime',
       label: '에브리타임',
@@ -104,7 +110,16 @@ function ApplyMember() {
   );
 
   const onSubmit = async (formData: z.infer<typeof ApplyMemberSchema>) => {
-    console.log(formData);
+    if (formData.isPrimaryStudyOnly) {
+      const res = await authApi
+        .post('/apply', {
+          primary_study: formData.primaryStudy,
+          primary_intro: formData.primaryIntro,
+          apply_path: formData.applyPath,
+        })
+        .then((res) => res.data);
+      console.log(res);
+    }
   };
 
   return (
@@ -272,7 +287,7 @@ function ApplyMember() {
               />
               <Typography variant='titleSmall'>포리프를 접한 경로</Typography>
               <Controller
-                name='from'
+                name='applyPath'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Select
@@ -281,7 +296,7 @@ function ApplyMember() {
                     val={field.value}
                     setVal={field.onChange}
                     placeholder='포리프를 접하게 된 경로를 작성해주세요.'
-                    options={fromOptions}
+                    options={applyPathOptions}
                     error={!!fieldState.error}
                     errorMessage='지원 경로는 필수값입니다.'
                     minWidth={512}
@@ -290,7 +305,7 @@ function ApplyMember() {
               />
             </Stack>
             <Button type='submit' variant='contained' size='large' fullWidth>
-              제출하기
+              제출
             </Button>
           </form>
         </Box>

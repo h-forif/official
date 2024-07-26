@@ -4,7 +4,7 @@ import { authApi } from './axios-instance';
 
 const getUserInfo = async () => {
   const userInfo: UserProfile = await authApi
-    .get('/profile')
+    .get('/auth/profile')
     .then((res) => res.data);
   return userInfo;
 };

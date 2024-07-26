@@ -25,11 +25,10 @@ export function DepartDialog({ previousDepartment }: DepartDialogProps) {
     setDepartment(e.target.value);
   };
 
-  console.log(department);
-
   const handleSubmit = () => {
     // TO-DO: add change department api
-    showToast('휴대전화 번호가 변경되었습니다.', 'success');
+    showToast('학과가 변경되었습니다.', 'success');
+    console.log(department);
     setOpen(false);
   };
 
