@@ -14,13 +14,13 @@ import {
   ModalContentProps,
   ModalProps,
   ModalTriggerProps,
-} from '@components/types/modal';
+} from '../types/modal';
 
 /**
- * keepMounted는 모달창을 항상 마운트시킵니다. 동일한 모달을 자주 발생시킬 시 사용해주세요.
+ * keepMounted는 모달창을 항상 마운트시킵니다. 동일한 모달을 자주 발생시킬 시 성능을 높이기 위해 사용해주세요.
  */
-export function Modal({ keepMounted = false, children }: ModalProps) {
-  const [open, setOpen] = useState(false);
+export function Modal({ keepMounted = false, isOpen, children }: ModalProps) {
+  const [open, setOpen] = useState(isOpen ? isOpen : false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

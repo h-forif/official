@@ -23,7 +23,8 @@ export default function BlockModal({ reset, proceed }: BlockModalProps) {
           스터디 신청서 작성 중
         </Typography>
         <Typography variant='labelMedium' color='inherit' mb={6}>
-          다른 페이지로 이동시에 작성중인 신청서의 내용이 사라질 수 있습니다.
+          신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
+          내용이 사라질 수 있습니다.
           <br />
           괜찮으시다면 '나가기' 버튼을 눌러주세요.
         </Typography>

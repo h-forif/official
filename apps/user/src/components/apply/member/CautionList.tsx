@@ -104,11 +104,12 @@ export default function CautionList() {
                     문의해주신다면 더욱 빠른 답변이 가능합니다.
                   </li>
                   <li>
+                    1.{' '}
                     <a
                       href='mailto:contact@forif.org?subject=OOO 스터디 청강 관련 문의?body=안녕하세요, {학번} {학과}{이름}입니다. OOO 스터디를 청강하고 싶습니다.'
                       style={{ color: 'black', fontWeight: 'bold' }}
                     >
-                      1. 포리프 공식 메일
+                      포리프 공식 메일
                     </a>
                     (contact@forif.org)을 사용해 문의하기
                   </li>

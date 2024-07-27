@@ -1,6 +1,7 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
   Box,
   Checkbox,
@@ -13,7 +14,13 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
+import {
+  Modal,
+  ModalContent,
+  ModalDescription,
+} from '@packages/components/Modal';
 import { Select, SelectOption } from '@packages/components/Select';
+import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createFileRoute, useBlocker } from '@tanstack/react-router';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
@@ -24,6 +31,8 @@ import { z } from 'zod';
 import { Title } from '@components/Title';
 import CautionList from '@components/apply/member/CautionList';
 import BlockModal from '@components/common/BlockModal';
+
+const STORAGE_KEY = 'applyMemberForm';
 
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
@@ -42,6 +51,8 @@ export const Route = createFileRoute('/apply/member')({
 function ApplyMember() {
   const loaderData = Route.useLoaderData();
   const { id, name, department, phoneNumber } = loaderData.userInfo;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
@@ -56,8 +67,22 @@ function ApplyMember() {
   });
 
   const { proceed, reset, status } = useBlocker({
-    condition: form.formState.isDirty,
+    condition: form.formState.isDirty || !isSaved,
   });
+
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      form.reset(JSON.parse(savedData));
+    }
+  }, [form]);
+
+  const handleSaveDraft = () => {
+    const formData = form.getValues();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    setIsSaved(true);
+    setModalOpen(true);
+  };
 
   const primaryStudyValue = form.watch('primaryStudy');
   const secondaryStudyValue = form.watch('secondaryStudy');
@@ -304,13 +329,48 @@ function ApplyMember() {
                 )}
               />
             </Stack>
-            <Button type='submit' variant='contained' size='large' fullWidth>
-              제출
-            </Button>
+            <Stack direction={'row'} gap={2}>
+              <Button
+                variant='outlined'
+                size='large'
+                fullWidth
+                disabled={!form.formState.isDirty}
+                onClick={handleSaveDraft}
+              >
+                임시저장
+              </Button>
+              <Button type='submit' variant='contained' size='large' fullWidth>
+                제출
+              </Button>
+            </Stack>
           </form>
         </Box>
       </Box>
       {status === 'blocked' && <BlockModal proceed={proceed} reset={reset} />}
+      {modalOpen && (
+        <Modal isOpen>
+          <ModalContent>
+            <CenteredBox gap={2} height={256}>
+              <ModalDescription>
+                <CheckCircleOutlineIcon
+                  color='primary'
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    mb: 2,
+                    fontSize: '5rem',
+                  }}
+                />
+                <Typography variant='bodyMedium'>
+                  스터디 임시 저장에 성공했습니다.
+                </Typography>
+              </ModalDescription>
+            </CenteredBox>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }

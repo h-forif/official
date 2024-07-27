@@ -44,8 +44,6 @@ function StudyComponent() {
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
 
-  console.log(study);
-
   const renderPickerDay = (props: PickersDayProps<Dayjs>) => {
     const { day, outsideCurrentMonth } = props;
     const isSelectedWeekDay =
@@ -102,7 +100,6 @@ function StudyComponent() {
     setTab(newValue);
     event.preventDefault();
     const targetElement = document.querySelector(newValue);
-    console.log(targetElement);
 
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth' });

@@ -37,7 +37,8 @@ export function DesktopNav({
   useEffect(() => {
     const navMenus = userState === 'sign-out' ? NAV_MENUS : AUTH_NAV_MENUS;
     setSelectedNavMenus(navMenus);
-  }, [userState]); // This effect runs whenever `userState` changes.
+  }, [userState]);
+
   return (
     <>
       <Box
