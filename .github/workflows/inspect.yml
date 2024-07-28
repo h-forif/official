@@ -10,7 +10,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Console.log가 있는지 확인합니다.
+      - name: 메인 브랜치 최신 코드를 가져옵니다.
+        run: git fetch origin main
+
+      - name: Check console.log
         run: |
-          chmod +x .scripts/is_contain.sh
-          .scripts/is_contain.sh "console.log"
+          if bash .scripts/is_contain.sh "^\+.*(console\.log)"; then
+            echo "console.log is used, please remove it before merging";
+            gh pr comment $PR_URL --body "There is console.log on your commit. Please remove it before merge."
+            exit 1;
+          fi
