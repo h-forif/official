@@ -143,8 +143,8 @@ export default function CautionList() {
           서비스를 이용해보세요.
         </Typography>
         <Typography component={'li'} variant='bodySmall'>
-          모든 정보가 정확한지 다시 한 번 확인해주세요. 이름, 학번, 전화번호 네
-          가지 정보를 수정하고 싶다면{' '}
+          모든 정보가 정확한지 다시 한 번 확인해주세요. 이름, 학과, 전화번호를
+          수정하고 싶다면{' '}
           <Link
             to='/profile/account'
             style={{

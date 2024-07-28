@@ -36,7 +36,17 @@ function Profile() {
             </ProfileCard>
           </Grid>
           <Grid item sm={6} xs={12}>
-            <ProfileCard title='내 스터디 확인' href='/profile/account'>
+            <ProfileCard title='지원서' href='/profile/application'>
+              <ProfileCardDescription>
+                <Typography variant='bodyMedium' sx={{ height: 80 }}>
+                  제출한 지원서를 확인할 수 있습니다. 지원서 수정 및 삭제는
+                  '스터디 지원'을 통해 가능합니다.
+                </Typography>
+              </ProfileCardDescription>
+            </ProfileCard>
+          </Grid>
+          <Grid item sm={6} xs={12}>
+            <ProfileCard title='내 스터디 확인' href='/profile/study'>
               <ProfileCardDescription>
                 <Typography variant='bodyMedium' sx={{ height: 80 }}>
                   내가 현재 수강하는 스터디에 대한 정보를 얻을 수 있습니다.
@@ -50,15 +60,6 @@ function Profile() {
                 <Typography variant='bodyMedium' sx={{ height: 80 }}>
                   포리프에서는 한 학기가 끝나면 인증 요건을 충족한 부원에게
                   인증서를 발급합니다.
-                </Typography>
-              </ProfileCardDescription>
-            </ProfileCard>
-          </Grid>
-          <Grid item sm={6} xs={12}>
-            <ProfileCard title='내 스터디 확인' href='/profile/study'>
-              <ProfileCardDescription>
-                <Typography variant='bodyMedium' sx={{ height: 80 }}>
-                  내가 현재 수강하는 스터디에 대한 정보를 얻을 수 있습니다.
                 </Typography>
               </ProfileCardDescription>
             </ProfileCard>

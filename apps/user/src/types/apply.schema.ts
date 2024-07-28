@@ -31,3 +31,6 @@ export const ApplyMemberSchema = z
       path: ['secondaryStudy', 'secondaryIntro'],
     },
   );
+
+export interface Application
+  extends Omit<z.infer<typeof ApplyMemberSchema>, 'applyPath'> {}

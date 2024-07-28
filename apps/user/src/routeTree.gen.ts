@@ -20,7 +20,9 @@ import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
+import { Route as ApplyApplicationImport } from './routes/apply/application'
 import { Route as LayoutProfileStudyImport } from './routes/_layout/profile/study'
+import { Route as LayoutProfileApplicationImport } from './routes/_layout/profile/application'
 import { Route as LayoutProfileAccountImport } from './routes/_layout/profile/account'
 
 // Create Virtual Routes
@@ -99,6 +101,11 @@ const ApplyMemberRoute = ApplyMemberImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ApplyApplicationRoute = ApplyApplicationImport.update({
+  path: '/apply/application',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const LayoutProfileIndexLazyRoute = LayoutProfileIndexLazyImport.update({
   path: '/profile/',
   getParentRoute: () => LayoutRoute,
@@ -116,6 +123,11 @@ const LayoutProfileCertificateLazyRoute =
 
 const LayoutProfileStudyRoute = LayoutProfileStudyImport.update({
   path: '/profile/study',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutProfileApplicationRoute = LayoutProfileApplicationImport.update({
+  path: '/profile/application',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -154,6 +166,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof TeamLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/apply/application': {
+      id: '/apply/application'
+      path: '/apply/application'
+      fullPath: '/apply/application'
+      preLoaderRoute: typeof ApplyApplicationImport
       parentRoute: typeof rootRoute
     }
     '/apply/member': {
@@ -219,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutProfileAccountImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/profile/application': {
+      id: '/_layout/profile/application'
+      path: '/profile/application'
+      fullPath: '/profile/application'
+      preLoaderRoute: typeof LayoutProfileApplicationImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/profile/study': {
       id: '/_layout/profile/study'
       path: '/profile/study'
@@ -249,12 +275,14 @@ export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
   LayoutRoute: LayoutRoute.addChildren({
     LayoutProfileAccountRoute,
+    LayoutProfileApplicationRoute,
     LayoutProfileStudyRoute,
     LayoutProfileCertificateLazyRoute,
     LayoutProfileIndexLazyRoute,
   }),
   AboutLazyRoute,
   TeamLazyRoute,
+  ApplyApplicationRoute,
   ApplyMemberRoute,
   ApplyMentorRoute,
   AuthSignUpRoute,
@@ -277,6 +305,7 @@ export const routeTree = rootRoute.addChildren({
         "/_layout",
         "/about",
         "/team",
+        "/apply/application",
         "/apply/member",
         "/apply/mentor",
         "/auth/sign-up",
@@ -294,6 +323,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_layout.tsx",
       "children": [
         "/_layout/profile/account",
+        "/_layout/profile/application",
         "/_layout/profile/study",
         "/_layout/profile/certificate",
         "/_layout/profile/"
@@ -304,6 +334,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/team": {
       "filePath": "team.lazy.tsx"
+    },
+    "/apply/application": {
+      "filePath": "apply/application.tsx"
     },
     "/apply/member": {
       "filePath": "apply/member.tsx"
@@ -331,6 +364,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_layout/profile/account": {
       "filePath": "_layout/profile/account.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/profile/application": {
+      "filePath": "_layout/profile/application.tsx",
       "parent": "/_layout"
     },
     "/_layout/profile/study": {

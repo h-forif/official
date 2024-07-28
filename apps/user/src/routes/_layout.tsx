@@ -18,7 +18,7 @@ function ProfileLayout() {
   const pathname = useLocation().pathname;
   const theme = useTheme();
   const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
-  const [, setValue] = useState(pathname);
+  const [value, setValue] = useState(pathname);
 
   return (
     <Box
@@ -32,9 +32,11 @@ function ProfileLayout() {
       }}
     >
       <Tabs
-        value={pathname}
-        onChange={(event, newValue) => {
-          setValue(newValue);
+        value={value}
+        onChange={(event, newValue: string) => {
+          if (newValue.startsWith('/profile')) {
+            setValue(newValue);
+          }
         }}
         orientation={isPhone ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'

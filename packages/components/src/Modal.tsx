@@ -78,9 +78,9 @@ export function ModalHeader({ children }: { children: ReactNode }) {
 export function ModalTitle({ children }: { children: ReactNode }) {
   return (
     <Typography
-      variant='titleSmall'
+      variant='titleMedium'
       id='modal-modal-title'
-      sx={{ fontWeight: 800 }}
+      sx={{ fontWeight: 800, mb: 2 }}
     >
       {children}
     </Typography>

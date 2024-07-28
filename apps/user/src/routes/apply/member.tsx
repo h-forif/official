@@ -24,7 +24,7 @@ import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { createFileRoute, useBlocker } from '@tanstack/react-router';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
-import { getUserInfo } from 'src/services/user.service';
+import { getApplication, getUserInfo } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -36,6 +36,11 @@ const STORAGE_KEY = 'applyMemberForm';
 
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
+    const savedApplication = await getApplication();
+    if (savedApplication) {
+      window.location.href = '/apply/application';
+    }
+
     const [userInfo, studies] = await Promise.all([
       getUserInfo(),
       getAllStudies({ year: 2024, semester: 1 }),
@@ -50,7 +55,7 @@ export const Route = createFileRoute('/apply/member')({
 
 function ApplyMember() {
   const loaderData = Route.useLoaderData();
-  const { id, name, department, phoneNumber } = loaderData.userInfo;
+  const { id, name, department, phoneNumber } = loaderData!.userInfo;
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -93,7 +98,7 @@ function ApplyMember() {
       value: '0',
       label: '자율스터디 부원으로 신청하기',
     },
-    ...loaderData.studies.map((study) => ({
+    ...loaderData!.studies.map((study) => ({
       value: study.id.toString(),
       label: study.name,
     })),
@@ -150,7 +155,14 @@ function ApplyMember() {
   return (
     <>
       <Box component={'main'} sx={{ mx: '3vw' }}>
-        <Box sx={{ maxWidth: '512px', mx: 'auto', mb: 8 }}>
+        <Box
+          sx={{
+            width: { xs: '100%', md: '512px' },
+            px: { xs: 2 },
+            pb: 4,
+            margin: 'auto',
+          }}
+        >
           <Title title='스터디 신청' label='2024-08-26 ~ 2024-09-11' mb={3} />
           <CautionList />
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -209,7 +221,7 @@ function ApplyMember() {
                     error={!!fieldState.error}
                     errorMessage='1순위 스터디는 필수값입니다.'
                     options={options}
-                    minWidth={512}
+                    minWidth={'100%'}
                     required
                   />
                 )}
@@ -269,7 +281,6 @@ function ApplyMember() {
                     setVal={field.onChange}
                     placeholder='2순위 스터디를 신청해주세요.'
                     options={filteredSecondaryOptions}
-                    minWidth={512}
                     required={!isPrimaryStudyOnly}
                     error={!!fieldState.error}
                     errorMessage={fieldState.error?.message}
@@ -278,6 +289,7 @@ function ApplyMember() {
                       primaryStudyValue === '0' ||
                       isPrimaryStudyOnly
                     }
+                    minWidth={'100%'}
                   />
                 )}
               />
@@ -324,7 +336,7 @@ function ApplyMember() {
                     options={applyPathOptions}
                     error={!!fieldState.error}
                     errorMessage='지원 경로는 필수값입니다.'
-                    minWidth={512}
+                    minWidth={'100%'}
                   />
                 )}
               />

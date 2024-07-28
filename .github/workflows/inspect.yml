@@ -1,0 +1,16 @@
+name: 콘솔 로그 확인
+
+on: [pull_request]
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Console.log가 있는지 확인합니다.
+        run: |
+          chmod +x .scripts/is_contain.sh
+          .scripts/is_contain.sh "console.log"

@@ -16,10 +16,10 @@ export interface SelectOption {
 interface SelectProps extends BaseSelectProps {
   val: string;
   // eslint-disable-next-line no-unused-vars
-  setVal: (val: string) => void;
+  setVal?: (val: string) => void;
   placeholder: string;
   errorMessage?: string;
-  minWidth?: number;
+  minWidth?: number | string;
   options: SelectOption[];
 }
 
@@ -35,7 +35,9 @@ export function Select({
   ...props
 }: SelectProps) {
   const handleChange = (event: SelectChangeEvent<unknown>) => {
-    setVal(event.target.value as string);
+    if (setVal) {
+      setVal(event.target.value as string);
+    }
   };
 
   return (
