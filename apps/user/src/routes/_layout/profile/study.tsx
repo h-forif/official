@@ -1,4 +1,11 @@
-import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
@@ -26,7 +33,6 @@ function MyStudy() {
     queryKey: ['currentStudy'],
     queryFn: () => getStudyInfo(user.currentStudyId?.toString() || ''),
   });
-  console.log(user);
 
   return (
     <Box width={'100%'}>
@@ -40,7 +46,55 @@ function MyStudy() {
         maxWidth={1120}
       >
         <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
-          <Grid item sm={12} md={6}>
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                minWidth: 275,
+                backgroundColor: 'background.default',
+                borderRadius: 3,
+                boxShadow: 0,
+                p: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+              }}
+            >
+              <CardContent>
+                <Box>
+                  <Typography variant='titleMedium' fontWeight={'bold'}>
+                    제출한 스터디 지원서
+                  </Typography>
+                  <Typography variant='bodySmall' color={'text.secondary'}>
+                    현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
+                  </Typography>
+                  <Stack gap={2} my={4}>
+                    <Typography variant='bodyMedium'>
+                      1순위 스터디: {isLoading ? 'Unknown' : data!.name}
+                    </Typography>
+                    <TextField
+                      id='primary-study-application-textfield'
+                      value={'Hi through the fire and the flames'}
+                      multiline
+                      disabled
+                      maxRows={4}
+                    />
+                  </Stack>
+                  <Stack gap={2} my={4}>
+                    <Typography variant='bodyMedium'>
+                      2순위 스터디: {isLoading ? 'Unknown' : data!.name}
+                    </Typography>
+                    <TextField
+                      id='primary-study-application-textfield'
+                      value={'Hi through the fire and the flames'}
+                      multiline
+                      disabled
+                      maxRows={4}
+                    />
+                  </Stack>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item sm={12} md={4}>
             <Card
               sx={{
                 minWidth: 275,
@@ -84,7 +138,7 @@ function MyStudy() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={8}>
             <Card
               sx={{
                 minWidth: 275,

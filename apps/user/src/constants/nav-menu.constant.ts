@@ -59,6 +59,10 @@ export const PROFILE_NAV_MENUS: NavMenu[] = [
     href: '/profile/study',
   },
   {
+    title: '지원서',
+    href: '/profile/application',
+  },
+  {
     title: '인증서',
     href: '/profile/certificate',
   },

@@ -190,6 +190,8 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               right: 0,
               bottom: 0,
               bgcolor: 'rgba(0, 0, 0, 0.5)',
+              width: '100%',
+              height: '100vh',
               backdropFilter: 'blur(5px)',
               zIndex: 1000,
             }}

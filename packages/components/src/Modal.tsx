@@ -14,13 +14,13 @@ import {
   ModalContentProps,
   ModalProps,
   ModalTriggerProps,
-} from '@components/types/modal';
+} from '../types/modal';
 
 /**
- * keepMounted는 모달창을 항상 마운트시킵니다. 동일한 모달을 자주 발생시킬 시 사용해주세요.
+ * keepMounted는 모달창을 항상 마운트시킵니다. 동일한 모달을 자주 발생시킬 시 성능을 높이기 위해 사용해주세요.
  */
-export function Modal({ keepMounted = false, children }: ModalProps) {
-  const [open, setOpen] = useState(false);
+export function Modal({ keepMounted = false, isOpen, children }: ModalProps) {
+  const [open, setOpen] = useState(isOpen ? isOpen : false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -78,9 +78,9 @@ export function ModalHeader({ children }: { children: ReactNode }) {
 export function ModalTitle({ children }: { children: ReactNode }) {
   return (
     <Typography
-      variant='titleSmall'
+      variant='titleMedium'
       id='modal-modal-title'
-      sx={{ fontWeight: 800 }}
+      sx={{ fontWeight: 800, mb: 2 }}
     >
       {children}
     </Typography>
@@ -89,9 +89,9 @@ export function ModalTitle({ children }: { children: ReactNode }) {
 
 export function ModalDescription({ children }: { children: ReactNode }) {
   return (
-    <DescTypography variant='labelSmall' id='modal-modal-description'>
+    <Typography variant='labelSmall' id='modal-modal-description'>
       {children}
-    </DescTypography>
+    </Typography>
   );
 }
 
@@ -102,19 +102,14 @@ const HeaderContainer = styled('div')({
   marginBottom: '16px',
 });
 
-const DescTypography = styled(Typography)(({ theme }) => ({
-  color: theme.palette.info.main,
-}));
-
-const Close = styled(CloseIcon)(({ theme }) => ({
-  color: theme.palette.info.main,
+const Close = styled(CloseIcon)({
   position: 'absolute',
   width: '1rem',
   height: '1rem',
   top: '16px',
   right: '16px',
   cursor: 'pointer',
-}));
+});
 
 const ModalContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,

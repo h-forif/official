@@ -1,3 +1,4 @@
+import { FormHelperText } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,9 +16,10 @@ export interface SelectOption {
 interface SelectProps extends BaseSelectProps {
   val: string;
   // eslint-disable-next-line no-unused-vars
-  setVal: (val: string) => void;
+  setVal?: (val: string) => void;
   placeholder: string;
-  minWidth?: number;
+  errorMessage?: string;
+  minWidth?: number | string;
   options: SelectOption[];
 }
 
@@ -26,21 +28,27 @@ export function Select({
   setVal,
   placeholder,
   options,
-  minWidth = 120,
+  minWidth,
+  error,
+  errorMessage,
+  required,
   ...props
 }: SelectProps) {
   const handleChange = (event: SelectChangeEvent<unknown>) => {
-    setVal(event.target.value as string);
+    if (setVal) {
+      setVal(event.target.value as string);
+    }
   };
 
   return (
     <Box sx={{ minWidth: minWidth }}>
-      <FormControl fullWidth>
-        <InputLabel id={`${val}-select-label`}>{placeholder}</InputLabel>
+      <FormControl fullWidth error={error}>
+        <InputLabel id={`${val}-select-label`} required={required}>
+          {placeholder}
+        </InputLabel>
         <MUISelect
           labelId={`${val}-select-label`}
           id={`${val}-select`}
-          displayEmpty
           value={val}
           label={placeholder}
           onChange={handleChange}
@@ -52,6 +60,7 @@ export function Select({
             </MenuItem>
           ))}
         </MUISelect>
+        {error && <FormHelperText>{errorMessage}</FormHelperText>}
       </FormControl>
     </Box>
   );

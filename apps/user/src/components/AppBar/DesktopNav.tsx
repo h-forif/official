@@ -37,11 +37,12 @@ export function DesktopNav({
   useEffect(() => {
     const navMenus = userState === 'sign-out' ? NAV_MENUS : AUTH_NAV_MENUS;
     setSelectedNavMenus(navMenus);
-  }, [userState]); // This effect runs whenever `userState` changes.
+  }, [userState]);
+
   return (
     <>
       <Box
-        sx={{ display: { xs: 'none', md: 'flex' } }}
+        sx={{ display: { xs: 'none', md: 'flex', zIndex: 999 } }}
         onMouseLeave={handleMouseLeave}
       >
         {selectedNavMenus.map((menu) => (
