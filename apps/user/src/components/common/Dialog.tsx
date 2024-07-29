@@ -1,4 +1,5 @@
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import {
   Dialog,
   DialogActions,
@@ -9,10 +10,60 @@ import {
 } from '@mui/material';
 
 import { Button } from '@packages/components/Button';
-import { useDialogStore } from '@stores/dialog.store';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 
 export const AlertDialog = () => {
   const { isOpen, dialogProps, closeDialog, isDualButton } = useDialogStore();
+
+  const renderIcon = (dialogIconType: DialogIconType) => {
+    let IconComponent;
+    switch (dialogIconType) {
+      case DialogIconType.CONFIRM:
+        IconComponent = (
+          <Icon
+            component={CheckRoundedIcon}
+            color='primary'
+            sx={{
+              fontSize: '64px',
+              borderRadius: '50%',
+              border: '2px solid',
+              mb: 2,
+            }}
+          />
+        );
+        break;
+      case DialogIconType.WARNING:
+        IconComponent = (
+          <Icon
+            component={PriorityHighIcon}
+            color='error'
+            sx={{
+              fontSize: '64px',
+              borderRadius: '50%',
+              border: '2px solid',
+              mb: 2,
+            }}
+          />
+        );
+        break;
+      default:
+        IconComponent = (
+          <Icon
+            component={CheckRoundedIcon}
+            color='primary'
+            sx={{
+              fontSize: '64px',
+              borderRadius: '50%',
+              border: '2px solid',
+              mb: 2,
+            }}
+          />
+        );
+        break;
+    }
+    return IconComponent;
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -20,12 +71,7 @@ export const AlertDialog = () => {
         sx: {
           margin: 0,
           padding: '36px',
-          xs: {
-            width: '100%',
-          },
-          sm: {
-            width: '560px',
-          },
+          width: { xs: '100%', md: '512px' },
         },
       }}
       sx={{
@@ -44,16 +90,7 @@ export const AlertDialog = () => {
           fontSize: '24px',
         }}
       >
-        <Icon
-          component={CheckRoundedIcon}
-          color='primary'
-          sx={{
-            fontSize: '48px',
-            borderRadius: '50%',
-            border: '2px solid',
-            mb: 2,
-          }}
-        />
+        {renderIcon(dialogProps.dialogIconType)}
         {dialogProps.title}
       </DialogTitle>
 

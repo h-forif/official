@@ -8,8 +8,8 @@ import { styled } from '@mui/system';
 import LetterIcon from '@assets/logos/forif-letter.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
-import { setRefreshToken, useAccessToken } from '@stores/token.store';
-import { clearUser, getUserState, setUserState } from '@stores/user.store';
+import { setRefreshToken } from '@stores/token.store';
+import { clearUser, getUserState } from '@stores/user.store';
 import { useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import axios from 'axios';
@@ -51,14 +51,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   }, [isVisible, controls]);
 
   const userState = getUserState();
-
-  const accessToken = useAccessToken();
-
-  useEffect(() => {
-    if (accessToken) {
-      setUserState('sign-in');
-    }
-  }, [accessToken]);
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
     try {

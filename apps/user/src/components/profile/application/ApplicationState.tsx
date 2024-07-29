@@ -11,7 +11,9 @@ export function ApplicationState({
 }: {
   application: Application;
 }) {
-  const [activeStep, setActiveStep] = useState(0);
+  console.log(application);
+
+  const [activeStep] = useState(0);
 
   return (
     <Box
@@ -35,7 +37,9 @@ export function ApplicationState({
             } = {};
             return (
               <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
+                <StepLabel {...labelProps}>
+                  {label} - {index}
+                </StepLabel>
               </Step>
             );
           })}

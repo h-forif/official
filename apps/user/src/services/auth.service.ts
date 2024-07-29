@@ -26,6 +26,7 @@ const signIn = async (g_access_token: string | null | undefined) => {
     department: department ? department : null,
     id: null,
   });
+  setAccessToken(g_access_token!); //sign-up 에서도 accessToken을 사용하기 때문
 
   const { user, access_token, refresh_token } = await api
     .get<SignInResponse>('/auth/sign-in', {
@@ -45,29 +46,24 @@ const handleSignUp = async (
   { department, id, name, phoneNumber }: z.infer<typeof SignUpSchema>,
   accessToken: string | null | undefined,
 ) => {
-  try {
-    const data: User = await api
-      .post(
-        '/signup',
-        {
-          userName: name,
-          department: department,
-          id: id,
-          phoneNumber: phoneNumber,
+  const data: User = await api
+    .post(
+      '/auth/sign-up',
+      {
+        userName: name,
+        department: department,
+        id: id,
+        phoneNumber: phoneNumber,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: accessToken,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: accessToken,
-          },
-        },
-      )
-      .then((res) => res.data);
-    return data;
-  } catch (err) {
-    console.error('An error occurred:', err);
-    throw new Error('회원가입에 실패했습니다.');
-  }
+      },
+    )
+    .then((res) => res.data);
+  return data;
 };
 
 export { handleSignUp, signIn };

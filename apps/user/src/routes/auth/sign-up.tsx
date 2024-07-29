@@ -10,7 +10,10 @@ import { FormAutocomplete } from '@packages/components/form/FormAutocomplete';
 import { FormCheckbox } from '@packages/components/form/FormCheckbox';
 import { FormInput } from '@packages/components/form/FormInput';
 import { User } from '@packages/components/types/user';
+import { handleSignUp } from '@services/auth.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import useToastStore from '@stores/toast.store';
+import { useAccessToken } from '@stores/token.store';
 import { getUser } from '@stores/user.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { SignUpSchema } from 'src/types/sign-up.schema';
@@ -33,9 +36,11 @@ function SignUpPage() {
   const user = Route.useLoaderData();
   const navigate = useNavigate();
 
-  const { openDualButtonDialog, closeDialog } = useDialogStore();
+  const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
+    useDialogStore();
 
   const { email, name, department }: User = user;
+  const { showToast } = useToastStore();
 
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -49,29 +54,39 @@ function SignUpPage() {
     },
   });
 
+  const accessToken = useAccessToken();
+
   const onSubmit = async (formData: z.infer<typeof SignUpSchema>) => {
     openDualButtonDialog({
       dialogIconType: DialogIconType.CONFIRM,
       title: '회원가입 제출',
-      message: '정말로 제출하실 건가요? 학번은 수정이 불가능합니다.',
+      message: '정말로 제출하실 건가요? 학번은 수정이 불가능해요..',
       mainButtonText: '네, 제출할게요.',
-      mainButtonAction: () => {
-        // Handle main button action
-        closeDialog();
+      mainButtonAction: async () => {
+        try {
+          const res = await handleSignUp(formData, accessToken);
+          showToast('회원가입이 완료되었습니다.', 'success');
+          navigate({ to: '/' });
+          console.log(res);
+        } catch (err) {
+          closeDialog();
+          openSingleButtonDialog({
+            dialogIconType: DialogIconType.WARNING,
+            title: '회원가입 실패',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            message: (err as any)?.response?.data?.message,
+            mainButtonText: '확인',
+            mainButtonAction: () => {
+              closeDialog();
+            },
+          });
+        }
       },
       subButtonText: '아니요, 수정할게요.',
       subButtonAction: () => {
         closeDialog();
       },
     });
-
-    // try {
-    //   const data = await handleSignUp(formData, accessToken);
-    //   setUser(data);
-    //   navigate({ to: '/' });
-    // } catch (err) {
-    //   console.error(err);
-    // }
   };
   return (
     <Box component={'main'}>
