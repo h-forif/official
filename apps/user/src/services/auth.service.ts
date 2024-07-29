@@ -1,6 +1,6 @@
 import { User } from '@packages/components/types/user';
-import { setAccessToken, setRefreshToken } from '@store/token.store';
-import { setUser, setUserState } from '@store/user.store';
+import { setAccessToken, setRefreshToken } from '@stores/token.store';
+import { setUser, setUserState } from '@stores/user.store';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 

@@ -4,8 +4,8 @@ import {
   setAccessToken,
   useAccessToken,
   useRefreshToken,
-} from '@store/token.store';
-import { setUserState } from '@store/user.store';
+} from '@stores/token.store';
+import { setUserState } from '@stores/user.store';
 import { api } from 'src/services/axios-instance';
 
 const useInitializeAuth = () => {

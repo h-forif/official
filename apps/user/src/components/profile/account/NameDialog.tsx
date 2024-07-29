@@ -8,7 +8,7 @@ import { Stack } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
-import useToastStore from '@store/toast.store';
+import useToastStore from '@stores/toast.store';
 
 export interface NameDialogProps {
   previousName: string;

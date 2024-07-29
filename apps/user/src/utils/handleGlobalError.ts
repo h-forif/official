@@ -1,5 +1,5 @@
 // errorHandler.ts
-import useToastStore from '@store/toast.store';
+import useToastStore from '@stores/toast.store';
 import { AxiosError } from 'axios';
 
 export const handleGlobalError = (error: unknown) => {

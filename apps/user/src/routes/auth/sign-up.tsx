@@ -10,8 +10,8 @@ import { FormAutocomplete } from '@packages/components/form/FormAutocomplete';
 import { FormCheckbox } from '@packages/components/form/FormCheckbox';
 import { FormInput } from '@packages/components/form/FormInput';
 import { User } from '@packages/components/types/user';
-import { useAccessToken } from '@store/token.store';
-import { getUser } from '@store/user.store';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import { getUser } from '@stores/user.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
@@ -32,7 +32,8 @@ export const Route = createFileRoute('/auth/sign-up')({
 function SignUpPage() {
   const user = Route.useLoaderData();
   const navigate = useNavigate();
-  const accessToken = useAccessToken();
+
+  const { openDualButtonDialog, closeDialog } = useDialogStore();
 
   const { email, name, department }: User = user;
 
@@ -49,7 +50,20 @@ function SignUpPage() {
   });
 
   const onSubmit = async (formData: z.infer<typeof SignUpSchema>) => {
-    console.log(formData);
+    openDualButtonDialog({
+      dialogIconType: DialogIconType.CONFIRM,
+      title: '회원가입 제출',
+      message: '정말로 제출하실 건가요? 학번은 수정이 불가능합니다.',
+      mainButtonText: '네, 제출할게요.',
+      mainButtonAction: () => {
+        // Handle main button action
+        closeDialog();
+      },
+      subButtonText: '아니요, 수정할게요.',
+      subButtonAction: () => {
+        closeDialog();
+      },
+    });
 
     // try {
     //   const data = await handleSignUp(formData, accessToken);

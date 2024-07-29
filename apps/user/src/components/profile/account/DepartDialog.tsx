@@ -9,7 +9,7 @@ import { Stack } from '@mui/system';
 import { DEPARTMENT_OPTIONS } from '@constants/department.constant';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
-import useToastStore from '@store/toast.store';
+import useToastStore from '@stores/toast.store';
 
 export interface DepartDialogProps {
   previousDepartment: string;

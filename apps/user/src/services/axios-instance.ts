@@ -2,7 +2,7 @@ import {
   accessTokenStore,
   refreshTokenStore,
   setAccessToken,
-} from '@store/token.store';
+} from '@stores/token.store';
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
