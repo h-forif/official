@@ -5,7 +5,7 @@ export interface User {
   phoneNumber: string | null;
   department: string | null;
   id: string | null;
-  state?: 'sign-in' | 'sign-out' | 'loading';
+  state?: 'sign-in' | 'sign-out' | null;
 }
 
 export interface UserProfile

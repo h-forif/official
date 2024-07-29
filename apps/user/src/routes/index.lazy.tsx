@@ -1,19 +1,16 @@
 import { useCallback } from 'react';
 
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { Stack } from '@mui/system';
 
-import MainPeeps1 from '@assets/images/avatar/peep-1.svg?react';
-import MainPeeps2 from '@assets/images/avatar/peep-2.svg?react';
+import banner from '@assets/images/banner.svg';
 import { Button } from '@packages/components/Button';
+import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { signIn } from 'src/services/auth.service';
 
-import { LogoWall } from '@components/LogoWall';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 
 export const Route = createLazyFileRoute('/')({
@@ -22,8 +19,6 @@ export const Route = createLazyFileRoute('/')({
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 function Home() {
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('lg'));
   const navigate = useNavigate();
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
@@ -87,30 +82,16 @@ function Home() {
           </Link>
         </Stack>
         <AnimatedContainer>스터디 목록이 들어갈 자리입니다.</AnimatedContainer>
-        {matches && (
-          <>
-            <MainPeeps1
-              style={{
-                position: 'fixed',
-                bottom: 8,
-                right: 0,
-                width: '216px',
-                height: 'auto',
-              }}
-            />
-            <MainPeeps2
-              style={{
-                position: 'fixed',
-                bottom: 8,
-                left: 0,
-                width: '216px',
-                height: 'auto',
-              }}
-            />
-          </>
-        )}
       </CenteredBox>
-      <LogoWall />
+      <Image
+        src={banner}
+        alt={`forif-main-banner`}
+        loading='lazy'
+        title={'main-banner'}
+        width={'100%'}
+        style={{ objectFit: 'contain' }}
+        fallback={''}
+      />
     </main>
   );
 }

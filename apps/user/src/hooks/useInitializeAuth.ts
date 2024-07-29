@@ -27,8 +27,9 @@ const useInitializeAuth = () => {
           setUserState('sign-in');
         } catch (error) {
           console.error('Error refreshing access token:', error);
-          // 여기서 필요한 경우 로그아웃 처리를 할 수 있습니다.
         }
+      } else {
+        setUserState('sign-out');
       }
     };
 

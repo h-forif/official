@@ -14,8 +14,6 @@ interface SignInResponse {
 }
 
 const signIn = async (g_access_token: string | null | undefined) => {
-  console.log(g_access_token);
-
   try {
     const { user, access_token, refresh_token } = await api
       .get<SignInResponse>('/auth/sign-in', {
@@ -26,9 +24,9 @@ const signIn = async (g_access_token: string | null | undefined) => {
       .then((res) => res.data);
 
     setUser(user);
-    setUserState('sign-in');
     setAccessToken(access_token);
     setRefreshToken(refresh_token);
+    setUserState('sign-in');
   } catch (err) {
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       throw new Error('UserNotFound');

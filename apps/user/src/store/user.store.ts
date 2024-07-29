@@ -14,7 +14,7 @@ const useUserStore = create<User & UserAction>((set) => ({
   userAuthorization: null,
   email: null,
   phoneNumber: null,
-  state: 'sign-out',
+  state: null,
   updateName: (name) => set(() => ({ name: name })),
   updateDepartment: (department) => set(() => ({ department: department })),
   updateState: (state) => set(() => ({ state: state })),

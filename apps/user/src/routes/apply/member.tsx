@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { APPLY_PATH_OPTIONS } from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
@@ -104,33 +105,6 @@ function ApplyMember() {
     })),
   ];
 
-  const applyPathOptions: SelectOption[] = [
-    {
-      value: 'everytime',
-      label: '에브리타임',
-    },
-    {
-      value: 'instagram',
-      label: '인스타그램',
-    },
-    {
-      value: 'linkedin',
-      label: '링크드인',
-    },
-    {
-      value: 'kakaotalk',
-      label: '학과 단톡방',
-    },
-    {
-      value: 'friend',
-      label: '지인 추천',
-    },
-    {
-      value: 'etc',
-      label: '기타',
-    },
-  ];
-
   const handleCheckBoxChange = (e: ChangeEvent<HTMLInputElement>) => {
     form.setValue('isPrimaryStudyOnly', e.target.checked);
   };
@@ -154,7 +128,7 @@ function ApplyMember() {
 
   return (
     <>
-      <Box component={'main'} sx={{ mx: '3vw' }}>
+      <Box component={'main'}>
         <Box
           sx={{
             width: { xs: '100%', md: '512px' },
@@ -333,7 +307,7 @@ function ApplyMember() {
                     val={field.value}
                     setVal={field.onChange}
                     placeholder='포리프를 접하게 된 경로를 작성해주세요.'
-                    options={applyPathOptions}
+                    options={APPLY_PATH_OPTIONS}
                     error={!!fieldState.error}
                     errorMessage='지원 경로는 필수값입니다.'
                     minWidth={'100%'}

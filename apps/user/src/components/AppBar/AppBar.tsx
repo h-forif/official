@@ -50,6 +50,8 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   }, [isVisible, controls]);
 
   const userState = getUserState();
+  console.log(userState);
+
   const accessToken = useAccessToken();
 
   useEffect(() => {
@@ -91,10 +93,15 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
     navigate({ to: '/' });
   };
 
+  // userState가 null이면 로딩 상태 표시
+  if (userState === null) {
+    return null;
+  }
+
   return (
     <>
       <MUIAppBar
-        position='absolute'
+        position='static'
         sx={{
           boxShadow: 0,
           bgcolor: 'transparent',
