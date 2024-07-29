@@ -12,6 +12,7 @@ import { setRefreshToken, useAccessToken } from '@store/token.store';
 import { clearUser, getUserState, setUserState } from '@store/user.store';
 import { useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
+import axios from 'axios';
 import { useAnimation } from 'framer-motion';
 import { signIn } from 'src/services/auth.service';
 
@@ -50,7 +51,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   }, [isVisible, controls]);
 
   const userState = getUserState();
-  console.log(userState);
 
   const accessToken = useAccessToken();
 
@@ -65,8 +65,11 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
       await signIn(tokenResponse.access_token);
       navigate({ to: '/profile' });
     } catch (err) {
-      if (err === 'UserNotFound') {
-        navigate({ to: '/auth/sign-up' });
+      if (axios.isAxiosError(err) && err.response?.status === 404) {
+        navigate({
+          to: '/auth/sign-up',
+          params: { tokenResponse },
+        });
       } else {
         handleGlobalError(err);
       }

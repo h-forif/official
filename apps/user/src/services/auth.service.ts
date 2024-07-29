@@ -1,11 +1,11 @@
 import { User } from '@packages/components/types/user';
 import { setAccessToken, setRefreshToken } from '@store/token.store';
 import { setUser, setUserState } from '@store/user.store';
-import axios from 'axios';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 
 import { api } from './axios-instance';
+import { getGoogleInfo } from './user.service';
 
 interface SignInResponse {
   access_token: string;
@@ -14,25 +14,31 @@ interface SignInResponse {
 }
 
 const signIn = async (g_access_token: string | null | undefined) => {
-  try {
-    const { user, access_token, refresh_token } = await api
-      .get<SignInResponse>('/auth/sign-in', {
-        params: {
-          access_token: g_access_token,
-        },
-      })
-      .then((res) => res.data);
+  const data = await getGoogleInfo(g_access_token);
+  const parts = data.name.split('|').map((part) => part.trim());
+  const [name, department] = parts;
 
-    setUser(user);
-    setAccessToken(access_token);
-    setRefreshToken(refresh_token);
-    setUserState('sign-in');
-  } catch (err) {
-    if (axios.isAxiosError(err) && err.response?.status === 404) {
-      throw new Error('UserNotFound');
-    }
-    throw err;
-  }
+  setUser({
+    email: data.email ? data.email : null,
+    userAuthorization: null,
+    name: name ? name : null,
+    phoneNumber: null,
+    department: department ? department : null,
+    id: null,
+  });
+
+  const { user, access_token, refresh_token } = await api
+    .get<SignInResponse>('/auth/sign-in', {
+      params: {
+        access_token: g_access_token,
+      },
+    })
+    .then((res) => res.data);
+
+  setUser(user);
+  setAccessToken(access_token);
+  setRefreshToken(refresh_token);
+  setUserState('sign-in');
 };
 
 const handleSignUp = async (

@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
 import { Checkbox, CheckboxProps, FormControlLabel } from '@mui/material';
@@ -5,7 +6,7 @@ import { Checkbox, CheckboxProps, FormControlLabel } from '@mui/material';
 type FormCheckboxProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
-  label: string;
+  label: ReactNode;
 } & CheckboxProps;
 
 export function FormCheckbox<T extends FieldValues>({

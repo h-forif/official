@@ -1,13 +1,24 @@
 import { UserProfile } from '@packages/components/types/user';
 import { Application } from 'src/types/apply.schema';
 
-import { authApi } from './axios-instance';
+import { api, authApi } from './axios-instance';
 
 const getUserInfo = async () => {
   const userInfo: UserProfile = await authApi
     .get('/auth/profile')
     .then((res) => res.data);
   return userInfo;
+};
+
+const getGoogleInfo = async (g_access_token: string | null | undefined) => {
+  const data: { email: string; name: string } = await api
+    .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${g_access_token}`,
+      },
+    })
+    .then((res) => res.data);
+  return data;
 };
 
 const getApplication = async () => {
@@ -17,4 +28,4 @@ const getApplication = async () => {
   return application;
 };
 
-export { getApplication, getUserInfo };
+export { getApplication, getGoogleInfo, getUserInfo };
