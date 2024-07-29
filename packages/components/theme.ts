@@ -111,7 +111,7 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
       ? {
           // 라이트 모드 팔레트
           primary: {
-            main: '#1E4CF4',
+            main: '#1D40BA',
           },
           secondary: {
             main: '#8BA6BA',
