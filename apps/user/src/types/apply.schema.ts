@@ -1,3 +1,4 @@
+import dayjs, { Dayjs } from 'dayjs';
 import z from 'zod';
 
 export const ApplyMemberSchema = z
@@ -69,6 +70,33 @@ export const ApplyMemberSchema = z
       }
     }
     return true;
+  });
+
+export const ApplyMentorSchema = z
+  .object({
+    studyName: z
+      .string()
+      .min(1, '개설하시고자 하는 스터디 이름을 입력해주세요.')
+      .max(20, '스터디 이름은 20자 이하로 입력해주세요.'),
+    oneLiner: z
+      .string()
+      .min(1, '한 줄 소개를 입력해주세요.')
+      .max(150, '150자 이하로 입력해주세요.'),
+    level: z.string().min(1, '스터디 난이도를 선택해주세요.'),
+    location: z.string().min(1, '스터디 장소를 입력해주세요.'),
+    startTime: z.custom<Dayjs>(
+      (val) => val instanceof dayjs,
+      '올바르지 않은 형식입니다.',
+    ),
+    endTime: z.custom<Dayjs>(
+      (val) => val instanceof dayjs,
+      '올바르지 않은 형식입니다.',
+    ),
+    weekDay: z.string().min(1, '스터디 요일을 선택해주세요.'),
+  })
+  .refine((data) => data.endTime.isAfter(data.startTime), {
+    message: '종료 시간은 시작 시간보다 늦어야 합니다.',
+    path: ['endTime'], // set the path of the error to 'endTime'
   });
 
 export interface Application {

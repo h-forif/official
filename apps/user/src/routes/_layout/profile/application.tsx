@@ -2,7 +2,7 @@ import { Card, CardContent, Grid, TextField, Typography } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
-import { createFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import dayjs from 'dayjs';
 import { getApplication } from 'src/services/user.service';
@@ -88,9 +88,11 @@ function MyApplication() {
                     }}
                   />
                 </Stack>
-                <Button variant='contained' size='large' fullWidth>
-                  수정
-                </Button>
+                <Link to='/apply/application'>
+                  <Button variant='contained' size='large' fullWidth>
+                    수정
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </Grid>

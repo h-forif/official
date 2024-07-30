@@ -22,7 +22,7 @@ import {
 } from '@packages/components/Modal';
 import { Select, SelectOption } from '@packages/components/Select';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { createFileRoute, useBlocker } from '@tanstack/react-router';
+import { createFileRoute, redirect, useBlocker } from '@tanstack/react-router';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
 import { getApplication, getUserInfo } from 'src/services/user.service';
@@ -39,7 +39,9 @@ export const Route = createFileRoute('/apply/member')({
   loader: async () => {
     const savedApplication = await getApplication();
     if (savedApplication) {
-      window.location.href = '/apply/application';
+      throw redirect({
+        to: '/apply/application',
+      });
     }
 
     const [userInfo, studies] = await Promise.all([
@@ -146,7 +148,7 @@ function ApplyMember() {
               alignItems={'center'}
               my={4}
             >
-              <Typography variant='titleSmall'>개인 정보</Typography>
+              <Typography variant='titleSmall'>신청 부원 정보</Typography>
               <Input
                 required
                 fullWidth

@@ -71,7 +71,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
               <strong>{year}</strong>년 <strong>{semester}</strong>학기에
               진행되었으며 난이도가{' '}
               <strong>{getDifficultyKeyByValue(difficulty)}</strong>에 해당하는
-              스터디가 없는 듯 해요. 오류일 수 있으니 다시 시도해주세
+              스터디가 없는 듯 해요. 오류일 수 있으니 다시 시도해주세요.
             </Typography>
           </CenteredBox>
         )}

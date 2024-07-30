@@ -93,7 +93,7 @@ function MyApplication() {
         <CautionList />
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Stack gap={5} justifyContent={'center'} alignItems={'center'} my={4}>
-            <Typography variant='titleSmall'>개인 정보</Typography>
+            <Typography variant='titleSmall'>신청 부원 정보</Typography>
             <Input required fullWidth label='학번' defaultValue={id} disabled />
             <Input
               required

@@ -88,11 +88,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
     navigate({ to: '/' });
   };
 
-  // userState가 null이면 로딩 상태 표시
-  if (userState === null) {
-    return null;
-  }
-
   return (
     <>
       <MUIAppBar
