@@ -7,6 +7,8 @@ const getUserInfo = async () => {
   const userInfo: UserProfile = await authApi
     .get('/auth/profile')
     .then((res) => res.data);
+  console.log(userInfo);
+
   return userInfo;
 };
 

@@ -18,7 +18,7 @@
   "devDependencies": {
     "@packages/eslint-config": "workspace:*",
     "@packages/ts-config": "workspace:*",
-    "prettier": "^3.3.2"
+    "prettier": "^3.3.3"
   },
   "keywords": [],
   "author": "",

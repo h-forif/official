@@ -1,16 +1,19 @@
 import { useEffect } from 'react';
 
+import { api } from '@services/axios-instance';
 import {
   setAccessToken,
   useAccessToken,
   useRefreshToken,
 } from '@stores/token.store';
 import { setUserState } from '@stores/user.store';
-import { api } from 'src/services/axios-instance';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 const useInitializeAuth = () => {
   const refreshToken = useRefreshToken();
   const accessToken = useAccessToken();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -29,12 +32,18 @@ const useInitializeAuth = () => {
           console.error('Error refreshing access token:', error);
         }
       } else {
+        if (
+          location.pathname !== '/' &&
+          location.pathname.startsWith('/auth')
+        ) {
+          navigate({ to: '/' });
+        }
         setUserState('sign-out');
       }
     };
 
     initializeAuth();
-  }, [refreshToken, accessToken]);
+  }, [refreshToken, accessToken, location, navigate]);
 };
 
 export default useInitializeAuth;

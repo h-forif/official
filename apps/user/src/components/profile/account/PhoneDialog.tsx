@@ -53,7 +53,9 @@ export function PhoneDialog({ previousPhoneNumber }: PhoneDialogProps) {
             alignItems={'center'}
             justifyContent={'space-between'}
           >
-            <Typography variant='labelLarge'>{previousPhoneNumber}</Typography>
+            <Typography variant='labelLarge'>
+              {previousPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')}
+            </Typography>
             <Button variant='outlined' onClick={() => setOpen(true)}>
               변경
             </Button>

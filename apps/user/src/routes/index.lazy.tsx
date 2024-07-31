@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/system';
 
@@ -7,47 +5,18 @@ import banner from '@assets/images/banner.svg';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { Link, createLazyFileRoute, useNavigate } from '@tanstack/react-router';
-import { handleGlobalError } from '@utils/handleGlobalError';
-import { signIn } from 'src/services/auth.service';
+import { Link, createLazyFileRoute } from '@tanstack/react-router';
 
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
+
+import { useSignIn } from '@hooks/useSignIn';
 
 export const Route = createLazyFileRoute('/')({
   component: Home,
 });
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 function Home() {
-  const navigate = useNavigate();
-
-  const signInWithToken = async (tokenResponse: TokenResponse) => {
-    console.log(tokenResponse.access_token);
-
-    try {
-      await signIn(tokenResponse.access_token);
-      navigate({ to: '/profile' });
-    } catch (err) {
-      if (err === 'UserNotFound') {
-        navigate({ to: '/auth/sign-up' });
-      }
-      handleGlobalError(err);
-    }
-  };
-
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
-    callback: signInWithToken,
-  });
-
-  const handleSignIn = useCallback(async () => {
-    if (client) {
-      client.requestAccessToken();
-    } else {
-      console.error('Google OAuth2 client is not initialized.');
-    }
-  }, [client]);
+  const { handleSignIn } = useSignIn();
 
   return (
     <main>

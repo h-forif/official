@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import MUIAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -11,19 +11,15 @@ import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { setRefreshToken } from '@stores/token.store';
 import { clearUser, getUserState } from '@stores/user.store';
 import { useNavigate } from '@tanstack/react-router';
-import { handleGlobalError } from '@utils/handleGlobalError';
-import axios from 'axios';
 import { useAnimation } from 'framer-motion';
-import { signIn } from 'src/services/auth.service';
 
 import { useNavMenu } from '@hooks/useNavMenu';
 import useScrollPosition from '@hooks/useScrollPosition';
+import { useSignIn } from '@hooks/useSignIn';
 
 import { AppBarProps } from '../../types/app-bar.type';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const scrollPosition = useScrollPosition();
@@ -52,35 +48,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
 
   const userState = getUserState();
 
-  const signInWithToken = async (tokenResponse: TokenResponse) => {
-    try {
-      await signIn(tokenResponse.access_token);
-      navigate({ to: '/profile' });
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 404) {
-        navigate({
-          to: '/auth/sign-up',
-          params: { tokenResponse },
-        });
-      } else {
-        handleGlobalError(err);
-      }
-    }
-  };
-
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
-    callback: signInWithToken,
-  });
-
-  const handleSignIn = useCallback(async () => {
-    if (client) {
-      client.requestAccessToken();
-    } else {
-      console.error('Google OAuth2 client is not initialized.');
-    }
-  }, [client]);
+  const { handleSignIn } = useSignIn();
 
   const handleSignOut = () => {
     setRefreshToken(null);

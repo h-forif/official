@@ -62,11 +62,11 @@ function MyApplication() {
                 </Typography>
                 <Stack gap={2} my={4}>
                   <Typography variant='bodyMedium'>
-                    1순위 스터디: {application.primaryStudy.name}
+                    1순위 스터디: {application.primary_study.name}
                   </Typography>
                   <TextField
                     id='primary-study-application-textfield'
-                    value={application.primaryStudy.introduction}
+                    value={application.primary_study.introduction}
                     multiline
                     maxRows={4}
                     InputProps={{
@@ -76,11 +76,11 @@ function MyApplication() {
                 </Stack>
                 <Stack gap={2} my={4}>
                   <Typography variant='bodyMedium'>
-                    2순위 스터디: {application.secondaryStudy.name}
+                    2순위 스터디: {application.secondary_study.name}
                   </Typography>
                   <TextField
                     id='primary-study-application-textfield'
-                    value={application.secondaryStudy.introduction}
+                    value={application.secondary_study.introduction}
                     multiline
                     maxRows={4}
                     InputProps={{

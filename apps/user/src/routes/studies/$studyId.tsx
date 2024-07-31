@@ -13,20 +13,21 @@ import {
   Typography,
 } from '@mui/material';
 import { Box, Stack } from '@mui/system';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  DateCalendar,
+  LocalizationProvider,
   PickersDay,
   PickersDayProps,
-} from '@mui/x-date-pickers/PickersDay/PickersDay';
+} from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
-import { createFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute } from '@tanstack/react-router';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
+import rehypeRaw from 'rehype-raw';
 import { getStudyInfo } from 'src/services/study.service';
 
 import StudyCurriculum from '@components/study/StudyCurriculum';
@@ -43,11 +44,25 @@ function StudyComponent() {
   const study: Study = Route.useLoaderData();
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
+  const formattedExplanation = study.explanation.replace(
+    /<br\s*\/?>/gi,
+    '\n\n',
+  );
+
+  const handleTabClick = (event: SyntheticEvent, newValue: string) => {
+    setTab(newValue);
+    event.preventDefault();
+    const targetElement = document.querySelector(newValue);
+
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const renderPickerDay = (props: PickersDayProps<Dayjs>) => {
     const { day, outsideCurrentMonth } = props;
     const isSelectedWeekDay =
-      !outsideCurrentMonth && day.day() === study.weekDay;
+      !outsideCurrentMonth && day.day() === study.week_day;
     const isSameOrAfterToday =
       day.isSame(dayjs(STUDY_START_DATE), 'day') ||
       day.isAfter(dayjs(STUDY_START_DATE), 'day');
@@ -60,22 +75,18 @@ function StudyComponent() {
     const diffInDays = day.diff(startDate, 'day');
     const index = Math.floor(diffInDays / 7);
 
-    if (index >= study.weeklyPlans.length) {
+    if (index >= study.study_plans.length) {
       return <PickersDay {...props} disabled />;
     }
-
-    const weeklyPlan = study.weeklyPlans[index];
-    const backgroundColor = weeklyPlan === '' ? 'error.light' : 'primary.light';
-
     return (
       <PickersDay
         {...props}
         sx={{
           ...(isSelectedWeekDay && {
-            backgroundColor,
-            ':hover': {
-              backgroundColor:
-                weeklyPlan === '' ? 'error.dark' : 'primary.dark',
+            backgroundColor: 'primary.light',
+            color: 'primary.contrastText',
+            '&:hover': {
+              backgroundColor: 'primary.main',
             },
           }),
         }}
@@ -83,27 +94,21 @@ function StudyComponent() {
     );
   };
 
-  const getWeeklyPlan = (date: Dayjs | null): string => {
+  const getTodayStudyPlan = (date: Dayjs | null): string => {
     if (!date) return '';
+    const weekDay = date.day();
     const startDate = dayjs(STUDY_START_DATE).startOf('day');
     const diffInDays = date.diff(startDate, 'day');
+    console.log(
+      `startDate: ${startDate}, date: ${date}, diffInDays: ${diffInDays}`,
+    );
+
     const index = Math.floor(diffInDays / 7);
-    if (index >= study.weeklyPlans.length) return '';
-    if (study.weeklyPlans[index] === '') return '휴강';
-    return study.weeklyPlans[index]!;
-  };
-
-  const content =
-    '한국정부는 정보통신산업을 중요한 경제 성장 동력으로 인식하고, 이를 육성하기 위한 다양한 정책을 추진해왔습니다.자바는 다양한 플랫폼과 환경에서 사용할 수 있는 범용 프로그래밍 언어로서, 이러한 정보통신산업 육성 정책의 일환으로 자바 개발을 촉진하고 지원해왔습니다.';
-
-  const handleTabClick = (event: SyntheticEvent, newValue: string) => {
-    setTab(newValue);
-    event.preventDefault();
-    const targetElement = document.querySelector(newValue);
-
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (weekDay !== study.week_day)
+      return '해당 날짜에 정해진 일정이 없습니다.';
+    return (
+      study.study_plans[index]?.section || '해당 날짜에 정해진 일정이 없습니다.'
+    );
   };
 
   return (
@@ -125,15 +130,16 @@ function StudyComponent() {
           p={6}
           gap={1}
         >
-          <Chip label='자바' sx={{ width: 'fit-content' }} />
+          <Chip
+            label={study.tag}
+            color='primary'
+            sx={{ width: 'fit-content' }}
+          />
           <Typography variant='displaySmall' mb={2}>
             {study.name}
           </Typography>
           <Typography variant='bodyMedium' mb={2} fontWeight={300}>
-            프로그래밍 공부, 어떻게 시작해야 할지 막막하시다구요? 입문자도 쉽게
-            배울 수 있는 파이썬과 함께 시작해 보세요! 이번 토픽을 통해 기초를
-            탄탄히 쌓고 나면, '프로그래밍 생각보다 별 거 아니네?' 이런 생각이 들
-            거예요.
+            {study.one_liner}
           </Typography>
           <Button
             sx={{
@@ -189,7 +195,11 @@ function StudyComponent() {
                 borderColor={'divider'}
                 width={'100%'}
               >
-                <Markdown>{content}</Markdown>
+                <Markdown
+                  rehypePlugins={[rehypeRaw]}
+                  children={formattedExplanation}
+                  className={'markdown'}
+                />
               </Stack>
             </Stack>
             <Box id='curriculum' component={'section'}>
@@ -197,8 +207,8 @@ function StudyComponent() {
                 커리큘럼
               </Typography>
               <Stack gap={2}>
-                {study.weeklyPlans.map((plan, index) => (
-                  <StudyCurriculum key={index} section={plan} index={index} />
+                {study.study_plans.map((plan, index) => (
+                  <StudyCurriculum key={index} studyPlan={plan} index={index} />
                 ))}
               </Stack>
             </Box>
@@ -207,9 +217,9 @@ function StudyComponent() {
                 시간 및 장소
               </Typography>
               <Typography variant='titleLarge'>
-                매주 {getWeekDayAsString(study.weekDay)}{' '}
-                {formatStudyTimeToKorean(study.startTime)} -{' '}
-                {formatStudyTimeToKorean(study.endTime)}
+                매주 {getWeekDayAsString(study.week_day)}{' '}
+                {formatStudyTimeToKorean(study.start_time)} -{' '}
+                {formatStudyTimeToKorean(study.end_time)}
               </Typography>
               <Stack
                 display={'flex'}
@@ -228,15 +238,10 @@ function StudyComponent() {
                 >
                   <DateCalendar
                     value={date}
-                    onChange={(newValue) => setDate(newValue)}
                     slots={{ day: renderPickerDay }}
+                    onChange={(newValue) => setDate(newValue)}
                     sx={{
                       margin: 0,
-                      '& .MuiPickersDay-root': {
-                        '&.Mui-selected': {
-                          backgroundColor: 'black',
-                        },
-                      },
                     }}
                   />
                 </LocalizationProvider>
@@ -247,10 +252,27 @@ function StudyComponent() {
                   </Typography>
                   <Box minHeight={200}>
                     <Typography variant='titleLarge'>
-                      {getWeeklyPlan(date)}
+                      {getTodayStudyPlan(date)}
                     </Typography>
+                    <Box component={'ul'}>
+                      {study.study_plans
+                        .find(
+                          (plan) => plan.section === getTodayStudyPlan(date),
+                        )
+                        ?.content.map((content, index) => (
+                          <Typography
+                            component={'li'}
+                            variant='bodyLarge'
+                            key={index}
+                          >
+                            {content}{' '}
+                          </Typography>
+                        ))}
+                    </Box>
                   </Box>
-                  <Typography variant='labelLarge'>{study.location}</Typography>
+                  <Typography variant='labelLarge'>
+                    수업 장소 : {study.location}
+                  </Typography>
                 </Stack>
               </Stack>
             </Box>
@@ -353,19 +375,26 @@ function StudySideBox(study: Study) {
       top={64}
       display={{ xs: 'none', md: 'flex' }}
     >
-      <Chip label='자바' sx={{ width: 'fit-content' }} color='primary' />
+      <Chip label='WEB/APP' sx={{ width: 'fit-content' }} color='primary' />
       <Typography variant='labelLarge'>{study.name}</Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
-        매주 {getWeekDayAsString(study.weekDay)}
+        매주 {getWeekDayAsString(study.week_day)}
       </Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
-        {formatStudyTimeToKorean(study.startTime)} -{' '}
-        {formatStudyTimeToKorean(study.endTime)}
+        {formatStudyTimeToKorean(study.start_time)} -{' '}
+        {formatStudyTimeToKorean(study.end_time)}
       </Typography>
-      <Typography variant='labelSmall'>{study.mentorName} 멘토</Typography>
-      <Button variant='contained' fullWidth size='large'>
-        신청하기
-      </Button>
+      <Typography variant='labelSmall'>
+        {study.primary_mentor_name} 멘토{' '}
+        {study.secondary_mentor_name
+          ? `| ${study.secondary_mentor_name} 멘토`
+          : ''}
+      </Typography>
+      <Link to='/apply/member'>
+        <Button variant='contained' fullWidth size='large'>
+          신청하기
+        </Button>
+      </Link>
     </Stack>
   );
 }

@@ -30,16 +30,14 @@ export function ApplicationState({
     >
       <CardContent>
         <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
+          {steps.map((label) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {
               optional?: React.ReactNode;
             } = {};
             return (
               <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>
-                  {label} - {index}
-                </StepLabel>
+                <StepLabel {...labelProps}>{label}</StepLabel>
               </Step>
             );
           })}

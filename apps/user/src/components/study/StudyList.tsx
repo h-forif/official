@@ -49,7 +49,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
   const studies =
     difficulty === 0
       ? data!
-      : data!.filter((study) => study.level === difficulty);
+      : data!.filter((study) => Number(study.difficulty) === difficulty);
 
   return (
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
@@ -59,7 +59,9 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
             <StudyCard
               id={study.id}
               image={study.image!}
-              mentor={study.mentorName}
+              primaryMentorName={study.primary_mentor_name}
+              secondaryMentorName={study.secondary_mentor_name}
+              difficulty={study.difficulty}
               title={study.name}
             />
           </Grid>

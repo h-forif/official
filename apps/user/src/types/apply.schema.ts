@@ -3,35 +3,35 @@ import z from 'zod';
 
 export const ApplyMemberSchema = z
   .object({
-    primaryStudy: z.string().min(1, '1순위 스터디는 필수값입니다.'),
-    primaryIntro: z.string().optional(),
-    secondaryStudy: z.string().optional(),
-    secondaryIntro: z.string().optional(),
-    applyPath: z.string().min(1, '지원 경로는 필수값입니다.'),
-    isPrimaryStudyOnly: z.boolean().optional(),
+    primary_study: z.string().min(1, '1순위 스터디는 필수값입니다.'),
+    primary_intro: z.string().optional(),
+    secondary_study: z.string().optional(),
+    secondary_intro: z.string().optional(),
+    apply_path: z.string().min(1, '지원 경로는 필수값입니다.'),
+    is_primary_study_only: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     // 1순위 스터디가 자율스터디가 아닌 경우 1순위 소개글에 대한 검증 진행
-    if (data.primaryStudy !== '0') {
-      if (!data.primaryIntro || data.primaryIntro.length < 50) {
+    if (data.primary_study !== '0') {
+      if (!data.primary_intro || data.primary_intro.length < 50) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 50,
           message: '50자 이상 입력해주세요.',
           inclusive: true,
           type: 'string',
-          path: ['primaryIntro'],
+          path: ['primary_intro'],
         });
         return false;
       }
-      if (!data.primaryIntro || data.primaryIntro.length > 500) {
+      if (!data.primary_intro || data.primary_intro.length > 500) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
           maximum: 500,
           message: '500자 이하로 입력해주세요.',
           inclusive: true,
           type: 'string',
-          path: ['primaryIntro'],
+          path: ['primary_intro'],
         });
         return false;
       }
@@ -40,31 +40,31 @@ export const ApplyMemberSchema = z
       return true;
     }
     // 1순위 스터디에 선발되지 않은 경우 2순위 스터디를 수강
-    if (!data.isPrimaryStudyOnly) {
+    if (!data.is_primary_study_only) {
       // 2순위 스터디가 자율스터디라면 2순위 소개글 검증 생략
-      if (data.secondaryStudy === '0') {
+      if (data.secondary_study === '0') {
         return true;
       }
       // 2순위 스터디가 자율스터디가 아닌 경우 2순위 소개글에 대한 검증 진행
-      if (!data.secondaryIntro || data.secondaryIntro.length < 50) {
+      if (!data.secondary_intro || data.secondary_intro.length < 50) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
           minimum: 50,
           message: '50자 이상 입력해주세요.',
           inclusive: true,
           type: 'string',
-          path: ['secondaryIntro'],
+          path: ['secondary_intro'],
         });
         return false;
       }
-      if (!data.secondaryIntro || data.secondaryIntro.length > 500) {
+      if (!data.secondary_intro || data.secondary_intro.length > 500) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
           maximum: 500,
           message: '500자 이하로 입력해주세요.',
           inclusive: true,
           type: 'string',
-          path: ['secondaryIntro'],
+          path: ['secondary_intro'],
         });
         return false;
       }
@@ -77,13 +77,16 @@ export const ApplyMentorSchema = z
     studyName: z
       .string()
       .min(1, '개설하시고자 하는 스터디 이름을 입력해주세요.')
-      .max(20, '스터디 이름은 20자 이하로 입력해주세요.'),
+      .max(25, '스터디 이름은 25자 이하로 입력해주세요.'),
     oneLiner: z
       .string()
       .min(1, '한 줄 소개를 입력해주세요.')
       .max(150, '150자 이하로 입력해주세요.'),
-    level: z.string().min(1, '스터디 난이도를 선택해주세요.'),
+    difficulty: z.string().min(1, '스터디 난이도를 선택해주세요.'),
     location: z.string().min(1, '스터디 장소를 입력해주세요.'),
+    secondaryMentor: z.boolean().optional(),
+    secondaryMentorName: z.string().optional(),
+    secondaryMentorId: z.string().optional(),
     startTime: z.custom<Dayjs>(
       (val) => val instanceof dayjs,
       '올바르지 않은 형식입니다.',
@@ -93,6 +96,41 @@ export const ApplyMentorSchema = z
       '올바르지 않은 형식입니다.',
     ),
     weekDay: z.string().min(1, '스터디 요일을 선택해주세요.'),
+    studyPlan: z.custom<StudyPlan[]>((val) => {
+      if (val.length !== 8) {
+        return false;
+      }
+      for (const plan of val) {
+        if (plan.contents.length < 50) {
+          return false;
+        }
+      }
+      return true;
+    }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.secondaryMentor) {
+      if (!data.secondaryMentorName || data.secondaryMentorName.length < 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 1,
+          message: '함께 하는 멘토의 이름을 입력해주세요.',
+          inclusive: true,
+          type: 'string',
+          path: ['secondaryMentorName'],
+        });
+        return false;
+      }
+      if (!data.secondaryMentorId || data.secondaryMentorId.length !== 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '학번은 10자리여야 합니다.',
+          path: ['secondaryMentorId'],
+        });
+        return false;
+      }
+      return true;
+    }
   })
   .refine((data) => data.endTime.isAfter(data.startTime), {
     message: '종료 시간은 시작 시간보다 늦어야 합니다.',
@@ -101,9 +139,9 @@ export const ApplyMentorSchema = z
 
 export interface Application {
   timestamp: Date;
-  primaryStudy: PrimaryStudy;
-  secondaryStudy: SecondaryStudy;
-  applyPath: string;
+  primary_study: PrimaryStudy;
+  secondary_study: SecondaryStudy;
+  apply_path: string;
 }
 
 export interface PrimaryStudy {
@@ -116,4 +154,9 @@ export interface SecondaryStudy {
   id: number;
   name: string;
   introduction: string;
+}
+
+export interface StudyPlan {
+  section: string;
+  contents: string[];
 }

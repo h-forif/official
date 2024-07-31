@@ -26,7 +26,6 @@ import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
-import dayjs from 'dayjs';
 import { getStudyInfo } from 'src/services/study.service';
 import { getUserInfo } from 'src/services/user.service';
 
@@ -39,15 +38,25 @@ export const Route = createFileRoute('/_layout/profile/study')({
 
 function MyStudy() {
   const user: UserProfile = Route.useLoaderData();
+
   const currentTerm = getCurrentTerm();
-  const { data, isLoading } = useQuery<Study, AxiosError>({
+  const currentStudy = useQuery<Study, AxiosError>({
     queryKey: ['currentStudy'],
-    queryFn: () => getStudyInfo(user.currentStudyId?.toString() || ''),
+    queryFn: () => getStudyInfo(user.currentStudyId?.toString() || '0'),
+  });
+  const passedStudy = useQuery<Study, AxiosError>({
+    queryKey: ['passedStudy'],
+    queryFn: () => getStudyInfo(user.passedStudyId!.join(',')[0]!), // TO-DO: Fix this
   });
 
-  if (isLoading) return null;
-  const date = dayjs('2024-09-04');
+  console.log(passedStudy.data);
+  console.log(currentStudy.data);
 
+  if (currentStudy.isLoading && passedStudy.isLoading && !passedStudy.data)
+    return null;
+  if (!currentStudy.data) {
+    return <Box>현재 수강 중인 스터디가 없습니다.</Box>;
+  }
   return (
     <Box width={'100%'}>
       <Title
@@ -80,70 +89,78 @@ function MyStudy() {
                   <Typography variant='bodySmall' color={'text.secondary'}>
                     현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
                   </Typography>
-                  <Stack gap={2} my={4}>
-                    <Typography variant='bodyMedium'>{data!.name}</Typography>
-                    <TextField
-                      value={data!.explanation}
-                      multiline
-                      maxRows={4}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                    <Typography variant='bodyMedium'>
-                      매주 {getWeekDayAsString(data!.weekDay)}{' '}
-                      {formatStudyTimeToKorean(data!.startTime)} -{' '}
-                      {formatStudyTimeToKorean(data!.endTime)}에 진행합니다.
-                    </Typography>
-                    <Typography variant='bodyMedium'></Typography>
-                  </Stack>
-                  <Stack direction={'row'} gap={2}>
-                    <Modal>
-                      <ModalTrigger>
-                        <Button variant='contained' size='large'>
-                          학습 계획 확인하기
-                        </Button>
-                      </ModalTrigger>
-                      <ModalContent>
-                        <ModalHeader>
-                          <Typography variant='titleSmall' mb={1}>
-                            <strong>{data!.name}</strong> 스터디 계획서
-                          </Typography>
-                          <Typography
-                            variant='bodySmall'
-                            color={'text.secondary'}
-                          >
-                            스터디 계획의 순서 혹은 자세한 내용은 멘토에 따라
-                            변경될 수 있습니다.
-                          </Typography>
-                        </ModalHeader>
-                        <ModalDescription>
-                          <List dense={false}>
-                            {data!.weeklyPlans.map((plan, index) => (
-                              <Box key={`plan-${index}`}>
-                                <ListItemButton>
-                                  <ListItemText
-                                    primary={
-                                      plan
-                                        ? `${index + 1}주차: ${plan}`
-                                        : `${index + 1}주차: 시험기간으로 인한 휴강`
-                                    }
-                                  />
-                                </ListItemButton>
-                                <Divider />
-                              </Box>
-                            ))}
-                          </List>
-                        </ModalDescription>
-                      </ModalContent>
-                    </Modal>
+                  <>
+                    <Stack gap={2} my={4}>
+                      <Typography variant='bodyMedium'>
+                        {currentStudy.data!.name}
+                      </Typography>
+                      <TextField
+                        value={currentStudy.data!.explanation}
+                        multiline
+                        maxRows={4}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                      <Typography variant='bodyMedium'>
+                        매주 {getWeekDayAsString(currentStudy.data!.week_day)}{' '}
+                        {formatStudyTimeToKorean(currentStudy.data!.start_time)}{' '}
+                        - {formatStudyTimeToKorean(currentStudy.data!.end_time)}
+                        에 진행합니다.
+                      </Typography>
+                      <Typography variant='bodyMedium'></Typography>
+                    </Stack>
+                    <Stack direction={'row'} gap={2}>
+                      <Modal>
+                        <ModalTrigger>
+                          <Button variant='contained' size='large'>
+                            학습 계획 확인하기
+                          </Button>
+                        </ModalTrigger>
+                        <ModalContent>
+                          <ModalHeader>
+                            <Typography variant='titleSmall' mb={1}>
+                              <strong>{currentStudy.data!.name}</strong> 스터디
+                              계획서
+                            </Typography>
+                            <Typography
+                              variant='bodySmall'
+                              color={'text.secondary'}
+                            >
+                              스터디 계획의 순서 혹은 자세한 내용은 멘토에 따라
+                              변경될 수 있습니다.
+                            </Typography>
+                          </ModalHeader>
+                          <ModalDescription>
+                            <List dense={false}>
+                              {currentStudy.data!.study_plans.map(
+                                (plan, index) => (
+                                  <Box key={`plan-${index}`}>
+                                    <ListItemButton>
+                                      <ListItemText
+                                        primary={
+                                          plan
+                                            ? `${index + 1}주차: ${plan}`
+                                            : `${index + 1}주차: 시험기간으로 인한 휴강`
+                                        }
+                                      />
+                                    </ListItemButton>
+                                    <Divider />
+                                  </Box>
+                                ),
+                              )}
+                            </List>
+                          </ModalDescription>
+                        </ModalContent>
+                      </Modal>
 
-                    <Link to={`/studies/${data?.id}`}>
-                      <Button variant='outlined' size='large'>
-                        스터디 자세히 보기
-                      </Button>
-                    </Link>
-                  </Stack>
+                      <Link to={`/studies/${currentStudy.data!.id}`!}>
+                        <Button variant='outlined' size='large'>
+                          스터디 자세히 보기
+                        </Button>
+                      </Link>
+                    </Stack>
+                  </>
                 </Box>
               </CardContent>
             </Card>
@@ -172,7 +189,7 @@ function MyStudy() {
                     overflow: 'auto',
                   }}
                 >
-                  {Array.from({ length: 8 }).map((_, index) => {
+                  {/* {Array.from({ length: 8 }).map((_, index) => {
                     const day = date.add(index, 'week').format('YYYY.MM.DD');
                     return (
                       <Stack
@@ -193,7 +210,7 @@ function MyStudy() {
                         </Typography>
                       </Stack>
                     );
-                  })}
+                  })} */}
                 </Stack>
               </CardContent>
             </Card>
@@ -229,23 +246,13 @@ function MyStudy() {
                     py={2}
                   >
                     <Typography variant='bodySmall'>
-                      {data?.name}({currentTerm.year} - {currentTerm.semester})
+                      {/* {passedStudy.data!.name}
+                      {passedStudy.data!.act_semester &&
+                        passedStudy.data!.act_year &&
+                        `(${passedStudy.data!.act_year} - ${passedStudy.data!.act_semester})`} */}
                     </Typography>
                     <Typography variant='labelSmall' color={'primary'}>
                       수료 완료!
-                    </Typography>
-                  </Stack>
-                  <Stack
-                    direction={'row'}
-                    alignItems={'center'}
-                    justifyContent={'space-between'}
-                    py={2}
-                  >
-                    <Typography variant='bodySmall'>
-                      {data?.name}(2023 - 2)
-                    </Typography>
-                    <Typography variant='labelSmall' color={'error'}>
-                      미수료
                     </Typography>
                   </Stack>
                 </Stack>
