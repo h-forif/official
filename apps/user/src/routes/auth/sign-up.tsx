@@ -49,7 +49,7 @@ function SignUpPage() {
       name: name ? name : '',
       department: department ? department : '',
       id: '',
-      phoneNumber: '',
+      phone_number: '',
       privacyPolicyAccepted: false,
     },
   });
@@ -139,7 +139,7 @@ function SignUpPage() {
           />
           <FormInput
             control={form.control}
-            name='phoneNumber'
+            name='phone_number'
             label='전화번호'
             placeholder='01012345678'
             fullWidth

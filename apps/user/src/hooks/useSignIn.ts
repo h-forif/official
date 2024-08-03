@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { signIn } from '@services/auth.service';
 import { useNavigate } from '@tanstack/react-router';
@@ -8,6 +8,8 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export function useSignIn() {
   const navigate = useNavigate();
+  const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
+  const [client, setClient] = useState<TokenClient | null>(null);
 
   const signInWithToken = async (tokenResponse: TokenResponse) => {
     try {
@@ -21,19 +23,48 @@ export function useSignIn() {
     }
   };
 
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
-    callback: signInWithToken,
-  });
+  useEffect(() => {
+    // 스크립트 로딩 확인
+    const onGoogleScriptLoad = () => {
+      if (
+        typeof google !== 'undefined' &&
+        google.accounts &&
+        google.accounts.oauth2
+      ) {
+        setIsGoogleScriptLoaded(true);
+        const tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: 'https://www.googleapis.com/auth/userinfo.email',
+          callback: signInWithToken,
+        });
+        setClient(tokenClient);
+      } else {
+        console.error('Google OAuth2 client script is not loaded.');
+      }
+    };
+
+    if (typeof window.google === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = onGoogleScriptLoad;
+      document.head.appendChild(script);
+    } else {
+      onGoogleScriptLoad();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [google]);
 
   const handleSignIn = useCallback(async () => {
-    if (client) {
+    if (isGoogleScriptLoaded && client) {
       client.requestAccessToken();
     } else {
-      console.error('Google OAuth2 client is not initialized.');
+      console.error(
+        'Google OAuth2 client is not initialized or script is not loaded.',
+      );
     }
-  }, [client]);
+  }, [isGoogleScriptLoaded, client]);
 
   return { handleSignIn };
 }

@@ -1,7 +1,14 @@
-import { ApplyMemberSchema } from 'src/types/apply.schema';
+import { Application, ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
 import { authApi } from './axios-instance';
+
+export const getApplication = async () => {
+  const application: Application = await authApi
+    .get('/applies/application')
+    .then((res) => res.data);
+  return application;
+};
 
 export const updateApplication = async (
   application: z.infer<typeof ApplyMemberSchema>,

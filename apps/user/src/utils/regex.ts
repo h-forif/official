@@ -1,7 +1,7 @@
-export const phoneNumber = new RegExp(/^\d{3}\d{4}\d{4}$/);
+export const phone_number = new RegExp(/^\d{3}\d{4}\d{4}$/);
 
 const regex = {
-  phoneNumber,
+  phone_number,
 };
 
 export default regex;

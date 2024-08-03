@@ -28,6 +28,7 @@ export const NAV_MENUS: NavMenu[] = [
       { title: '스터디 목록', href: '/studies' },
       { title: '스터디 지원', href: '/apply/member' },
       { title: '스터디 개설', href: '/apply/mentor' },
+      { title: '스터디 가이드', href: '/studies/guide' },
     ],
   },
   {

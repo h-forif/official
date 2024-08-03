@@ -11,6 +11,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import {
@@ -24,6 +25,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
 import { Link, createFileRoute } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
@@ -42,6 +44,9 @@ const STUDY_START_DATE = '2024-09-10';
 
 function StudyComponent() {
   const study: Study = Route.useLoaderData();
+  console.log(study);
+
+  const theme = useTheme();
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
   const formattedExplanation = study.explanation.replace(
@@ -99,9 +104,6 @@ function StudyComponent() {
     const weekDay = date.day();
     const startDate = dayjs(STUDY_START_DATE).startOf('day');
     const diffInDays = date.diff(startDate, 'day');
-    console.log(
-      `startDate: ${startDate}, date: ${date}, diffInDays: ${diffInDays}`,
-    );
 
     const index = Math.floor(diffInDays / 7);
     if (weekDay !== study.week_day)
@@ -119,7 +121,7 @@ function StudyComponent() {
           px: { xs: 4, md: 8, xl: 12 },
           py: 10,
           margin: 'auto',
-          backgroundColor: '#f6f6f8',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <Stack
@@ -203,13 +205,28 @@ function StudyComponent() {
               </Stack>
             </Stack>
             <Box id='curriculum' component={'section'}>
-              <Typography variant='titleLarge' py={4}>
+              <Typography
+                variant='titleLarge'
+                pt={4}
+                pb={study.id === 0 ? 0 : 4}
+              >
                 커리큘럼
               </Typography>
               <Stack gap={2}>
-                {study.study_plans.map((plan, index) => (
-                  <StudyCurriculum key={index} studyPlan={plan} index={index} />
-                ))}
+                {study.id === 0 ? (
+                  <Typography variant='bodyLarge'>
+                    자율스터디는 커리큘럼이 정해져 있지 않습니다. 동아리 활동
+                    기간 내에 서로 협의 하에 일정을 결정하게 됩니다.
+                  </Typography>
+                ) : (
+                  study.study_plans.map((plan, index) => (
+                    <StudyCurriculum
+                      key={index}
+                      studyPlan={plan}
+                      index={index}
+                    />
+                  ))
+                )}
               </Stack>
             </Box>
             <Box id='place' component={'section'}>
@@ -217,9 +234,11 @@ function StudyComponent() {
                 시간 및 장소
               </Typography>
               <Typography variant='titleLarge'>
-                매주 {getWeekDayAsString(study.week_day)}{' '}
-                {formatStudyTimeToKorean(study.start_time)} -{' '}
-                {formatStudyTimeToKorean(study.end_time)}
+                {study.id === 0
+                  ? '자율스터디는 시간 및 장소가 정해져 있지 않습니다.'
+                  : `매주 ${getWeekDayAsString(study.week_day)} 
+                ${formatStudyTimeToKorean(study.start_time)} - 
+                ${formatStudyTimeToKorean(study.end_time)}`}
               </Typography>
               <Stack
                 display={'flex'}
@@ -287,7 +306,7 @@ function StudyComponent() {
           px: { xs: 4, md: 8, xl: 12 },
           py: 10,
           margin: 'auto',
-          backgroundColor: '#f6f6f8',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
         <Stack justifyContent={'center'} alignItems={'center'} gap={4}>
@@ -393,6 +412,18 @@ function StudySideBox(study: Study) {
       <Link to='/apply/member'>
         <Button variant='contained' fullWidth size='large'>
           신청하기
+        </Button>
+      </Link>
+      <Link
+        to='/studies'
+        onClick={() => window.scrollTo(0, 0)}
+        search={{
+          semester: Number(getCurrentTerm().semester),
+          year: Number(getCurrentTerm().year),
+        }}
+      >
+        <Button variant='outlined' fullWidth size='large'>
+          스터디 목록으로 돌아가기
         </Button>
       </Link>
     </Stack>

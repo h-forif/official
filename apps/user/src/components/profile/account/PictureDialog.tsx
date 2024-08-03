@@ -1,16 +1,30 @@
 import { ChangeEvent, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { Dialog, DialogTitle, Stack, Typography } from '@mui/material';
 
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
+import { UserProfile } from '@packages/components/types/user';
+import { UpdateUser, updateUser } from '@services/user.service';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import { handleGlobalError } from '@utils/handleGlobalError';
 
-export function PictureDialog({ previousImage }: { previousImage: string }) {
+export function PictureDialog({ user }: { user: UserProfile }) {
   const [open, setOpen] = useState(false);
-  const [picture, setPicture] = useState<string | ArrayBuffer | null>(
-    previousImage,
-  );
-  // const { showToast } = useToastStore();
+  const { closeDialog, openSingleButtonDialog } = useDialogStore();
+
+  const form = useForm<UpdateUser>({
+    defaultValues: {
+      email: user.email!,
+      name: user.name!,
+      id: user.id!,
+      phone_number: user.phone_number!,
+      department: user.department!,
+      img_url: user.img_url!,
+    },
+  });
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,21 +32,26 @@ export function PictureDialog({ previousImage }: { previousImage: string }) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPicture(reader.result);
+        form.setValue('img_url', reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleOnClose = () => {
+  const handleSubmit = async () => {
     setOpen(false);
-    setPicture(null);
-  };
-
-  const handleSubmit = () => {
-    // TO-DO: add change profile picture api
-    // showToast('프로필 사진이 변경되었습니다.', 'success');
-    // setOpen(false);
+    try {
+      await updateUser(form.getValues());
+      openSingleButtonDialog({
+        mainButtonText: '확인',
+        title: '학과 변경',
+        message: '학과가 변경되었습니다.',
+        dialogIconType: DialogIconType.CONFIRM,
+        mainButtonAction: () => closeDialog(),
+      });
+    } catch (err) {
+      handleGlobalError(err);
+    }
   };
 
   return (
@@ -75,16 +94,15 @@ export function PictureDialog({ previousImage }: { previousImage: string }) {
           </Stack>
 
           <Image
-            src={previousImage}
+            src={user.img_url!}
             alt='유저 프로필 이미지'
-            fallback={previousImage}
             width={56}
             height={56}
             style={{ borderRadius: '100%' }}
           />
         </Stack>
       </Button>
-      <Dialog onClose={handleOnClose} open={open}>
+      <Dialog onClose={() => setOpen(false)} open={open} fullWidth>
         <DialogTitle mt={2} textAlign={'center'}>
           변경할 프로필 사진을 선택해주세요.
         </DialogTitle>
@@ -97,9 +115,8 @@ export function PictureDialog({ previousImage }: { previousImage: string }) {
             onChange={handleImageUpload}
           />
           <Image
-            src={picture as string}
+            src={form.getValues('img_url')}
             alt='유저 프로필 이미지'
-            fallback={previousImage}
             width={120}
             height={120}
             style={{

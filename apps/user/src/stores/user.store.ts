@@ -11,9 +11,9 @@ const useUserStore = create<User & UserAction>((set) => ({
   name: null,
   id: null,
   department: null,
-  userAuthorization: null,
+  user_authorization: null,
   email: null,
-  phoneNumber: null,
+  phone_number: null,
   state: null,
   updateName: (name) => set(() => ({ name: name })),
   updateDepartment: (department) => set(() => ({ department: department })),
@@ -29,9 +29,9 @@ const clearUser = () => {
     name: null,
     id: null,
     department: null,
-    userAuthorization: null,
+    user_authorization: null,
     email: null,
-    phoneNumber: null,
+    phone_number: null,
     state: 'sign-out',
   });
 };

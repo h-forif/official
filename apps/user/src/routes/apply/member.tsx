@@ -22,10 +22,11 @@ import {
 } from '@packages/components/Modal';
 import { Select, SelectOption } from '@packages/components/Select';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { getApplication } from '@services/apply.service';
 import { createFileRoute, redirect, useBlocker } from '@tanstack/react-router';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
-import { getApplication, getUserInfo } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -47,7 +48,7 @@ export const Route = createFileRoute('/apply/member')({
     }
 
     const [userInfo, studies] = await Promise.all([
-      getUserInfo(),
+      getUser(),
       getAllStudies({ year: 2024, semester: 1 }),
     ]);
     console.log(userInfo);
@@ -62,7 +63,7 @@ export const Route = createFileRoute('/apply/member')({
 
 function ApplyMember() {
   const loaderData = Route.useLoaderData();
-  const { id, name, department, phoneNumber } = loaderData!.userInfo;
+  const { id, name, department, phone_number } = loaderData!.userInfo;
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -172,7 +173,7 @@ function ApplyMember() {
                 required
                 fullWidth
                 label='전화번호'
-                defaultValue={phoneNumber}
+                defaultValue={phone_number}
                 disabled
               />
             </Stack>
@@ -332,7 +333,15 @@ function ApplyMember() {
           </form>
         </Box>
       </Box>
-      {status === 'blocked' && <BlockModal proceed={proceed} reset={reset} />}
+      {status === 'blocked' && (
+        <BlockModal
+          title='스터디 신청서 작성 중'
+          description='신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
+          내용이 사라질 수 있습니다.'
+          proceed={proceed}
+          reset={reset}
+        />
+      )}
       {modalOpen && (
         <Modal isOpen>
           <ModalContent>

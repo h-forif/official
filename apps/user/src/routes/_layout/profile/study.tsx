@@ -24,15 +24,14 @@ import { UserProfile } from '@packages/components/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
-import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
 import { getStudyInfo } from 'src/services/study.service';
-import { getUserInfo } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 
 import { Title } from '@components/Title';
 
 export const Route = createFileRoute('/_layout/profile/study')({
-  loader: () => getUserInfo(),
+  loader: () => getUser(),
   component: MyStudy,
 });
 
@@ -48,9 +47,6 @@ function MyStudy() {
     queryKey: ['passedStudy'],
     queryFn: () => getStudyInfo(user.passedStudyId!.join(',')[0]!), // TO-DO: Fix this
   });
-
-  console.log(passedStudy.data);
-  console.log(currentStudy.data);
 
   if (currentStudy.isLoading && passedStudy.isLoading && !passedStudy.data)
     return null;
@@ -103,10 +99,12 @@ function MyStudy() {
                         }}
                       />
                       <Typography variant='bodyMedium'>
-                        매주 {getWeekDayAsString(currentStudy.data!.week_day)}{' '}
+                        {currentStudy.data!.id === 0
+                          ? `자율스터디는 정해진 스터디 시간이 없습니다.`
+                          : `매주 {getWeekDayAsString(currentStudy.data!.week_day)}{' '}
                         {formatStudyTimeToKorean(currentStudy.data!.start_time)}{' '}
                         - {formatStudyTimeToKorean(currentStudy.data!.end_time)}
-                        에 진행합니다.
+                        에 진행합니다.`}
                       </Typography>
                       <Typography variant='bodyMedium'></Typography>
                     </Stack>
@@ -133,22 +131,24 @@ function MyStudy() {
                           </ModalHeader>
                           <ModalDescription>
                             <List dense={false}>
-                              {currentStudy.data!.study_plans.map(
-                                (plan, index) => (
-                                  <Box key={`plan-${index}`}>
-                                    <ListItemButton>
-                                      <ListItemText
-                                        primary={
-                                          plan
-                                            ? `${index + 1}주차: ${plan}`
-                                            : `${index + 1}주차: 시험기간으로 인한 휴강`
-                                        }
-                                      />
-                                    </ListItemButton>
-                                    <Divider />
-                                  </Box>
-                                ),
-                              )}
+                              {currentStudy.data.id === 0
+                                ? '자율스터디는 계획서가 없습니다.'
+                                : currentStudy.data!.study_plans.map(
+                                    (plan, index) => (
+                                      <Box key={`plan-${index}`}>
+                                        <ListItemButton>
+                                          <ListItemText
+                                            primary={
+                                              plan
+                                                ? `${index + 1}주차: ${plan}`
+                                                : `${index + 1}주차: 시험기간으로 인한 휴강`
+                                            }
+                                          />
+                                        </ListItemButton>
+                                        <Divider />
+                                      </Box>
+                                    ),
+                                  )}
                             </List>
                           </ModalDescription>
                         </ModalContent>

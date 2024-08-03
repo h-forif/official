@@ -10,9 +10,9 @@ import { SelectOption } from '@packages/components/Select';
 import { FormCheckbox } from '@packages/components/form/FormCheckbox';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
-import { updateApplication } from '@services/applicaiton.service';
+import { getApplication, updateApplication } from '@services/apply.service';
 import { getAllStudies } from '@services/study.service';
-import { getApplication, getUserInfo } from '@services/user.service';
+import { getUser } from '@services/user.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { handleGlobalError } from '@utils/handleGlobalError';
@@ -28,7 +28,7 @@ export const Route = createFileRoute('/apply/application')({
   loader: async () => {
     const [application, userInfo, studies] = await Promise.all([
       getApplication(),
-      getUserInfo(),
+      getUser(),
       getAllStudies({ year: 2024, semester: 1 }),
     ]);
     return { application, userInfo, studies };
@@ -43,9 +43,8 @@ function MyApplication() {
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate();
   const { application, studies, userInfo } = loaderData;
-  console.log(application);
 
-  const { id, name, department, phoneNumber } = userInfo;
+  const { id, name, department, phone_number } = userInfo;
   const options: SelectOption[] = studies.map((study) => ({
     value: study.id.toString(),
     label: study.name,
@@ -127,7 +126,7 @@ function MyApplication() {
               required
               fullWidth
               label='전화번호'
-              defaultValue={phoneNumber}
+              defaultValue={phone_number}
               disabled
             />
           </Stack>

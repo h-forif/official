@@ -18,7 +18,7 @@ export function MentorInfo({
   form: UseFormReturn<z.infer<typeof ApplyMentorSchema>>;
   userInfo: UserProfile;
 }) {
-  const { id, name, department, phoneNumber } = userInfo;
+  const { id, name, department, phone_number } = userInfo;
   return (
     <>
       <Title
@@ -42,7 +42,7 @@ export function MentorInfo({
           required
           fullWidth
           label='전화번호'
-          defaultValue={phoneNumber}
+          defaultValue={phone_number}
           disabled
         />
         <FormCheckbox

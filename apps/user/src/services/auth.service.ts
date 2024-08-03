@@ -20,9 +20,9 @@ const signIn = async (g_access_token: string | null | undefined) => {
 
   setUser({
     email: data.email ? data.email : null,
-    userAuthorization: null,
+    user_authorization: null,
     name: name ? name : null,
-    phoneNumber: null,
+    phone_number: null,
     department: department ? department : null,
     id: null,
   });
@@ -43,7 +43,7 @@ const signIn = async (g_access_token: string | null | undefined) => {
 };
 
 const handleSignUp = async (
-  { department, id, name, phoneNumber }: z.infer<typeof SignUpSchema>,
+  { department, id, name, phone_number }: z.infer<typeof SignUpSchema>,
   accessToken: string | null | undefined,
 ) => {
   const data: User = await api
@@ -53,7 +53,7 @@ const handleSignUp = async (
         userName: name,
         department: department,
         id: id,
-        phoneNumber: phoneNumber,
+        phone_number: phone_number,
       },
       {
         headers: {

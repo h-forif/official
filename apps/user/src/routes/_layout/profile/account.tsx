@@ -10,7 +10,7 @@ import { Stack } from '@mui/system';
 
 import { UserProfile } from '@packages/components/types/user';
 import { createFileRoute } from '@tanstack/react-router';
-import { getUserInfo } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 
 import { Title } from '@components/Title';
 import { BizMsgSwitch } from '@components/profile/account/BizMsgSwitch';
@@ -20,12 +20,13 @@ import { PhoneDialog } from '@components/profile/account/PhoneDialog';
 import { PictureDialog } from '@components/profile/account/PictureDialog';
 
 export const Route = createFileRoute('/_layout/profile/account')({
-  loader: () => getUserInfo(),
+  loader: () => getUser(),
   component: ProfileAccount,
 });
 
 function ProfileAccount() {
   const user: UserProfile = Route.useLoaderData();
+
   return (
     <Box width={'100%'}>
       <Title
@@ -63,15 +64,15 @@ function ProfileAccount() {
                   표시될 수 있습니다.
                 </Typography>
                 <Stack divider={<Divider />}>
-                  <PictureDialog previousImage={user.image!} />
-                  <NameDialog previousName={user.name!} />
-                  <DepartDialog previousDepartment={user.department!} />
+                  <PictureDialog user={user} />
+                  <NameDialog user={user} />
+                  <DepartDialog user={user} />
                 </Stack>
               </CardContent>
             </Card>
           </Grid>
           <Grid item sm={12} md={6}>
-            <PhoneDialog previousPhoneNumber={user.phoneNumber!} />
+            <PhoneDialog user={user} />
           </Grid>
           <Grid item sm={12} md={6}>
             <Card

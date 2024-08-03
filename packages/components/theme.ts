@@ -1,20 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { orange } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material/styles/createTheme';
 import { TypographyStyleOptions } from '@mui/material/styles/createTypography';
 
 declare module '@mui/material/styles' {
-  interface Theme {
-    status: {
-      danger: string;
-    };
-  }
-  interface ThemeOptions {
-    status?: {
-      danger?: string;
-    };
-  }
   interface TypographyVariants {
     // 기본 타입 스케일에는 Large, Medium, Small의 세 가지 디스플레이 스타일이 있어요.
     /*
@@ -274,9 +263,6 @@ const getDesignTokens = (mode: 'light' | 'dark'): ThemeOptions => ({
         asterisk: { color: 'red' },
       },
     },
-  },
-  status: {
-    danger: orange[500],
   },
 });
 

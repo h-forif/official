@@ -1,32 +1,17 @@
-import { ChangeEvent, useState } from 'react';
-
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import { Stack } from '@mui/system';
 
 import { Button } from '@packages/components/Button';
-import { Input } from '@packages/components/Input';
-import useToastStore from '@stores/toast.store';
+import { UserProfile } from '@packages/components/types/user';
 
-export interface NameDialogProps {
-  previousName: string;
-}
+import { useChangeDialog } from '@hooks/useChangeDialog';
 
-export function NameDialog({ previousName }: NameDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState<string | null>('');
-  const { showToast } = useToastStore();
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    // TO-DO: add change name api
-    showToast('이름이 변경되었습니다.', 'success');
-    setOpen(false);
-  };
+export function NameDialog({ user }: { user: UserProfile }) {
+  const { setOpen, ChangeDialog } = useChangeDialog({
+    user,
+    field: 'name',
+  });
 
   return (
     <>
@@ -63,25 +48,13 @@ export function NameDialog({ previousName }: NameDialogProps) {
               flexGrow={1}
               color={'text.primary'}
             >
-              {previousName}
+              {user.name}
             </Typography>
           </Stack>
           <ChevronRightIcon fontSize='large' />
         </Stack>
       </Button>
-      <Dialog onClose={() => setOpen(false)} open={open}>
-        <DialogTitle mt={2}>변경할 이름을 선택해주세요.</DialogTitle>
-        <Stack gap={2} px={3} my={3}>
-          <Input
-            value={name}
-            onChange={handleChange}
-            placeholder={previousName}
-          />
-          <Button variant='contained' size='large' onClick={handleSubmit}>
-            변경
-          </Button>
-        </Stack>
-      </Dialog>
+      <ChangeDialog />
     </>
   );
 }

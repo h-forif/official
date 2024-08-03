@@ -5,7 +5,7 @@ import { Button } from '@packages/components/Button';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import dayjs from 'dayjs';
-import { getApplication } from 'src/services/user.service';
+import { getApplication } from 'src/services/apply.service';
 import { Application } from 'src/types/apply.schema';
 
 import { Title } from '@components/Title';
@@ -19,7 +19,6 @@ export const Route = createFileRoute('/_layout/profile/application')({
 function MyApplication() {
   const currentTerm = getCurrentTerm();
   const application: Application = Route.useLoaderData();
-  console.log(application);
 
   return (
     <Box width={'100%'}>

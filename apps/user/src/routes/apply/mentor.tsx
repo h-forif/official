@@ -11,7 +11,7 @@ import { createFileRoute, useBlocker } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import dayjs from 'dayjs';
-import { getUserInfo } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -25,7 +25,7 @@ import BlockModal from '@components/common/BlockModal';
 const STORAGE_KEY = 'applyMentorForm';
 
 export const Route = createFileRoute('/apply/mentor')({
-  loader: async () => getUserInfo(),
+  loader: async () => getUser(),
   onError: ({ error }) => {
     handleGlobalError(error);
   },
@@ -181,7 +181,15 @@ function ApplyMember() {
         </Box>
       </Box>
 
-      {status === 'blocked' && <BlockModal proceed={proceed} reset={reset} />}
+      {status === 'blocked' && (
+        <BlockModal
+          title='스터디 개설 신청서 작성 중입니다.'
+          description='신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
+          내용이 사라질 수 있습니다.'
+          proceed={proceed}
+          reset={reset}
+        />
+      )}
     </>
   );
 }
