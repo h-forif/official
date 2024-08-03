@@ -29,7 +29,7 @@ export function StudyInfo({
         <Typography variant='titleSmall'>스터디 이름 및 한 줄 소개</Typography>
         <FormInput
           control={form.control}
-          name='studyName'
+          name='name'
           fullWidth
           label='개설할 스터디 이름을 작성해주세요.'
           placeholder='알아두면 쓸모있는 컴퓨터 구조'
@@ -37,7 +37,7 @@ export function StudyInfo({
         />
         <FormInput
           control={form.control}
-          name='oneLiner'
+          name='one_liner'
           fullWidth
           maxRows={2}
           label='스터디에 대한 한 줄 소개를 작성해주세요.'
@@ -70,7 +70,7 @@ export function StudyInfo({
         <Stack direction={'row'} gap={2} width={'100%'}>
           <FormSelect
             control={form.control}
-            name='weekDay'
+            name='week_day'
             options={WEEKDAYS_OPTIONS}
             label='요일'
             minWidth={'20%'}
@@ -78,8 +78,8 @@ export function StudyInfo({
           />
           <TimeRangeField
             control={form.control}
-            startTime='startTime'
-            endTime='endTime'
+            start_time='start_time'
+            end_time='end_time'
             required
           />
         </Stack>

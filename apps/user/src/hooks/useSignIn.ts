@@ -24,7 +24,6 @@ export function useSignIn() {
   };
 
   useEffect(() => {
-    // 스크립트 로딩 확인
     const onGoogleScriptLoad = () => {
       if (
         typeof google !== 'undefined' &&
@@ -53,8 +52,18 @@ export function useSignIn() {
     } else {
       onGoogleScriptLoad();
     }
+
+    // Cleanup function in case the component unmounts before the script is loaded
+    return () => {
+      const existingScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]',
+      );
+      if (existingScript) {
+        existingScript.removeEventListener('load', onGoogleScriptLoad);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [google]);
+  }, []);
 
   const handleSignIn = useCallback(async () => {
     if (isGoogleScriptLoaded && client) {

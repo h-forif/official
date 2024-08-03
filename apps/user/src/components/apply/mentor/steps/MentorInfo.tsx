@@ -48,22 +48,22 @@ export function MentorInfo({
         <FormCheckbox
           control={form.control}
           label='다른 멘토와 함께 스터디를 개설합니다.'
-          name='secondaryMentor'
+          name='secondary_mentor'
         />
-        {form.watch('secondaryMentor') && (
+        {form.watch('secondary_mentor') && (
           <>
             <Typography variant='titleSmall'>멘토2</Typography>
             <FormInput
               fullWidth
               control={form.control}
-              name='secondaryMentorName'
+              name='secondary_mentor_name'
               label='함께하는 멘토의 이름을 입력해주세요.'
               placeholder='홍길동'
             />
             <FormInput
               fullWidth
               control={form.control}
-              name='secondaryMentorId'
+              name='secondary_mentor_id'
               label='함께하는 멘토의 학번을 입력해주세요.'
               placeholder='0000063845'
             />

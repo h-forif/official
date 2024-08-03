@@ -39,7 +39,6 @@ const STORAGE_KEY = 'applyMemberForm';
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
     const savedApplication = await getApplication();
-    console.log(savedApplication);
 
     if (savedApplication) {
       throw redirect({

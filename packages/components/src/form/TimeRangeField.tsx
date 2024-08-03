@@ -12,25 +12,25 @@ import dayjs, { Dayjs } from 'dayjs';
 
 type TimeRangeFieldProps<T extends FieldValues> = {
   control: Control<T>;
-  startTime: Path<T>;
-  endTime: Path<T>;
+  start_time: Path<T>;
+  end_time: Path<T>;
 } & Omit<TimeFieldProps<Dayjs>, 'name' | 'value' | 'onChange'>;
 
 export function TimeRangeField<T extends FieldValues>({
   control,
-  startTime,
-  endTime,
+  start_time,
+  end_time,
   required,
   ...props
 }: TimeRangeFieldProps<T>) {
   const { field: startTimeField, fieldState: startTimeFieldState } =
     useController({
-      name: startTime,
+      name: start_time,
       control,
       rules: { required },
     });
   const { field: endTimeField, fieldState: endTimeFieldState } = useController({
-    name: endTime,
+    name: end_time,
     control,
     rules: { required },
   });

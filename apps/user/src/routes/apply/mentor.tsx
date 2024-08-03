@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { Box, Stack } from '@mui/material';
@@ -6,6 +6,7 @@ import { Box, Stack } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { UserProfile } from '@packages/components/types/user';
+import { applyStudy } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { createFileRoute, useBlocker } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
@@ -20,6 +21,7 @@ import ApplyMentorStepper from '@components/apply/mentor/ApplyMentorStepper';
 import { MentorInfo } from '@components/apply/mentor/steps/MentorInfo';
 import { StudyInfo } from '@components/apply/mentor/steps/StudyInfo';
 import { StudyPlan } from '@components/apply/mentor/steps/StudyPlan';
+import { StudySubmit } from '@components/apply/mentor/steps/StudySubmit';
 import BlockModal from '@components/common/BlockModal';
 
 const STORAGE_KEY = 'applyMentorForm';
@@ -43,17 +45,20 @@ function ApplyMember() {
   const form = useForm<z.infer<typeof ApplyMentorSchema>>({
     resolver: zodResolver(ApplyMentorSchema),
     defaultValues: {
-      studyName: '',
-      oneLiner: '',
+      name: '',
+      one_liner: '',
       difficulty: '',
       location: '',
-      weekDay: '',
-      startTime: dayjs(null),
-      endTime: dayjs(null),
-      secondaryMentor: false,
-      secondaryMentorId: '',
-      secondaryMentorName: '',
-      studyPlan: Array(15).fill({ section: '', contents: [''] }),
+      week_day: '',
+      start_time: dayjs(null),
+      end_time: dayjs(null),
+      primary_mentor_name: user.name!,
+      primary_mentor_id: user.id!,
+      secondary_mentor: false,
+      explanation: '',
+      secondary_mentor_id: '',
+      secondary_mentor_name: '',
+      study_plans: Array(15).fill({ section: '', contents: [''] }),
     },
   });
 
@@ -69,8 +74,8 @@ function ApplyMember() {
         return <StudyInfo form={form} />;
       case 2:
         return <StudyPlan form={form} />;
-      default:
-        return <MentorInfo form={form} userInfo={user} />;
+      case 3:
+        return <StudySubmit form={form} />;
     }
   };
 
@@ -78,15 +83,15 @@ function ApplyMember() {
     condition: form.formState.isDirty,
   });
 
-  // useEffect(() => {
-  //   const savedData = localStorage.getItem(STORAGE_KEY);
-  //   if (savedData) {
-  //     const parsedData = JSON.parse(savedData);
-  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //     const { startTime, endTime, ...rest } = parsedData;
-  //     form.reset(rest);
-  //   }
-  // }, [form]);
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { start_time, end_time, ...rest } = parsedData;
+      form.reset(rest);
+    }
+  }, [form]);
 
   const handleSaveDraft = () => {
     const formData = form.getValues();
@@ -108,23 +113,29 @@ function ApplyMember() {
   };
 
   const handleNext = async () => {
-    if (activeStep === 3) return;
+    if (activeStep === 3) {
+      const formData = form.getValues();
+      console.log(formData);
+
+      onSubmit(formData);
+      return;
+    }
 
     let isValid = true;
     if (activeStep === 0) {
       isValid = await form.trigger([
-        'secondaryMentor',
-        'secondaryMentorId',
-        'secondaryMentorName',
+        'secondary_mentor',
+        'secondary_mentor_id',
+        'secondary_mentor_name',
       ]);
     } else if (activeStep === 1) {
       isValid = await form.trigger([
-        'studyName',
-        'oneLiner',
+        'name',
+        'one_liner',
         'difficulty',
-        'startTime',
-        'endTime',
-        'weekDay',
+        'start_time',
+        'end_time',
+        'week_day',
         'location',
       ]);
     }
@@ -134,7 +145,20 @@ function ApplyMember() {
   };
 
   const onSubmit = async (formData: z.infer<typeof ApplyMentorSchema>) => {
-    console.log(formData);
+    try {
+      await applyStudy(formData);
+      openSingleButtonDialog({
+        dialogIconType: DialogIconType.CONFIRM,
+        title: '스터디 지원서 제출 완료',
+        message: '스터디 지원서 제출이 완료되었습니다.',
+        mainButtonText: '확인',
+        mainButtonAction: () => {
+          closeDialog();
+        },
+      });
+    } catch (err) {
+      handleGlobalError(err);
+    }
   };
 
   return (
@@ -156,7 +180,13 @@ function ApplyMember() {
         >
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {renderStep(activeStep, form, user)}
-            <Button variant='outlined' fullWidth onClick={handleSaveDraft}>
+            <Button
+              variant='outlined'
+              fullWidth
+              onClick={handleSaveDraft}
+              disabled={!form.formState.isDirty}
+              sx={{ mb: 2 }}
+            >
               임시 저장
             </Button>
             <Stack direction={'row'} gap={2}>
@@ -165,6 +195,7 @@ function ApplyMember() {
                 size='large'
                 fullWidth
                 onClick={handlePrevious}
+                disabled={activeStep === 0}
               >
                 이전
               </Button>
@@ -174,7 +205,7 @@ function ApplyMember() {
                 fullWidth
                 onClick={handleNext}
               >
-                다음
+                {activeStep === 3 ? '제출' : '다음'}
               </Button>
             </Stack>
           </form>

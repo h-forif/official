@@ -44,7 +44,6 @@ const STUDY_START_DATE = '2024-09-10';
 
 function StudyComponent() {
   const study: Study = Route.useLoaderData();
-  console.log(study);
 
   const theme = useTheme();
   const [tab, setTab] = useState('#introduction');
@@ -143,15 +142,17 @@ function StudyComponent() {
           <Typography variant='bodyMedium' mb={2} fontWeight={300}>
             {study.one_liner}
           </Typography>
-          <Button
-            sx={{
-              width: 'fit-content',
-            }}
-            variant='contained'
-            size='large'
-          >
-            스터디 신청하기
-          </Button>
+          <Link to='/apply/member'>
+            <Button
+              sx={{
+                width: 'fit-content',
+              }}
+              variant='contained'
+              size='large'
+            >
+              스터디 신청하기
+            </Button>
+          </Link>
         </Stack>
       </Box>
       <Box
@@ -394,7 +395,7 @@ function StudySideBox(study: Study) {
       top={64}
       display={{ xs: 'none', md: 'flex' }}
     >
-      <Chip label='WEB/APP' sx={{ width: 'fit-content' }} color='primary' />
+      <Chip label={study.tag} sx={{ width: 'fit-content' }} color='primary' />
       <Typography variant='labelLarge'>{study.name}</Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
         매주 {getWeekDayAsString(study.week_day)}

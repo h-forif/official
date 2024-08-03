@@ -2,8 +2,10 @@
 import { Study } from '@packages/components/types/study';
 import { StudySearch } from '@routes/studies';
 import { AxiosResponse } from 'axios';
+import { ApplyMentorSchema } from 'src/types/apply.schema';
+import { z } from 'zod';
 
-import { api } from './axios-instance';
+import { api, authApi } from './axios-instance';
 
 export const getStudyInfo = async (studyId: string) => {
   const response = await api.get(`/studies/${studyId}`);
@@ -16,4 +18,11 @@ export const getAllStudies = ({ year, semester }: StudySearch) => {
     .get('/studies', { params })
     .then((res: AxiosResponse<Study[]>) => res.data);
   return data;
+};
+
+export const applyStudy = async (
+  formData: z.infer<typeof ApplyMentorSchema>,
+) => {
+  const res = await authApi.post(`/study-apply`, formData);
+  return res;
 };
