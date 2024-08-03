@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 
 import { Alert, Snackbar } from '@mui/material';
 
-import useToastStore from '@store/toast.store';
+import useToastStore from '@stores/toast.store';
 
 const Toast = () => {
   const { message, severity, clearToast } = useToastStore();

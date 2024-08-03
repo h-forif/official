@@ -17,6 +17,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
+import { AlertDialog } from '@components/common/Dialog';
 import Toast from '@components/common/Toast';
 
 import useInitializeAuth from '@hooks/useInitializeAuth';
@@ -60,6 +61,7 @@ function RootComponent() {
               <AppBar mode={mode} toggleColorMode={toggleColorMode} />
               <Outlet />
               <Toast />
+              <AlertDialog />
               <TanStackRouterDevtools />
             </ThemeProvider>
           </ErrorBoundary>

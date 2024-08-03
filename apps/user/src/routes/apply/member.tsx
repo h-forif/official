@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { APPLY_PATH_OPTIONS } from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
@@ -21,10 +22,11 @@ import {
 } from '@packages/components/Modal';
 import { Select, SelectOption } from '@packages/components/Select';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { createFileRoute, useBlocker } from '@tanstack/react-router';
+import { getApplication } from '@services/apply.service';
+import { createFileRoute, redirect, useBlocker } from '@tanstack/react-router';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
-import { getApplication, getUserInfo } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -37,14 +39,19 @@ const STORAGE_KEY = 'applyMemberForm';
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
     const savedApplication = await getApplication();
+
     if (savedApplication) {
-      window.location.href = '/apply/application';
+      throw redirect({
+        to: '/apply/application',
+      });
     }
 
     const [userInfo, studies] = await Promise.all([
-      getUserInfo(),
+      getUser(),
       getAllStudies({ year: 2024, semester: 1 }),
     ]);
+    console.log(userInfo);
+
     return { userInfo, studies };
   },
   onError: ({ error }) => {
@@ -55,19 +62,19 @@ export const Route = createFileRoute('/apply/member')({
 
 function ApplyMember() {
   const loaderData = Route.useLoaderData();
-  const { id, name, department, phoneNumber } = loaderData!.userInfo;
+  const { id, name, department, phone_number } = loaderData!.userInfo;
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
     defaultValues: {
-      primaryStudy: '',
-      primaryIntro: '',
-      secondaryStudy: '',
-      secondaryIntro: '',
-      applyPath: '',
-      isPrimaryStudyOnly: false,
+      primary_study: '',
+      primary_intro: '',
+      secondary_study: '',
+      secondary_intro: '',
+      apply_path: '',
+      is_primary_study_only: false,
     },
   });
 
@@ -89,50 +96,17 @@ function ApplyMember() {
     setModalOpen(true);
   };
 
-  const primaryStudyValue = form.watch('primaryStudy');
-  const secondaryStudyValue = form.watch('secondaryStudy');
-  const isPrimaryStudyOnly = form.watch('isPrimaryStudyOnly');
+  const primaryStudyValue = form.watch('primary_study');
+  const secondaryStudyValue = form.watch('primary_intro');
+  const is_primary_study_only = form.watch('is_primary_study_only');
 
-  const options: SelectOption[] = [
-    {
-      value: '0',
-      label: '자율스터디 부원으로 신청하기',
-    },
-    ...loaderData!.studies.map((study) => ({
-      value: study.id.toString(),
-      label: study.name,
-    })),
-  ];
-
-  const applyPathOptions: SelectOption[] = [
-    {
-      value: 'everytime',
-      label: '에브리타임',
-    },
-    {
-      value: 'instagram',
-      label: '인스타그램',
-    },
-    {
-      value: 'linkedin',
-      label: '링크드인',
-    },
-    {
-      value: 'kakaotalk',
-      label: '학과 단톡방',
-    },
-    {
-      value: 'friend',
-      label: '지인 추천',
-    },
-    {
-      value: 'etc',
-      label: '기타',
-    },
-  ];
+  const options: SelectOption[] = loaderData!.studies.map((study) => ({
+    value: study.id.toString(),
+    label: study.name,
+  }));
 
   const handleCheckBoxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    form.setValue('isPrimaryStudyOnly', e.target.checked);
+    form.setValue('is_primary_study_only', e.target.checked);
   };
 
   const filteredSecondaryOptions = options.filter(
@@ -140,12 +114,12 @@ function ApplyMember() {
   );
 
   const onSubmit = async (formData: z.infer<typeof ApplyMemberSchema>) => {
-    if (formData.isPrimaryStudyOnly) {
+    if (formData.is_primary_study_only) {
       const res = await authApi
         .post('/apply', {
-          primary_study: formData.primaryStudy,
-          primary_intro: formData.primaryIntro,
-          apply_path: formData.applyPath,
+          primary_study: formData.primary_study,
+          primary_intro: formData.primary_intro,
+          apply_path: formData.secondary_study,
         })
         .then((res) => res.data);
       console.log(res);
@@ -154,7 +128,7 @@ function ApplyMember() {
 
   return (
     <>
-      <Box component={'main'} sx={{ mx: '3vw' }}>
+      <Box component={'main'}>
         <Box
           sx={{
             width: { xs: '100%', md: '512px' },
@@ -172,7 +146,7 @@ function ApplyMember() {
               alignItems={'center'}
               my={4}
             >
-              <Typography variant='titleSmall'>개인 정보</Typography>
+              <Typography variant='titleSmall'>신청 부원 정보</Typography>
               <Input
                 required
                 fullWidth
@@ -198,7 +172,7 @@ function ApplyMember() {
                 required
                 fullWidth
                 label='전화번호'
-                defaultValue={phoneNumber}
+                defaultValue={phone_number}
                 disabled
               />
             </Stack>
@@ -210,7 +184,7 @@ function ApplyMember() {
             >
               <Typography variant='titleSmall'>1순위 스터디 신청</Typography>
               <Controller
-                name='primaryStudy'
+                name='primary_study'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Select
@@ -227,7 +201,7 @@ function ApplyMember() {
                 )}
               />
               <Controller
-                name='primaryIntro'
+                name='primary_intro'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <TextField
@@ -255,7 +229,7 @@ function ApplyMember() {
                 control={
                   <Checkbox
                     disabled={primaryStudyValue === '0'}
-                    checked={isPrimaryStudyOnly}
+                    checked={is_primary_study_only}
                     onChange={handleCheckBoxChange}
                   />
                 }
@@ -272,7 +246,7 @@ function ApplyMember() {
                 }
               />
               <Controller
-                name='secondaryStudy'
+                name='secondary_study'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Select
@@ -281,20 +255,20 @@ function ApplyMember() {
                     setVal={field.onChange}
                     placeholder='2순위 스터디를 신청해주세요.'
                     options={filteredSecondaryOptions}
-                    required={!isPrimaryStudyOnly}
+                    required={!is_primary_study_only}
                     error={!!fieldState.error}
                     errorMessage={fieldState.error?.message}
                     disabled={
                       primaryStudyValue === '' ||
                       primaryStudyValue === '0' ||
-                      isPrimaryStudyOnly
+                      is_primary_study_only
                     }
                     minWidth={'100%'}
                   />
                 )}
               />
               <Controller
-                name='secondaryIntro'
+                name='secondary_intro'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <TextField
@@ -305,13 +279,13 @@ function ApplyMember() {
                     maxRows={4}
                     value={field.value}
                     onChange={field.onChange}
-                    required={!isPrimaryStudyOnly}
+                    required={!is_primary_study_only}
                     disabled={
                       primaryStudyValue === '0' ||
                       primaryStudyValue === '' ||
                       secondaryStudyValue === '0' ||
                       primaryStudyValue === '' ||
-                      isPrimaryStudyOnly
+                      is_primary_study_only
                     }
                     error={!!fieldState.error}
                     helperText={
@@ -324,7 +298,7 @@ function ApplyMember() {
               />
               <Typography variant='titleSmall'>포리프를 접한 경로</Typography>
               <Controller
-                name='applyPath'
+                name='apply_path'
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Select
@@ -333,7 +307,7 @@ function ApplyMember() {
                     val={field.value}
                     setVal={field.onChange}
                     placeholder='포리프를 접하게 된 경로를 작성해주세요.'
-                    options={applyPathOptions}
+                    options={APPLY_PATH_OPTIONS}
                     error={!!fieldState.error}
                     errorMessage='지원 경로는 필수값입니다.'
                     minWidth={'100%'}
@@ -358,7 +332,15 @@ function ApplyMember() {
           </form>
         </Box>
       </Box>
-      {status === 'blocked' && <BlockModal proceed={proceed} reset={reset} />}
+      {status === 'blocked' && (
+        <BlockModal
+          title='스터디 신청서 작성 중'
+          description='신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
+          내용이 사라질 수 있습니다.'
+          proceed={proceed}
+          reset={reset}
+        />
+      )}
       {modalOpen && (
         <Modal isOpen>
           <ModalContent>

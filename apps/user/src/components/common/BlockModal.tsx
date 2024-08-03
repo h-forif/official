@@ -4,11 +4,18 @@ import { Backdrop, Box, Stack, Typography, styled } from '@mui/material';
 import { Button } from '@packages/components/Button';
 
 interface BlockModalProps {
+  title: string;
+  description: string;
   reset: () => void;
   proceed: () => void;
 }
 
-export default function BlockModal({ reset, proceed }: BlockModalProps) {
+export default function BlockModal({
+  title,
+  description,
+  reset,
+  proceed,
+}: BlockModalProps) {
   return (
     <Backdrop sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
       <Box
@@ -20,11 +27,10 @@ export default function BlockModal({ reset, proceed }: BlockModalProps) {
         p={5}
       >
         <Typography variant='titleMedium' color='inherit'>
-          스터디 신청서 작성 중
+          {title}
         </Typography>
         <Typography variant='labelMedium' color='inherit' mb={6}>
-          신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
-          내용이 사라질 수 있습니다.
+          {description}
           <br />
           괜찮으시다면 '나가기' 버튼을 눌러주세요.
         </Typography>

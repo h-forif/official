@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as StudiesIndexImport } from './routes/studies/index'
+import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
@@ -75,6 +76,11 @@ const ClubTeamLazyRoute = ClubTeamLazyImport.update({
   path: '/club/team',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/club/team.lazy').then((d) => d.Route))
+
+const StudiesGuideRoute = StudiesGuideImport.update({
+  path: '/studies/guide',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const StudiesStudyIdRoute = StudiesStudyIdImport.update({
   path: '/studies/$studyId',
@@ -210,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesStudyIdImport
       parentRoute: typeof rootRoute
     }
+    '/studies/guide': {
+      id: '/studies/guide'
+      path: '/studies/guide'
+      fullPath: '/studies/guide'
+      preLoaderRoute: typeof StudiesGuideImport
+      parentRoute: typeof rootRoute
+    }
     '/club/team': {
       id: '/club/team'
       path: '/club/team'
@@ -288,6 +301,7 @@ export const routeTree = rootRoute.addChildren({
   AuthSignUpRoute,
   ClubAboutRoute,
   StudiesStudyIdRoute,
+  StudiesGuideRoute,
   ClubTeamLazyRoute,
   StudiesIndexRoute,
   HackathonIndexLazyRoute,
@@ -311,6 +325,7 @@ export const routeTree = rootRoute.addChildren({
         "/auth/sign-up",
         "/club/about",
         "/studies/$studyId",
+        "/studies/guide",
         "/club/team",
         "/studies/",
         "/hackathon/"
@@ -352,6 +367,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/$studyId": {
       "filePath": "studies/$studyId.tsx"
+    },
+    "/studies/guide": {
+      "filePath": "studies/guide.tsx"
     },
     "/club/team": {
       "filePath": "club/team.lazy.tsx"

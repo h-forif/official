@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import MUIAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,21 +8,18 @@ import { styled } from '@mui/system';
 import LetterIcon from '@assets/logos/forif-letter.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
-import { setRefreshToken, useAccessToken } from '@store/token.store';
-import { clearUser, getUserState, setUserState } from '@store/user.store';
+import { setRefreshToken } from '@stores/token.store';
+import { clearUser, getUserState } from '@stores/user.store';
 import { useNavigate } from '@tanstack/react-router';
-import { handleGlobalError } from '@utils/handleGlobalError';
-import { motion, useAnimation } from 'framer-motion';
-import { signIn } from 'src/services/auth.service';
+import { useAnimation } from 'framer-motion';
 
 import { useNavMenu } from '@hooks/useNavMenu';
 import useScrollPosition from '@hooks/useScrollPosition';
+import { useSignIn } from '@hooks/useSignIn';
 
 import { AppBarProps } from '../../types/app-bar.type';
 import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const scrollPosition = useScrollPosition();
@@ -50,40 +47,8 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   }, [isVisible, controls]);
 
   const userState = getUserState();
-  const accessToken = useAccessToken();
 
-  useEffect(() => {
-    if (accessToken) {
-      setUserState('sign-in');
-    }
-  }, [accessToken]);
-
-  const signInWithToken = async (tokenResponse: TokenResponse) => {
-    try {
-      await signIn(tokenResponse.access_token);
-      navigate({ to: '/profile' });
-    } catch (err) {
-      if (err === 'UserNotFound') {
-        navigate({ to: '/auth/sign-up' });
-      } else {
-        handleGlobalError(err);
-      }
-    }
-  };
-
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
-    callback: signInWithToken,
-  });
-
-  const handleSignIn = useCallback(async () => {
-    if (client) {
-      client.requestAccessToken();
-    } else {
-      console.error('Google OAuth2 client is not initialized.');
-    }
-  }, [client]);
+  const { handleSignIn } = useSignIn();
 
   const handleSignOut = () => {
     setRefreshToken(null);
@@ -93,111 +58,103 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
 
   return (
     <>
-      <motion.div
-        initial='visible'
-        animate={controls}
-        variants={{
-          visible: { y: 0 },
-          hidden: { y: '-100%' },
+      <MUIAppBar
+        position='static'
+        sx={{
+          boxShadow: 0,
+          bgcolor: 'transparent',
+          backgroundImage: 'none',
+          width: '100%',
         }}
-        transition={{ duration: 0.35, ease: 'easeInOut' }}
+        style={{
+          zIndex: 1100,
+        }}
       >
-        <MUIAppBar
-          position='sticky'
-          sx={{
-            boxShadow: 0,
-            bgcolor: 'transparent',
-            backgroundImage: 'none',
-            width: '100%',
-            zIndex: 1100,
-          }}
-        >
-          <MyToolBar variant='regular'>
-            <Box
-              sx={{
-                flexGrow: 1,
+        <MyToolBar variant='regular'>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              px: 3,
+            }}
+          >
+            <a
+              href='/'
+              style={{
+                marginRight: 64,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 2,
-                px: 3,
               }}
             >
-              <a
-                href='/'
-                style={{
-                  marginRight: 64,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <LetterIcon width={100} height={'64'} />
-              </a>
-              <DesktopNav
-                activeMenu={activeMenu}
-                handleClick={handleClick}
-                handleMouseEnter={handleMouseEnter}
-                handleMouseLeave={handleMouseLeave}
-                userState={userState}
-              />
-            </Box>
-            <MobileNav mode={mode} toggleColorMode={toggleColorMode} />
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 0.5,
-                alignItems: 'center',
-              }}
-            >
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-              {userState === 'sign-out' ? (
-                <>
-                  <Button
-                    color='primary'
-                    variant='text'
-                    size='small'
-                    onClick={handleSignIn}
-                  >
-                    한양대학교 로그인
-                  </Button>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    size='small'
-                    onClick={handleSignIn}
-                  >
-                    회원가입
-                  </Button>
-                </>
-              ) : (
+              <LetterIcon width={100} height={'64'} />
+            </a>
+            <DesktopNav
+              activeMenu={activeMenu}
+              handleClick={handleClick}
+              handleMouseEnter={handleMouseEnter}
+              handleMouseLeave={handleMouseLeave}
+              userState={userState}
+            />
+          </Box>
+          <MobileNav mode={mode} toggleColorMode={toggleColorMode} />
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              gap: 0.5,
+              alignItems: 'center',
+            }}
+          >
+            <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+            {userState === 'sign-out' ? (
+              <>
+                <Button
+                  color='primary'
+                  variant='text'
+                  size='small'
+                  onClick={handleSignIn}
+                >
+                  한양대학교 로그인
+                </Button>
                 <Button
                   color='primary'
                   variant='contained'
                   size='small'
-                  onClick={handleSignOut}
+                  onClick={handleSignIn}
                 >
-                  로그아웃
+                  회원가입
                 </Button>
-              )}
-            </Box>
-          </MyToolBar>
-        </MUIAppBar>
-        {activeMenu && (
-          <Box
-            sx={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              bgcolor: 'rgba(0, 0, 0, 0.5)',
-              width: '100%',
-              height: '100vh',
-              backdropFilter: 'blur(5px)',
-              zIndex: 1000,
-            }}
-          />
-        )}
-      </motion.div>
+              </>
+            ) : (
+              <Button
+                color='primary'
+                variant='contained'
+                size='small'
+                onClick={handleSignOut}
+              >
+                로그아웃
+              </Button>
+            )}
+          </Box>
+        </MyToolBar>
+      </MUIAppBar>
+      {activeMenu && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: 'rgba(0, 0, 0, 0.5)',
+            width: '100%',
+            height: '100vh',
+            backdropFilter: 'blur(5px)',
+            zIndex: 1000,
+          }}
+        />
+      )}
     </>
   );
 }

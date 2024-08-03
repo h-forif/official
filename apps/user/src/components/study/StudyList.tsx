@@ -49,7 +49,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
   const studies =
     difficulty === 0
       ? data!
-      : data!.filter((study) => study.level === difficulty);
+      : data!.filter((study) => Number(study.difficulty) === difficulty);
 
   return (
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
@@ -59,7 +59,9 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
             <StudyCard
               id={study.id}
               image={study.image!}
-              mentor={study.mentorName}
+              primaryMentorName={study.primary_mentor_name}
+              secondaryMentorName={study.secondary_mentor_name}
+              difficulty={study.difficulty}
               title={study.name}
             />
           </Grid>
@@ -71,7 +73,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
               <strong>{year}</strong>년 <strong>{semester}</strong>학기에
               진행되었으며 난이도가{' '}
               <strong>{getDifficultyKeyByValue(difficulty)}</strong>에 해당하는
-              스터디가 없는 듯 해요. 오류일 수 있으니 다시 시도해주세
+              스터디가 없는 듯 해요. 오류일 수 있으니 다시 시도해주세요.
             </Typography>
           </CenteredBox>
         )}

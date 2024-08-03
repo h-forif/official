@@ -1,36 +1,17 @@
-import { ChangeEvent, useState } from 'react';
-
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Autocomplete, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
+import { Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 
-import { DEPARTMENT_OPTIONS } from '@constants/department.constant';
 import { Button } from '@packages/components/Button';
-import { Input } from '@packages/components/Input';
-import useToastStore from '@store/toast.store';
+import { UserProfile } from '@packages/components/types/user';
 
-export interface DepartDialogProps {
-  previousDepartment: string;
-}
+import { useChangeDialog } from '@hooks/useChangeDialog';
 
-export function DepartDialog({ previousDepartment }: DepartDialogProps) {
-  const [open, setOpen] = useState(false);
-  const [department, setDepartment] = useState<string | null>(
-    previousDepartment,
-  );
-  const { showToast } = useToastStore();
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setDepartment(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    // TO-DO: add change department api
-    showToast('학과가 변경되었습니다.', 'success');
-    console.log(department);
-    setOpen(false);
-  };
+export function DepartDialog({ user }: { user: UserProfile }) {
+  const { setOpen, ChangeDialog } = useChangeDialog({
+    user,
+    field: 'department',
+  });
 
   return (
     <>
@@ -67,34 +48,13 @@ export function DepartDialog({ previousDepartment }: DepartDialogProps) {
               flexGrow={1}
               color={'text.primary'}
             >
-              {previousDepartment}
+              {user.department}
             </Typography>
           </Stack>
           <ChevronRightIcon fontSize='large' />
         </Stack>
       </Button>
-      <Dialog onClose={() => setOpen(false)} open={open} fullWidth>
-        <DialogTitle mt={2}>변경할 학과를 선택해주세요.</DialogTitle>
-        <Stack gap={2} px={3} my={3}>
-          <Autocomplete
-            options={DEPARTMENT_OPTIONS}
-            disablePortal
-            id='department-combo-box'
-            renderInput={(params) => (
-              <Input
-                {...params}
-                required
-                label='학과를 선택해주세요.'
-                onChange={handleChange}
-                fullWidth
-              />
-            )}
-          />
-          <Button variant='contained' size='large' onClick={handleSubmit}>
-            변경
-          </Button>
-        </Stack>
-      </Dialog>
+      <ChangeDialog />
     </>
   );
 }

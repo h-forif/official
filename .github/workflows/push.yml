@@ -53,3 +53,6 @@ jobs:
 
       - name: ESLINT를 실행합니다.
         run: pnpm run lint
+      
+      - name: 타입체크를 실행합니다.
+        run: pnpm run type-check

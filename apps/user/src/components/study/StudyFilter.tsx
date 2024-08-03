@@ -10,7 +10,7 @@ import {
 import { Button } from '@packages/components/Button';
 import { Select, SelectOption } from '@packages/components/Select';
 import { StudyProps } from '@routes/studies/index';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({
   value: year.toString(),
@@ -90,9 +90,11 @@ export function StudyFilter({
         />
       </Stack>
       <Stack direction={'row'} justifyContent={'flex-end'} width={'100%'}>
-        <Button variant='contained' size='large'>
-          스터디 가이드 <ArrowOutwardIcon fontSize='small' sx={{ ml: 1 }} />
-        </Button>
+        <Link to='/studies/guide'>
+          <Button variant='contained' size='large'>
+            스터디 가이드 <ArrowOutwardIcon fontSize='small' sx={{ ml: 1 }} />
+          </Button>
+        </Link>
       </Stack>
     </Stack>
   );

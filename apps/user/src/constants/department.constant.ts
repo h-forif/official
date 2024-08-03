@@ -60,9 +60,9 @@ const HYU_DEPARTMENTS: {
 
 const DEPARTMENT_OPTIONS = Object.entries(HYU_DEPARTMENTS).flatMap(
   ([college, departments]) =>
-    departments.map((department) => ({
-      department: department,
-      colleage: college,
+    departments.map((department, index) => ({
+      label: `${department}`,
+      id: `${college}-${index}`,
     })),
 );
 

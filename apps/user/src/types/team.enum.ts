@@ -1,3 +1,4 @@
+//TODO: Enum이므로 대문자로 변경
 export const team = {
   '전체 팀': 'all',
   회장단: 'executive',

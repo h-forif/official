@@ -17,12 +17,11 @@ export function ProjectList() {
     queryFn: getProjects,
     retry: false,
   });
+  console.log(data);
 
   if (error) {
     return <ErrorComponent status={error.response!.status} />;
   }
-
-  console.log(data);
 
   if (isLoading) {
     return (

@@ -1,17 +1,16 @@
 import { Box, Stack, Typography } from '@mui/material';
 
+import { StudyPlan } from '@packages/components/types/study';
+
 interface StudyCurriculumProps {
-  section: string;
-  content?: string;
+  studyPlan: StudyPlan;
   index: number;
 }
 
 export default function StudyCurriculum({
-  section,
-  content,
+  studyPlan: { section, content },
   index,
 }: StudyCurriculumProps) {
-  const contents = content?.split(';');
   return (
     <>
       <Stack
@@ -43,7 +42,7 @@ export default function StudyCurriculum({
         </Typography>
       </Stack>
       <Stack>
-        {contents?.map((content, index) => (
+        {content.map((content, index) => (
           <Stack key={index} direction={'row'} alignItems={'center'} px={2}>
             <Stack
               position={'relative'}
