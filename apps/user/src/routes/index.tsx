@@ -1,7 +1,11 @@
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/system';
+import { Box, Stack } from '@mui/system';
 
-import banner from '@assets/images/banner.svg';
+import Box1 from '@assets/images/main/box1.svg';
+import Box2 from '@assets/images/main/box2.svg';
+import Box3 from '@assets/images/main/box3.svg';
+import Box4 from '@assets/images/main/box4.svg';
+import Box5 from '@assets/images/main/box5.svg';
 import {
   MENTOR_RECRUIT_END_DATE,
   MENTOR_RECRUIT_START_DATE,
@@ -9,11 +13,11 @@ import {
   RECRUIT_START_DATE,
 } from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
-import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { getUserState } from '@stores/user.store';
 import { Link, createFileRoute } from '@tanstack/react-router';
 
+import GravityBox from '@components/main/GravityBox';
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 
 import { usePeriod } from '@hooks/usePeriod';
@@ -73,15 +77,9 @@ function Home() {
         </Stack>
         <AnimatedContainer>현재 스터디 모집 중입니다.</AnimatedContainer>
       </CenteredBox>
-      <Image
-        src={banner}
-        alt={`forif-main-banner`}
-        loading='lazy'
-        title={'main-banner'}
-        width={'100%'}
-        style={{ objectFit: 'contain' }}
-        fallback={''}
-      />
+      <Box sx={{ backgroundColor: '#1D40BA' }}>
+        <GravityBox images={[Box1, Box2, Box3, Box4, Box5]} />
+      </Box>
     </main>
   );
 }
