@@ -23,6 +23,7 @@ import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
 import { Route as ApplyApplicationImport } from './routes/apply/application'
+import { Route as LayoutProfileIndexImport } from './routes/_layout/profile/index'
 import { Route as LayoutProfileStudyImport } from './routes/_layout/profile/study'
 import { Route as LayoutProfileApplicationImport } from './routes/_layout/profile/application'
 import { Route as LayoutProfileAccountImport } from './routes/_layout/profile/account'
@@ -34,7 +35,6 @@ const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const HackathonIndexLazyImport = createFileRoute('/hackathon/')()
 const ClubTeamLazyImport = createFileRoute('/club/team')()
-const LayoutProfileIndexLazyImport = createFileRoute('/_layout/profile/')()
 const LayoutProfileCertificateLazyImport = createFileRoute(
   '/_layout/profile/certificate',
 )()
@@ -118,12 +118,10 @@ const ApplyApplicationRoute = ApplyApplicationImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutProfileIndexLazyRoute = LayoutProfileIndexLazyImport.update({
+const LayoutProfileIndexRoute = LayoutProfileIndexImport.update({
   path: '/profile/',
   getParentRoute: () => LayoutRoute,
-} as any).lazy(() =>
-  import('./routes/_layout/profile/index.lazy').then((d) => d.Route),
-)
+} as any)
 
 const LayoutProfileCertificateLazyRoute =
   LayoutProfileCertificateLazyImport.update({
@@ -289,7 +287,7 @@ declare module '@tanstack/react-router' {
       id: '/_layout/profile/'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof LayoutProfileIndexLazyImport
+      preLoaderRoute: typeof LayoutProfileIndexImport
       parentRoute: typeof LayoutImport
     }
   }
@@ -304,7 +302,7 @@ export const routeTree = rootRoute.addChildren({
     LayoutProfileApplicationRoute,
     LayoutProfileStudyRoute,
     LayoutProfileCertificateLazyRoute,
-    LayoutProfileIndexLazyRoute,
+    LayoutProfileIndexRoute,
   }),
   AboutLazyRoute,
   TeamLazyRoute,
@@ -415,7 +413,7 @@ export const routeTree = rootRoute.addChildren({
       "parent": "/_layout"
     },
     "/_layout/profile/": {
-      "filePath": "_layout/profile/index.lazy.tsx",
+      "filePath": "_layout/profile/index.tsx",
       "parent": "/_layout"
     }
   }

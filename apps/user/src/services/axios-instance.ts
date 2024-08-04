@@ -36,9 +36,9 @@ authApi.interceptors.request.use(async (config) => {
       config.headers.Authorization = `Bearer ${access_token}`;
       return config;
     } catch (err) {
-      // window.location.href = '/';
-      console.error('An error occurred:', err);
-      throw err;
+      alert('로그인이 필요합니다.');
+      history.back();
+      return config;
     }
   }
 });

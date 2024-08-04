@@ -24,6 +24,7 @@ import { Select, SelectOption } from '@packages/components/Select';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { getApplication } from '@services/apply.service';
 import { createFileRoute, redirect, useBlocker } from '@tanstack/react-router';
+import { handleGlobalError } from '@utils/handleGlobalError';
 import { authApi } from 'src/services/axios-instance';
 import { getAllStudies } from 'src/services/study.service';
 import { getUser } from 'src/services/user.service';
@@ -50,12 +51,17 @@ export const Route = createFileRoute('/apply/member')({
       getUser(),
       getAllStudies({ year: 2024, semester: 1 }),
     ]);
-    console.log(userInfo);
-
     return { userInfo, studies };
   },
   onError: ({ error }) => {
-    console.error(error);
+    console.log(error.response.status);
+
+    if (error.response?.status === 500) {
+      alert('로그인이 필요합니다. 메인 페이지로 이동합니다.');
+      window.location.href = '/'; // 메인 페이지로 리디렉션
+    } else {
+      handleGlobalError(error);
+    }
   },
   component: ApplyMember,
 });

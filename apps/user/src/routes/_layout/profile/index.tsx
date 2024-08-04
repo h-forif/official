@@ -1,7 +1,8 @@
 import { Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { getUser } from '@services/user.service';
+import { createFileRoute } from '@tanstack/react-router';
 
 import { Title } from '@components/Title';
 import {
@@ -9,7 +10,8 @@ import {
   ProfileCardDescription,
 } from '@components/profile/ProfileCard';
 
-export const Route = createLazyFileRoute('/_layout/profile/')({
+export const Route = createFileRoute('/_layout/profile/')({
+  loader: () => getUser(),
   component: Profile,
 });
 function Profile() {
