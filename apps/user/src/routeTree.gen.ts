@@ -17,6 +17,7 @@ import { Route as LayoutImport } from './routes/_layout'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
+import { Route as ClubCalendarImport } from './routes/club/calendar'
 import { Route as ClubAboutImport } from './routes/club/about'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
@@ -84,6 +85,11 @@ const StudiesGuideRoute = StudiesGuideImport.update({
 
 const StudiesStudyIdRoute = StudiesStudyIdImport.update({
   path: '/studies/$studyId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClubCalendarRoute = ClubCalendarImport.update({
+  path: '/club/calendar',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -209,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClubAboutImport
       parentRoute: typeof rootRoute
     }
+    '/club/calendar': {
+      id: '/club/calendar'
+      path: '/club/calendar'
+      fullPath: '/club/calendar'
+      preLoaderRoute: typeof ClubCalendarImport
+      parentRoute: typeof rootRoute
+    }
     '/studies/$studyId': {
       id: '/studies/$studyId'
       path: '/studies/$studyId'
@@ -300,6 +313,7 @@ export const routeTree = rootRoute.addChildren({
   ApplyMentorRoute,
   AuthSignUpRoute,
   ClubAboutRoute,
+  ClubCalendarRoute,
   StudiesStudyIdRoute,
   StudiesGuideRoute,
   ClubTeamLazyRoute,
@@ -324,6 +338,7 @@ export const routeTree = rootRoute.addChildren({
         "/apply/mentor",
         "/auth/sign-up",
         "/club/about",
+        "/club/calendar",
         "/studies/$studyId",
         "/studies/guide",
         "/club/team",
@@ -364,6 +379,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/club/about": {
       "filePath": "club/about.tsx"
+    },
+    "/club/calendar": {
+      "filePath": "club/calendar.tsx"
     },
     "/studies/$studyId": {
       "filePath": "studies/$studyId.tsx"
