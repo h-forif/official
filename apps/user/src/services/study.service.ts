@@ -7,9 +7,16 @@ import { z } from 'zod';
 
 import { api, authApi } from './axios-instance';
 
+/**
+ * 제공된 스터디 ID를 기반으로 스터디 정보를 가져옵니다.
+ * @param studyId - 정보를 가져올 스터디의 ID입니다.
+ * @returns 스터디 정보
+ */
 export const getStudyInfo = async (studyId: string) => {
-  const response = await api.get(`/studies/${studyId}`);
-  return response.data;
+  const studyInfo: Study = await api
+    .get(`/studies/${studyId}`)
+    .then((res) => res.data);
+  return studyInfo;
 };
 
 export const getAllStudies = ({ year, semester }: StudySearch) => {

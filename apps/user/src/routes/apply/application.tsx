@@ -14,7 +14,12 @@ import { getApplication, updateApplication } from '@services/apply.service';
 import { getAllStudies } from '@services/study.service';
 import { getUser } from '@services/user.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
 import dayjs from 'dayjs';
@@ -26,10 +31,14 @@ import CautionList from '@components/apply/application/CautionList';
 
 export const Route = createFileRoute('/apply/application')({
   loader: async () => {
+    const currentTerm = getCurrentTerm();
     const [application, userInfo, studies] = await Promise.all([
       getApplication(),
       getUser(),
-      getAllStudies({ year: 2024, semester: 1 }),
+      getAllStudies({
+        year: Number(currentTerm.year),
+        semester: Number(currentTerm.semester),
+      }),
     ]);
     return { application, userInfo, studies };
   },
@@ -42,6 +51,7 @@ export const Route = createFileRoute('/apply/application')({
 function MyApplication() {
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate();
+  const router = useRouter();
   const { application, studies, userInfo } = loaderData;
 
   const { id, name, department, phone_number } = userInfo;
@@ -59,7 +69,7 @@ function MyApplication() {
     resolver: zodResolver(ApplyMemberSchema),
     defaultValues: {
       primary_study: application.primary_study.id.toString(),
-      primary_intro: application.secondary_study.introduction,
+      primary_intro: application.primary_study.introduction,
       secondary_study: application.secondary_study.id.toString(),
       secondary_intro: application.secondary_study.introduction || '',
       is_primary_study_only: application.secondary_study.id === null,
@@ -74,6 +84,7 @@ function MyApplication() {
     const application = refineApplyForm(formData);
     try {
       await updateApplication(application);
+      router.invalidate();
       openSingleButtonDialog({
         dialogIconType: DialogIconType.CONFIRM,
         title: '스터디 신청서 수정 완료',

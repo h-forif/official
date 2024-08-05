@@ -11,6 +11,6 @@ export interface User {
 export interface UserProfile
   extends Pick<User, Exclude<keyof User, 'state' | 'user_authorization'>> {
   img_url: string | null;
-  currentStudyId: number | null; // 현재 내가 듣고 있는 스터디
-  passedStudyId: number[] | null;
+  current_study_id: number | null; // 현재 내가 듣고 있는 스터디
+  passed_study_id: number[] | null;
 }

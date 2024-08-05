@@ -115,7 +115,6 @@ function ApplyMember() {
   const handleNext = async () => {
     if (activeStep === 3) {
       const formData = form.getValues();
-      console.log(formData);
 
       onSubmit(formData);
       return;

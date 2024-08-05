@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import {
   Box,
   Checkbox,
@@ -15,17 +14,19 @@ import { APPLY_PATH_OPTIONS } from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
-import {
-  Modal,
-  ModalContent,
-  ModalDescription,
-} from '@packages/components/Modal';
 import { Select, SelectOption } from '@packages/components/Select';
-import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { getApplication } from '@services/apply.service';
-import { createFileRoute, redirect, useBlocker } from '@tanstack/react-router';
+import { applyMember, getApplication } from '@services/apply.service';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import {
+  createFileRoute,
+  redirect,
+  useBlocker,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
-import { authApi } from 'src/services/axios-instance';
+import { refineApplyForm } from '@utils/refine';
 import { getAllStudies } from 'src/services/study.service';
 import { getUser } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
@@ -47,30 +48,31 @@ export const Route = createFileRoute('/apply/member')({
       });
     }
 
+    const currentTerm = getCurrentTerm();
     const [userInfo, studies] = await Promise.all([
       getUser(),
-      getAllStudies({ year: 2024, semester: 1 }),
+      getAllStudies({
+        year: Number(currentTerm.year),
+        semester: Number(currentTerm.semester),
+      }),
     ]);
     return { userInfo, studies };
   },
   onError: ({ error }) => {
-    console.log(error.response.status);
-
-    if (error.response?.status === 500) {
-      alert('로그인이 필요합니다. 메인 페이지로 이동합니다.');
-      window.location.href = '/'; // 메인 페이지로 리디렉션
-    } else {
-      handleGlobalError(error);
-    }
+    console.log(error);
   },
   component: ApplyMember,
 });
 
 function ApplyMember() {
   const loaderData = Route.useLoaderData();
-  const { id, name, department, phone_number } = loaderData!.userInfo;
-  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const router = useRouter();
+  const { studies, userInfo } = loaderData;
+
+  const { id, name, department, phone_number } = userInfo;
   const [isSaved, setIsSaved] = useState(false);
+  const { closeDialog, openSingleButtonDialog } = useDialogStore();
 
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
@@ -99,14 +101,22 @@ function ApplyMember() {
     const formData = form.getValues();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     setIsSaved(true);
-    setModalOpen(true);
+    openSingleButtonDialog({
+      dialogIconType: DialogIconType.CONFIRM,
+      title: '임시 저장',
+      message: '스터디 신청서 임시 저장을 완료했습니다.',
+      mainButtonText: '확인',
+      mainButtonAction: () => {
+        closeDialog();
+      },
+    });
   };
 
-  const primaryStudyValue = form.watch('primary_study');
-  const secondaryStudyValue = form.watch('primary_intro');
+  const primary_study = form.watch('primary_study');
+  const secondary_study = form.watch('primary_intro');
   const is_primary_study_only = form.watch('is_primary_study_only');
 
-  const options: SelectOption[] = loaderData!.studies.map((study) => ({
+  const options: SelectOption[] = studies.map((study) => ({
     value: study.id.toString(),
     label: study.name,
   }));
@@ -116,19 +126,25 @@ function ApplyMember() {
   };
 
   const filteredSecondaryOptions = options.filter(
-    (option) => option.value !== primaryStudyValue,
+    (option) => option.value !== primary_study,
   );
 
   const onSubmit = async (formData: z.infer<typeof ApplyMemberSchema>) => {
-    if (formData.is_primary_study_only) {
-      const res = await authApi
-        .post('/apply', {
-          primary_study: formData.primary_study,
-          primary_intro: formData.primary_intro,
-          apply_path: formData.secondary_study,
-        })
-        .then((res) => res.data);
-      console.log(res);
+    const application = refineApplyForm(formData);
+    try {
+      await applyMember(application);
+      router.invalidate();
+      openSingleButtonDialog({
+        dialogIconType: DialogIconType.CONFIRM,
+        title: '스터디 신청서 수정 완료',
+        mainButtonText: '확인',
+        mainButtonAction: () => {
+          closeDialog();
+          navigate({ to: '/profile/application' });
+        },
+      });
+    } catch (error) {
+      handleGlobalError(error);
     }
   };
 
@@ -219,13 +235,13 @@ function ApplyMember() {
                     maxRows={4}
                     value={field.value}
                     onChange={field.onChange}
-                    disabled={primaryStudyValue === '0'}
+                    disabled={primary_study === '0'}
                     helperText={
                       fieldState.error
                         ? '50자 이상, 500자 이하로 작성해주세요.'
                         : '신청 사유는 50자 이상, 500자 이하로 작성해주세요.'
                     }
-                    error={!!fieldState.error && primaryStudyValue !== '0'}
+                    error={!!fieldState.error && primary_study !== '0'}
                   />
                 )}
               />
@@ -234,7 +250,7 @@ function ApplyMember() {
                 sx={{ width: '100%' }}
                 control={
                   <Checkbox
-                    disabled={primaryStudyValue === '0'}
+                    disabled={primary_study === '0'}
                     checked={is_primary_study_only}
                     onChange={handleCheckBoxChange}
                   />
@@ -265,8 +281,8 @@ function ApplyMember() {
                     error={!!fieldState.error}
                     errorMessage={fieldState.error?.message}
                     disabled={
-                      primaryStudyValue === '' ||
-                      primaryStudyValue === '0' ||
+                      primary_study === '' ||
+                      primary_study === '0' ||
                       is_primary_study_only
                     }
                     minWidth={'100%'}
@@ -287,10 +303,10 @@ function ApplyMember() {
                     onChange={field.onChange}
                     required={!is_primary_study_only}
                     disabled={
-                      primaryStudyValue === '0' ||
-                      primaryStudyValue === '' ||
-                      secondaryStudyValue === '0' ||
-                      primaryStudyValue === '' ||
+                      primary_study === '0' ||
+                      primary_study === '' ||
+                      secondary_study === '0' ||
+                      primary_study === '' ||
                       is_primary_study_only
                     }
                     error={!!fieldState.error}
@@ -346,30 +362,6 @@ function ApplyMember() {
           proceed={proceed}
           reset={reset}
         />
-      )}
-      {modalOpen && (
-        <Modal isOpen>
-          <ModalContent>
-            <CenteredBox gap={2} height={256}>
-              <ModalDescription>
-                <CheckCircleOutlineIcon
-                  color='primary'
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    mb: 2,
-                    fontSize: '5rem',
-                  }}
-                />
-                <Typography variant='bodyMedium'>
-                  스터디 임시 저장에 성공했습니다.
-                </Typography>
-              </ModalDescription>
-            </CenteredBox>
-          </ModalContent>
-        </Modal>
       )}
     </>
   );

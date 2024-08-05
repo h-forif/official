@@ -1,105 +1,122 @@
-import { Card, CardContent, Grid, TextField, Typography } from '@mui/material';
-import { Box, Stack } from '@mui/system';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
-import { Button } from '@packages/components/Button';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { Layout } from '@packages/components/elements/Layout';
+import { createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
-import dayjs from 'dayjs';
+import axios from 'axios';
 import { getApplication } from 'src/services/apply.service';
-import { Application } from 'src/types/apply.schema';
 
 import { Title } from '@components/Title';
 import { ApplicationState } from '@components/profile/application/ApplicationState';
 
 export const Route = createFileRoute('/_layout/profile/application')({
-  loader: () => getApplication(),
+  loader: async () => {
+    try {
+      const application = await getApplication();
+      return { application };
+    } catch (error) {
+      return { error };
+    }
+  },
   component: MyApplication,
 });
 
 function MyApplication() {
   const currentTerm = getCurrentTerm();
-  const application: Application = Route.useLoaderData();
+  const { application, error } = Route.useLoaderData();
 
-  return (
-    <Box width={'100%'}>
-      <Title
-        title='스터디 지원서'
-        label='이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다.'
-        pt={0}
-      />
-      <Box
-        sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}
-        maxWidth={1120}
-      >
-        <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                minWidth: 275,
-                backgroundColor: 'background.default',
-                borderRadius: 3,
-                boxShadow: 0,
-                p: 2,
-                border: '1px solid',
-                borderColor: 'divider',
-              }}
-            >
-              <CardContent>
-                <Typography variant='titleMedium' fontWeight={'bold'}>
-                  제출한 스터디 지원서
-                </Typography>
-                <Typography variant='bodySmall' color={'text.secondary'} mb={2}>
-                  현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
-                </Typography>
-                <Typography variant='bodyMedium'>
-                  <strong>
-                    {dayjs(application.timestamp).format(
-                      'YYYY년 MM월 DD일 HH시 mm분',
-                    )}
-                  </strong>
-                  에 마지막으로 제출하셨습니다.
-                </Typography>
-                <Stack gap={2} my={4}>
-                  <Typography variant='bodyMedium'>
-                    1순위 스터디: {application.primary_study.name}
+  if (error && axios.isAxiosError(error) && error.response?.status === 502) {
+    return (
+      <Box width={'100%'}>
+        <Title
+          title='스터디 지원서'
+          label='이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다.'
+          pt={0}
+        />
+        <Layout>
+          <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  minWidth: 275,
+                  backgroundColor: 'background.default',
+                  borderRadius: 3,
+                  boxShadow: 0,
+                  p: 2,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}
+              >
+                <CardContent>
+                  <Typography variant='titleMedium' fontWeight={'bold'}>
+                    제출한 스터디 지원서
                   </Typography>
-                  <TextField
-                    id='primary-study-application-textfield'
-                    value={application.primary_study.introduction}
-                    multiline
-                    maxRows={4}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </Stack>
-                <Stack gap={2} my={4}>
-                  <Typography variant='bodyMedium'>
-                    2순위 스터디: {application.secondary_study.name}
+                  <Typography
+                    variant='bodySmall'
+                    color={'text.secondary'}
+                    mb={2}
+                  >
+                    현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
                   </Typography>
-                  <TextField
-                    id='primary-study-application-textfield'
-                    value={application.secondary_study.introduction}
-                    multiline
-                    maxRows={4}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </Stack>
-                <Link to='/apply/application'>
-                  <Button variant='contained' size='large' fullWidth>
-                    수정
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                  <Typography variant='titleMedium'>
+                    제출한 지원서가 없습니다.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <ApplicationState application={application!} />
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <ApplicationState application={application} />
-          </Grid>
-        </Grid>
+        </Layout>
       </Box>
-    </Box>
-  );
+    );
+  } else {
+    return (
+      <Box width={'100%'}>
+        <Title
+          title='스터디 지원서'
+          label='이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다.'
+          pt={0}
+        />
+        <Layout>
+          <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  minWidth: 275,
+                  backgroundColor: 'background.default',
+                  borderRadius: 3,
+                  boxShadow: 0,
+                  p: 2,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                }}
+              >
+                <CardContent>
+                  <Typography variant='titleMedium' fontWeight={'bold'}>
+                    제출한 스터디 지원서
+                  </Typography>
+                  <Typography
+                    variant='bodySmall'
+                    color={'text.secondary'}
+                    mb={2}
+                  >
+                    현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
+                  </Typography>
+                  <Typography variant='titleMedium'>
+                    알 수 없는 오류가 발생했습니다. 다시 시도해주세요.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <ApplicationState application={application!} />
+            </Grid>
+          </Grid>
+        </Layout>
+      </Box>
+    );
+  }
 }

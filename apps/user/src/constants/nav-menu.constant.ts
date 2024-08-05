@@ -43,6 +43,21 @@ export const AUTH_NAV_MENUS: NavMenu[] = [
   {
     title: '프로필',
     href: '/profile',
+    submenu: [
+      { title: '계정', href: '/profile/account' },
+      {
+        title: '스터디',
+        href: '/profile/study',
+      },
+      {
+        title: '지원서',
+        href: '/profile/application',
+      },
+      {
+        title: '인증서',
+        href: '/profile/certificate',
+      },
+    ],
   },
 ];
 

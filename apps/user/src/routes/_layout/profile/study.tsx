@@ -1,3 +1,5 @@
+import Markdown from 'react-markdown';
+
 import {
   Card,
   CardContent,
@@ -6,7 +8,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  TextField,
   Typography,
 } from '@mui/material';
 import { Box, Stack } from '@mui/system';
@@ -21,10 +22,13 @@ import {
 } from '@packages/components/Modal';
 import { Study } from '@packages/components/types/study';
 import { UserProfile } from '@packages/components/types/user';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
+import formatMarkdown from '@utils/formatMarkdown';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
+import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
+import rehypeRaw from 'rehype-raw';
 import { getStudyInfo } from 'src/services/study.service';
 import { getUser } from 'src/services/user.service';
 
@@ -41,15 +45,19 @@ function MyStudy() {
   const currentTerm = getCurrentTerm();
   const currentStudy = useQuery<Study, AxiosError>({
     queryKey: ['currentStudy'],
-    queryFn: () => getStudyInfo(user.currentStudyId?.toString() || '0'),
-  });
-  const passedStudy = useQuery<Study, AxiosError>({
-    queryKey: ['passedStudy'],
-    queryFn: () => getStudyInfo(user.passedStudyId!.join(',')[0]!), // TO-DO: Fix this
+    queryFn: () => getStudyInfo(user.current_study_id?.toString() || '0'),
   });
 
-  if (currentStudy.isLoading && passedStudy.isLoading && !passedStudy.data)
-    return null;
+  const passedStudies = useQueries({
+    queries: user.passed_study_id!.map((studyId) => {
+      return {
+        queryKey: ['passedStudies', String(studyId)],
+        queryFn: () => getStudyInfo(studyId.toString()),
+      };
+    }),
+  });
+
+  if (currentStudy.isLoading) return null;
   if (!currentStudy.data) {
     return <Box>현재 수강 중인 스터디가 없습니다.</Box>;
   }
@@ -90,20 +98,19 @@ function MyStudy() {
                       <Typography variant='bodyMedium'>
                         {currentStudy.data!.name}
                       </Typography>
-                      <TextField
-                        value={currentStudy.data!.explanation}
-                        multiline
-                        maxRows={4}
-                        InputProps={{
-                          readOnly: true,
-                        }}
+                      <Markdown
+                        rehypePlugins={[rehypeRaw]}
+                        children={formatMarkdown(
+                          currentStudy.data!.explanation,
+                        )}
+                        className={'markdown'}
                       />
                       <Typography variant='bodyMedium'>
                         {currentStudy.data!.id === 0
                           ? `자율스터디는 정해진 스터디 시간이 없습니다.`
-                          : `매주 {getWeekDayAsString(currentStudy.data!.week_day)}{' '}
-                        {formatStudyTimeToKorean(currentStudy.data!.start_time)}{' '}
-                        - {formatStudyTimeToKorean(currentStudy.data!.end_time)}
+                          : `매주 ${getWeekDayAsString(currentStudy.data!.week_day)}
+                        ${formatStudyTimeToKorean(currentStudy.data!.start_time)}
+                        - ${formatStudyTimeToKorean(currentStudy.data!.end_time)}
                         에 진행합니다.`}
                       </Typography>
                       <Typography variant='bodyMedium'></Typography>
@@ -239,22 +246,27 @@ function MyStudy() {
                     overflow: 'auto',
                   }}
                 >
-                  <Stack
-                    direction={'row'}
-                    alignItems={'center'}
-                    justifyContent={'space-between'}
-                    py={2}
-                  >
-                    <Typography variant='bodySmall'>
-                      {/* {passedStudy.data!.name}
-                      {passedStudy.data!.act_semester &&
-                        passedStudy.data!.act_year &&
-                        `(${passedStudy.data!.act_year} - ${passedStudy.data!.act_semester})`} */}
-                    </Typography>
-                    <Typography variant='labelSmall' color={'primary'}>
-                      수료 완료!
-                    </Typography>
-                  </Stack>
+                  {passedStudies.map((study) => {
+                    if (study.isLoading) return null;
+                    if (!study.data) return null;
+                    return (
+                      <Stack
+                        key={study.data.id}
+                        direction={'row'}
+                        alignItems={'center'}
+                        justifyContent={'space-between'}
+                        py={2}
+                      >
+                        <Typography variant='bodySmall'>
+                          {study.data.name} ({study.data.act_year}-
+                          {study.data.act_semester})
+                        </Typography>
+                        <Typography variant='labelSmall' color={'primary'}>
+                          {study.data.id === 0 ? '자율스터디' : '수료'}
+                        </Typography>
+                      </Stack>
+                    );
+                  })}
                 </Stack>
               </CardContent>
             </Card>
