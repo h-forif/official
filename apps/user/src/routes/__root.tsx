@@ -13,7 +13,6 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
 import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
@@ -62,7 +61,6 @@ function RootComponent() {
               <Outlet />
               <Toast />
               <AlertDialog />
-              <TanStackRouterDevtools />
             </ThemeProvider>
           </ErrorBoundary>
         )}
