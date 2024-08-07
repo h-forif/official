@@ -1,10 +1,11 @@
-import { ReactNode } from 'react';
+import { Box, BoxProps } from '@mui/material';
 
-import { Box } from '@mui/material';
-
-export function Layout({ children }: { children?: ReactNode }) {
+export function Layout({ children, ...props }: BoxProps) {
   return (
-    <Box sx={{ paddingX: { xs: 4, sm: 8, md: 12 }, pb: 4, margin: 'auto' }}>
+    <Box
+      {...props}
+      sx={{ paddingX: { xs: 4, sm: 8, md: 12 }, pb: 4, margin: 'auto' }}
+    >
       {children}
     </Box>
   );

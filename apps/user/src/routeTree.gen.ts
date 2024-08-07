@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as StudiesIndexImport } from './routes/studies/index'
+import { Route as FaqIndexImport } from './routes/faq/index'
 import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubCalendarImport } from './routes/club/calendar'
@@ -70,6 +71,11 @@ const HackathonIndexLazyRoute = HackathonIndexLazyImport.update({
 
 const StudiesIndexRoute = StudiesIndexImport.update({
   path: '/studies/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FaqIndexRoute = FaqIndexImport.update({
+  path: '/faq/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -241,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClubTeamLazyImport
       parentRoute: typeof rootRoute
     }
+    '/faq/': {
+      id: '/faq/'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/studies/': {
       id: '/studies/'
       path: '/studies'
@@ -315,6 +328,7 @@ export const routeTree = rootRoute.addChildren({
   StudiesStudyIdRoute,
   StudiesGuideRoute,
   ClubTeamLazyRoute,
+  FaqIndexRoute,
   StudiesIndexRoute,
   HackathonIndexLazyRoute,
 })
@@ -340,6 +354,7 @@ export const routeTree = rootRoute.addChildren({
         "/studies/$studyId",
         "/studies/guide",
         "/club/team",
+        "/faq/",
         "/studies/",
         "/hackathon/"
       ]
@@ -389,6 +404,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/club/team": {
       "filePath": "club/team.lazy.tsx"
+    },
+    "/faq/": {
+      "filePath": "faq/index.tsx"
     },
     "/studies/": {
       "filePath": "studies/index.tsx"
