@@ -91,7 +91,7 @@ export function StudyPlan({
                 fullWidth
                 onClick={() => addNewContent(sectionIndex)}
               >
-                내용 추가
+                주차별 내용 추가
               </Button>
             </Stack>
           );

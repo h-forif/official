@@ -8,7 +8,7 @@ import Peeps3 from '@assets/images/avatar/peep-58.svg?react';
 import Peeps4 from '@assets/images/avatar/peep-75.svg?react';
 import { REVIEW_END_DATE, REVIEW_START_DATE } from '@constants/apply.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import dayjs from 'dayjs';
+import dayjs from '@utils/dayjs';
 import { Application } from 'src/types/apply.schema';
 
 import ApplyMentorStepper from '@components/apply/mentor/ApplyMentorStepper';
@@ -20,7 +20,7 @@ const steps = ['지원서 작성 중', '제출 완료', '검토 중', '합격 �
 export function ApplicationState({
   application,
 }: {
-  application: Application;
+  application: Application | null;
 }) {
   const [activeStep, setActiveStep] = useState(0);
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -29,7 +29,7 @@ export function ApplicationState({
     if (application) {
       if (
         application.primary_study.status === '대기' ||
-        application.secondary_study.status === '대기'
+        application.secondary_study?.status === '대기'
       )
         setActiveStep(1);
       if (currentDate.isAfter(dayjs(REVIEW_START_DATE))) setActiveStep(2);
@@ -43,7 +43,11 @@ export function ApplicationState({
     setCurrentDate(dayjs());
   }, 1000);
 
-  function ApplicationStateContents() {
+  function ApplicationStateContents({
+    priority,
+  }: {
+    priority: 'primary' | 'secondary';
+  }) {
     switch (activeStep) {
       case 0:
         return (
@@ -59,7 +63,9 @@ export function ApplicationState({
           <CenteredBox flexDirection={'column'}>
             <Peeps2 width={'100%'} height={'280px'} />
             <Typography variant='bodySmall' mt={2} textAlign={'center'}>
-              현재 지원서가 제출 완료된 상태입니다. 수정할 수 있습니다.
+              {priority === 'secondary' && application?.secondary_study === null
+                ? '2순위 스터디를 수강하지 않습니다.'
+                : '현재 지원서가 제출 완료된 상태입니다. 수정할 수 있습니다.'}
             </Typography>
           </CenteredBox>
         );
@@ -68,8 +74,9 @@ export function ApplicationState({
           <CenteredBox flexDirection={'column'}>
             <Peeps3 width={'100%'} height={'280px'} />
             <Typography variant='bodySmall' mt={2} textAlign={'center'}>
-              현재 지원서가 멘토에 의해 검토 중인 상태입니다. 지원서 수정이
-              불가능합니다.
+              {priority === 'secondary' && application?.secondary_study === null
+                ? '2순위 스터디를 수강하지 않습니다.'
+                : '현재 지원서가 멘토에 의해 검토 중인 상태입니다. 지원서 수정이 불가능합니다.'}
             </Typography>
           </CenteredBox>
         );
@@ -103,11 +110,11 @@ export function ApplicationState({
               1순위 스터디
             </Typography>
             <Box>
-              <ApplicationStateContents />
+              <ApplicationStateContents priority='primary' />
               {activeStep === 3 && (
                 <Typography variant='bodySmall' mt={2} textAlign={'center'}>
                   스터디 지원 결과:{' '}
-                  {application.primary_study.status === '승낙'
+                  {application!.primary_study.status === '승낙'
                     ? '합격'
                     : '불합격'}
                 </Typography>
@@ -120,11 +127,12 @@ export function ApplicationState({
               2순위 스터디
             </Typography>
             <Box>
-              <ApplicationStateContents />
+              <ApplicationStateContents priority='secondary' />
               {activeStep === 3 && (
                 <Typography variant='bodySmall' mt={2} textAlign={'center'}>
                   스터디 지원 결과:{' '}
-                  {application.secondary_study.status === '승낙'
+                  {application?.secondary_study &&
+                  application!.secondary_study.status === '승낙'
                     ? '합격'
                     : '불합격'}
                 </Typography>

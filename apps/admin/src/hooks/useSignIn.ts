@@ -1,44 +1,26 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { signIn } from '@services/auth.service';
-import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import useToastStore from '@stores/toast.store';
 import { useNavigate } from '@tanstack/react-router';
-import { handleGlobalError } from '@utils/handleGlobalError';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
 export function useSignIn() {
   const navigate = useNavigate();
-  const { closeDialog, openSingleButtonDialog } = useDialogStore();
   const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false);
   const [client, setClient] = useState<TokenClient | null>(null);
-  const { showToast } = useToastStore();
   const signInWithToken = async (tokenResponse: TokenResponse) => {
     try {
       const res = await signIn(tokenResponse.access_token);
       if (res.error) {
-        openSingleButtonDialog({
-          title: res.error.title,
-          message: res.error.message,
-          mainButtonText: '확인',
-          mainButtonAction: () => {
-            closeDialog();
-          },
-          dialogIconType: DialogIconType.WARNING,
-        });
+        console.error;
         return;
       }
-      showToast({
-        message: '포리프 웹사이트에 오신 것을 환영해요!',
-        severity: 'success',
-      });
-      navigate({ to: '/profile' });
+      navigate({ to: '/' });
     } catch (err) {
       if (err === 'UserNotFound') {
-        navigate({ to: '/auth/sign-up' });
+        navigate({ to: '/' });
       }
-      handleGlobalError(err);
     }
   };
 

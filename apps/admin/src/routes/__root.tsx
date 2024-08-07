@@ -1,19 +1,18 @@
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from 'react-error-boundary';
 
-import CssBaseline from "@mui/material/CssBaseline";
-import ThemeProvider from "@mui/system/ThemeProvider";
+import CssBaseline from '@mui/material/CssBaseline';
+import ThemeProvider from '@mui/system/ThemeProvider';
 
-import { lightTheme } from "@packages/components/theme.ts";
+import { lightTheme } from '@packages/components/theme.ts';
 import {
   QueryClient,
   QueryClientProvider,
   QueryErrorResetBoundary,
-} from "@tanstack/react-query";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+} from '@tanstack/react-query';
+import { Outlet, createRootRoute } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-import AppBar from "@components/AppBar/AppBar";
-import NotFoundPage from "@components/common/NotFoundPage";
+import NotFoundPage from '@components/common/NotFoundPage';
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
@@ -34,7 +33,6 @@ function RootComponent() {
           >
             <ThemeProvider theme={lightTheme}>
               <CssBaseline />
-              <AppBar />
               <Outlet />
               <TanStackRouterDevtools />
             </ThemeProvider>

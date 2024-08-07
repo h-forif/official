@@ -34,3 +34,7 @@ body {
 .markdown {
   margin: 0;
 }
+
+.flexGrow {
+  flex-grow: 1;
+}

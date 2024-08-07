@@ -18,6 +18,17 @@ const signIn = async (g_access_token: string | null | undefined) => {
   const parts = data.name.split('|').map((part) => part.trim());
   const [name, department] = parts;
 
+  if (!data.email.endsWith('@hanyang.ac.kr')) {
+    return {
+      data: null,
+      error: {
+        title: '허가되지 않은 이메일주소',
+        message: '한양대학교 이메일(@hanyang.ac.kr)로 로그인해주세요.',
+        status: 401,
+      },
+    };
+  }
+
   setUser({
     email: data.email ? data.email : null,
     user_authorization: null,
@@ -26,7 +37,7 @@ const signIn = async (g_access_token: string | null | undefined) => {
     department: department ? department : null,
     id: null,
   });
-  setAccessToken(g_access_token!); //sign-up 에서도 accessToken을 사용하기 때문
+  setAccessToken(g_access_token!);
 
   const { user, access_token, refresh_token } = await api
     .get<SignInResponse>('/auth/sign-in', {
@@ -40,6 +51,11 @@ const signIn = async (g_access_token: string | null | undefined) => {
   setAccessToken(access_token);
   setRefreshToken(refresh_token);
   setUserState('sign-in');
+
+  return {
+    data: user,
+    error: null,
+  };
 };
 
 const handleSignUp = async (

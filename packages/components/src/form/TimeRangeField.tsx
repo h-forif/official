@@ -8,7 +8,9 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
+
+import dayjs from './dayjs';
 
 type TimeRangeFieldProps<T extends FieldValues> = {
   control: Control<T>;
@@ -35,6 +37,8 @@ export function TimeRangeField<T extends FieldValues>({
     rules: { required },
   });
 
+  console.log(startTimeField.value, endTimeField.value);
+
   return (
     <FormControl
       error={startTimeFieldState.invalid || endTimeFieldState.invalid}
@@ -46,7 +50,11 @@ export function TimeRangeField<T extends FieldValues>({
             label='시작 시간'
             clearable
             format='HH:mm'
-            maxTime={endTimeField.value}
+            maxTime={
+              endTimeField.value
+                ? dayjs(endTimeField.value, 'HH:mm')
+                : undefined
+            }
             value={
               startTimeField.value ? dayjs(startTimeField.value, 'HH:mm') : null
             }
@@ -58,7 +66,11 @@ export function TimeRangeField<T extends FieldValues>({
             label='종료 시간'
             clearable
             format='HH:mm'
-            minTime={startTimeField.value}
+            minTime={
+              startTimeField.value
+                ? dayjs(startTimeField.value, 'HH:mm')
+                : undefined
+            }
             value={
               endTimeField.value ? dayjs(endTimeField.value, 'HH:mm') : null
             }

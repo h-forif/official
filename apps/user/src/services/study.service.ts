@@ -2,10 +2,8 @@
 import { Study } from '@packages/components/types/study';
 import { StudySearch } from '@routes/studies';
 import { AxiosResponse } from 'axios';
-import { ApplyMentorSchema } from 'src/types/apply.schema';
-import { z } from 'zod';
 
-import { api, authApi } from './axios-instance';
+import { api } from './axios-instance';
 
 /**
  * 제공된 스터디 ID를 기반으로 스터디 정보를 가져옵니다.
@@ -25,11 +23,4 @@ export const getAllStudies = ({ year, semester }: StudySearch) => {
     .get('/studies', { params })
     .then((res: AxiosResponse<Study[]>) => res.data);
   return data;
-};
-
-export const applyStudy = async (
-  formData: z.infer<typeof ApplyMentorSchema>,
-) => {
-  const res = await authApi.post(`/study-apply`, formData);
-  return res;
 };
