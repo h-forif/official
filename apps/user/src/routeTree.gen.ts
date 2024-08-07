@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as FaqIndexImport } from './routes/faq/index'
+import { Route as AnnouncementIndexImport } from './routes/announcement/index'
 import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubCalendarImport } from './routes/club/calendar'
@@ -24,6 +25,7 @@ import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as ApplyMentorImport } from './routes/apply/mentor'
 import { Route as ApplyMemberImport } from './routes/apply/member'
 import { Route as ApplyApplicationImport } from './routes/apply/application'
+import { Route as AnnouncementIdImport } from './routes/announcement/$id'
 import { Route as LayoutProfileIndexImport } from './routes/_layout/profile/index'
 import { Route as LayoutProfileStudyImport } from './routes/_layout/profile/study'
 import { Route as LayoutProfileApplicationImport } from './routes/_layout/profile/application'
@@ -79,6 +81,11 @@ const FaqIndexRoute = FaqIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AnnouncementIndexRoute = AnnouncementIndexImport.update({
+  path: '/announcement/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ClubTeamLazyRoute = ClubTeamLazyImport.update({
   path: '/club/team',
   getParentRoute: () => rootRoute,
@@ -121,6 +128,11 @@ const ApplyMemberRoute = ApplyMemberImport.update({
 
 const ApplyApplicationRoute = ApplyApplicationImport.update({
   path: '/apply/application',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AnnouncementIdRoute = AnnouncementIdImport.update({
+  path: '/announcement/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -184,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeamLazyImport
       parentRoute: typeof rootRoute
     }
+    '/announcement/$id': {
+      id: '/announcement/$id'
+      path: '/announcement/$id'
+      fullPath: '/announcement/$id'
+      preLoaderRoute: typeof AnnouncementIdImport
+      parentRoute: typeof rootRoute
+    }
     '/apply/application': {
       id: '/apply/application'
       path: '/apply/application'
@@ -245,6 +264,13 @@ declare module '@tanstack/react-router' {
       path: '/club/team'
       fullPath: '/club/team'
       preLoaderRoute: typeof ClubTeamLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/announcement/': {
+      id: '/announcement/'
+      path: '/announcement'
+      fullPath: '/announcement'
+      preLoaderRoute: typeof AnnouncementIndexImport
       parentRoute: typeof rootRoute
     }
     '/faq/': {
@@ -319,6 +345,7 @@ export const routeTree = rootRoute.addChildren({
   }),
   AboutLazyRoute,
   TeamLazyRoute,
+  AnnouncementIdRoute,
   ApplyApplicationRoute,
   ApplyMemberRoute,
   ApplyMentorRoute,
@@ -328,6 +355,7 @@ export const routeTree = rootRoute.addChildren({
   StudiesStudyIdRoute,
   StudiesGuideRoute,
   ClubTeamLazyRoute,
+  AnnouncementIndexRoute,
   FaqIndexRoute,
   StudiesIndexRoute,
   HackathonIndexLazyRoute,
@@ -345,6 +373,7 @@ export const routeTree = rootRoute.addChildren({
         "/_layout",
         "/about",
         "/team",
+        "/announcement/$id",
         "/apply/application",
         "/apply/member",
         "/apply/mentor",
@@ -354,6 +383,7 @@ export const routeTree = rootRoute.addChildren({
         "/studies/$studyId",
         "/studies/guide",
         "/club/team",
+        "/announcement/",
         "/faq/",
         "/studies/",
         "/hackathon/"
@@ -377,6 +407,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/team": {
       "filePath": "team.lazy.tsx"
+    },
+    "/announcement/$id": {
+      "filePath": "announcement/$id.tsx"
     },
     "/apply/application": {
       "filePath": "apply/application.tsx"
@@ -404,6 +437,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/club/team": {
       "filePath": "club/team.lazy.tsx"
+    },
+    "/announcement/": {
+      "filePath": "announcement/index.tsx"
     },
     "/faq/": {
       "filePath": "faq/index.tsx"

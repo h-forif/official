@@ -32,6 +32,10 @@ export const NAV_MENUS: NavMenu[] = [
     ],
   },
   {
+    title: '공지사항',
+    href: '/announcement',
+  },
+  {
     title: '자주 묻는 질문',
     href: '/faq',
   },

@@ -20,6 +20,7 @@ export const Route = createFileRoute('/faq/')({
   component: FAQPage,
 });
 
+//TODO: Replace with actual FAQ content
 const faqs = [
   {
     question: '스터디 신청 과정을 자세히 알고 싶어요.',
