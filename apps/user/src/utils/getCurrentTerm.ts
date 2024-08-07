@@ -3,7 +3,7 @@ const getCurrentTerm = () => {
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
 
-  const semester = month >= 2 && month <= 8 ? 1 : 2;
+  const semester = month >= 2 && month <= 7 ? 1 : 2;
 
   return {
     year: year.toString(),

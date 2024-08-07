@@ -14,10 +14,15 @@ import { getApplication, updateApplication } from '@services/apply.service';
 import { getAllStudies } from '@services/study.service';
 import { getUser } from '@services/user.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
+import dayjs from '@utils/dayjs';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
-import dayjs from 'dayjs';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -26,10 +31,14 @@ import CautionList from '@components/apply/application/CautionList';
 
 export const Route = createFileRoute('/apply/application')({
   loader: async () => {
+    const currentTerm = getCurrentTerm();
     const [application, userInfo, studies] = await Promise.all([
       getApplication(),
       getUser(),
-      getAllStudies({ year: 2024, semester: 1 }),
+      getAllStudies({
+        year: Number(currentTerm.year),
+        semester: Number(currentTerm.semester),
+      }),
     ]);
     return { application, userInfo, studies };
   },
@@ -42,6 +51,7 @@ export const Route = createFileRoute('/apply/application')({
 function MyApplication() {
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate();
+  const router = useRouter();
   const { application, studies, userInfo } = loaderData;
 
   const { id, name, department, phone_number } = userInfo;
@@ -51,29 +61,41 @@ function MyApplication() {
   }));
   const { openSingleButtonDialog, closeDialog } = useDialogStore();
 
-  const secondary_options: SelectOption[] = options.filter(
-    (option) => option.value !== application.primary_study.id.toString(),
-  );
-
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
     defaultValues: {
       primary_study: application.primary_study.id.toString(),
-      primary_intro: application.secondary_study.introduction,
-      secondary_study: application.secondary_study.id.toString(),
-      secondary_intro: application.secondary_study.introduction || '',
-      is_primary_study_only: application.secondary_study.id === null,
+      primary_intro: application.primary_study.introduction,
+      secondary_study:
+        application.secondary_study === null
+          ? undefined
+          : application.secondary_study.id.toString(),
+      secondary_intro:
+        application.secondary_study === null
+          ? ''
+          : application.secondary_study.introduction,
+      is_primary_study_only: application.secondary_study === null,
       apply_path: application.apply_path,
     },
   });
 
   const is_primary_study_only = form.watch('is_primary_study_only');
   const primary_study = form.watch('primary_study');
+  const secondary_study = form.watch('secondary_study');
+
+  const primary_options: SelectOption[] = options.filter(
+    (option) => option.value !== secondary_study,
+  );
+
+  const secondary_options: SelectOption[] = options.filter(
+    (option) => option.value !== primary_study,
+  );
 
   const onSubmit = async (formData: z.infer<typeof ApplyMemberSchema>) => {
     const application = refineApplyForm(formData);
     try {
       await updateApplication(application);
+      router.invalidate();
       openSingleButtonDialog({
         dialogIconType: DialogIconType.CONFIRM,
         title: '스터디 신청서 수정 완료',
@@ -135,7 +157,7 @@ function MyApplication() {
             <FormSelect
               control={form.control}
               name='primary_study'
-              options={options}
+              options={primary_options}
               minWidth={'100%'}
               required
               label='1순위 스터디를 선택해주세요.'
@@ -177,7 +199,7 @@ function MyApplication() {
               multiline
               disabled={
                 is_primary_study_only ||
-                form.watch('secondary_study') === '0' ||
+                secondary_study === '0' ||
                 primary_study === '0'
               }
               maxRows={4}

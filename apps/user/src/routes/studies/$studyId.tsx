@@ -1,5 +1,4 @@
 import { SyntheticEvent, useState } from 'react';
-import Markdown from 'react-markdown';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
@@ -25,11 +24,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
 import { Link, createFileRoute } from '@tanstack/react-router';
+import MDEditor from '@uiw/react-md-editor';
+import dayjs from '@utils/dayjs';
+import formatMarkdown from '@utils/formatMarkdown';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
-import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import { getStudyInfo } from 'src/services/study.service';
 
 import StudyCurriculum from '@components/study/StudyCurriculum';
@@ -48,10 +50,6 @@ function StudyComponent() {
   const theme = useTheme();
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
-  const formattedExplanation = study.explanation.replace(
-    /<br\s*\/?>/gi,
-    '\n\n',
-  );
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -198,10 +196,10 @@ function StudyComponent() {
                 borderColor={'divider'}
                 width={'100%'}
               >
-                <Markdown
-                  rehypePlugins={[rehypeRaw]}
-                  children={formattedExplanation}
-                  className={'markdown'}
+                <MDEditor.Markdown
+                  source={formatMarkdown(study.explanation)}
+                  rehypePlugins={[rehypeSanitize]}
+                  style={{ whiteSpace: 'pre-wrap' }}
                 />
               </Stack>
             </Stack>

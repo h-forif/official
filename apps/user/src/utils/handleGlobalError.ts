@@ -12,11 +12,20 @@ export const handleGlobalError = (error: unknown) => {
     } else {
       errorMessage += error.message;
     }
-    showToast(errorMessage, 'error');
+    showToast({
+      message: errorMessage,
+      severity: 'error',
+    });
   } else if (error instanceof Error) {
-    showToast(error.message, 'error');
+    showToast({
+      message: error.message,
+      severity: 'error',
+    });
   } else {
-    showToast('An unknown error occurred', 'error');
+    showToast({
+      message: '알 수 없는 오류가 발생했습니다.',
+      severity: 'error',
+    });
   }
 
   throw error;

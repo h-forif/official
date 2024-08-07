@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from '@utils/dayjs';
+import { Dayjs } from 'dayjs';
 import z from 'zod';
 
 export const ApplyMemberSchema = z
@@ -45,7 +46,15 @@ export const ApplyMemberSchema = z
       if (data.secondary_study === '0') {
         return true;
       }
-      // 2순위 스터디가 자율스터디가 아닌 경우 2순위 소개글에 대한 검증 진행
+      // 2순위 스터디가 자율스터디가 아닌 경우 2순위 스터디 및 소개글에 대한 검증 진행
+      if (data.secondary_study === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '2순위 스터디를 선택해주세요.',
+          path: ['secondary_study'],
+        });
+        return false;
+      }
       if (!data.secondary_intro || data.secondary_intro.length < 50) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
@@ -98,6 +107,7 @@ export const ApplyMentorSchema = z
       (val) => val instanceof dayjs,
       '올바르지 않은 형식입니다.',
     ),
+    tag: z.string().min(1, '태그를 선택해주세요'),
     week_day: z.string().min(1, '스터디 요일을 선택해주세요.'),
     study_plans: z.custom<StudyPlan[]>((val) => {
       if (val.length !== 8) {
@@ -143,7 +153,7 @@ export const ApplyMentorSchema = z
 export interface Application {
   timestamp: Date;
   primary_study: PrimaryStudy;
-  secondary_study: SecondaryStudy;
+  secondary_study: SecondaryStudy | null;
   apply_path: string;
 }
 
@@ -151,12 +161,14 @@ export interface PrimaryStudy {
   id: number;
   name: string;
   introduction: string;
+  status: '승낙' | '대기';
 }
 
 export interface SecondaryStudy {
   id: number;
   name: string;
   introduction: string;
+  status: '승낙' | '대기';
 }
 
 export interface StudyPlan {

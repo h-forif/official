@@ -64,10 +64,13 @@ function SignUpPage() {
       mainButtonText: '네, 제출할게요.',
       mainButtonAction: async () => {
         try {
-          const res = await handleSignUp(formData, accessToken);
-          showToast('회원가입이 완료되었습니다.', 'success');
+          await handleSignUp(formData, accessToken);
+          showToast({
+            message: '회원가입이 완료되었습니다.',
+            severity: 'success',
+          });
+          closeDialog();
           navigate({ to: '/' });
-          console.log(res);
         } catch (err) {
           closeDialog();
           openSingleButtonDialog({

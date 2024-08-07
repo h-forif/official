@@ -22,7 +22,7 @@ export default function NotFoundPage({ onClick }: { onClick?: () => void }) {
           margin: 0,
         }}
       >
-        요청하신 페이지를 찾을 수 없습니다.
+        요청하신 페이지를 찾을 수 없거나 오류가 발생했습니다.
       </h1>
       <h2
         style={{
@@ -31,7 +31,8 @@ export default function NotFoundPage({ onClick }: { onClick?: () => void }) {
           fontWeight: 500,
         }}
       >
-        검색했지만 원하는 항목을 찾을 수 없습니다. 더 좋은 곳을 찾아보겠습니다.
+        검색했지만 원하는 항목을 찾을 수 없습니다. 아래 버튼을 통해 다시
+        시도해주세요.
       </h2>
       <a href='/'>
         <Button size='large' variant='outlined' onClick={onClick}>

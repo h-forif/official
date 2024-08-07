@@ -44,7 +44,7 @@ export function refineApplyForm(
   if (primary_study === '0') {
     formData = {
       primary_study: 0,
-      primary_intro: null,
+      primary_intro: '',
       secondary_intro: null,
       secondary_study: null,
       apply_path: apply_path,

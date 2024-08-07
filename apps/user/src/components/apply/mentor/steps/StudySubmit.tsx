@@ -1,10 +1,16 @@
+import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
+import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Input } from '@packages/components/Input';
+import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
-import dayjs from 'dayjs';
+import MDEditor from '@uiw/react-md-editor';
+import dayjs from '@utils/dayjs';
+import formatMarkdown from '@utils/formatMarkdown';
+import rehypeSanitize from 'rehype-sanitize';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -27,15 +33,21 @@ export function StudySubmit({
     secondary_mentor_name,
     start_time,
     name,
+    explanation,
+    tag,
     week_day,
     study_plans,
   } = form.getValues();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <Title
         title='스터디 개설 신청서 제출'
         label='현재까지 작성한 정보 중 틀리거나 빠진 정보가 없는지 다시 한 번 확인해주세요. 수정하거나 정확하지 않은 정보가 있다면 "이전" 버튼을 통해 수정해주세요.'
         pt={4}
+        px={0}
         mb={0}
       />
       <Stack gap={5} justifyContent={'center'} alignItems={'center'} my={4}>
@@ -125,6 +137,37 @@ export function StudySubmit({
           defaultValue={dayjs(end_time).format('HH:mm')}
           disabled
         />
+        <Stack
+          gap={5}
+          justifyContent={'center'}
+          alignItems={'center'}
+          my={4}
+          width={'100%'}
+        >
+          <Typography variant='titleSmall'>스터디 태그 및 설명</Typography>
+          <Select
+            options={TAG_OPTIONS}
+            val={tag}
+            placeholder={''}
+            disabled
+            minWidth={'100%'}
+          />
+          <Box
+            width={'100%'}
+            p={3}
+            sx={{
+              border: 1,
+              borderRadius: 1,
+              borderColor: 'divider',
+            }}
+          >
+            <MDEditor.Markdown
+              source={formatMarkdown(explanation)}
+              rehypePlugins={[rehypeSanitize]}
+              style={{ whiteSpace: 'pre-wrap' }}
+            />
+          </Box>
+        </Stack>
         <Stack
           gap={5}
           justifyContent={'center'}

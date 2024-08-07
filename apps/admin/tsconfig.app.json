@@ -23,7 +23,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
       "@routes/*": ["src/routes/*"],
-      "@store/*": ["src/store/*"]
+      "@services/*": ["src/services/*"],
+      "@stores/*": ["src/stores/*"]
     }
   },
   "include": ["src", "svg.d.ts"],
