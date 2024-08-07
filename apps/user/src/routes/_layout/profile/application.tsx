@@ -187,7 +187,8 @@ function MyApplication() {
                     id='primary-study-application-textfield'
                     value={application!.primary_study.introduction}
                     multiline
-                    maxRows={4}
+                    minRows={4}
+                    maxRows={6}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -208,7 +209,8 @@ function MyApplication() {
                         : application!.secondary_study.introduction
                     }
                     multiline
-                    maxRows={4}
+                    minRows={4}
+                    maxRows={6}
                     InputProps={{
                       readOnly: true,
                     }}

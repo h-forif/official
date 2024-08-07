@@ -13,7 +13,6 @@ import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { applyMember, getApplication } from '@services/apply.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import { useQuery } from '@tanstack/react-query';
 import {
   createFileRoute,
   useBlocker,
@@ -23,10 +22,10 @@ import {
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
-import { AxiosError } from 'axios';
+import axios from 'axios';
 import { getAllStudies } from 'src/services/study.service';
 import { getUser } from 'src/services/user.service';
-import { Application, ApplyMemberSchema } from 'src/types/apply.schema';
+import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
 import { Title } from '@components/Title';
@@ -54,6 +53,21 @@ export const Route = createFileRoute('/apply/member')({
 });
 
 function ApplyMember() {
+  useEffect(() => {
+    const checkApplication = async () => {
+      try {
+        const application = await getApplication();
+        if (application) {
+          window.location.href = '/profile/application';
+        }
+      } catch (err) {
+        // 에러 무시
+      }
+    };
+
+    checkApplication();
+  }, []);
+
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate();
   const router = useRouter();
@@ -63,11 +77,6 @@ function ApplyMember() {
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
 
   const { id, name, department, phone_number } = userInfo!;
-  const { error, isLoading } = useQuery<Application, AxiosError>({
-    queryKey: ['application'],
-    queryFn: getApplication,
-    retry: false,
-  });
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
     defaultValues: {
@@ -132,7 +141,7 @@ function ApplyMember() {
       router.invalidate();
       openSingleButtonDialog({
         dialogIconType: DialogIconType.CONFIRM,
-        title: '스터디 신청서 수정 완료',
+        title: '스터디 신청서 제출 완료',
         mainButtonText: '확인',
         mainButtonAction: () => {
           closeDialog();
@@ -140,210 +149,32 @@ function ApplyMember() {
         },
       });
     } catch (error) {
-      handleGlobalError(error);
+      if (axios.isAxiosError(error) && error.response?.status === 500) {
+        openSingleButtonDialog({
+          dialogIconType: DialogIconType.WARNING,
+          title: '신청 오류 발생',
+          message: '자신의 스터디는 신청할 수 없습니다.',
+          mainButtonText: '확인',
+          mainButtonAction: () => {
+            closeDialog();
+          },
+        });
+      } else {
+        openSingleButtonDialog({
+          dialogIconType: DialogIconType.WARNING,
+          title: '신청 오류 발생',
+          message: `알 수 없는 오류가 발생했습니다:  ${error}`,
+          mainButtonText: '확인',
+          mainButtonAction: () => {
+            closeDialog();
+          },
+        });
+      }
     }
   };
 
-  if (error) {
-    if (error.response?.status === 404) {
-      return (
-        <>
-          <Box component={'main'}>
-            <Box
-              sx={{
-                width: { xs: '100%', md: '512px' },
-                px: { xs: 2 },
-                pb: 4,
-                margin: 'auto',
-              }}
-            >
-              <Title
-                title='스터디 신청'
-                label='2024-08-26 ~ 2024-09-11'
-                mb={3}
-              />
-              <CautionList />
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <Stack
-                  gap={5}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  my={4}
-                >
-                  <Typography variant='titleSmall'>신청 부원 정보</Typography>
-                  <Input
-                    required
-                    fullWidth
-                    label='학번'
-                    defaultValue={id}
-                    disabled
-                  />
-                  <Input
-                    required
-                    fullWidth
-                    label='이름'
-                    defaultValue={name}
-                    disabled
-                  />
-                  <Input
-                    required
-                    fullWidth
-                    label='학과'
-                    defaultValue={department}
-                    disabled
-                  />
-                  <Input
-                    required
-                    fullWidth
-                    label='전화번호'
-                    defaultValue={phone_number}
-                    disabled
-                  />
-                </Stack>
-                <Stack
-                  gap={5}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  my={4}
-                  width={'100%'}
-                >
-                  <Typography variant='titleSmall'>
-                    1순위 스터디 신청
-                  </Typography>
-                  <FormSelect
-                    minWidth={'100%'}
-                    options={options}
-                    control={form.control}
-                    name='primary_study'
-                    label='1순위 스터디를 선택해주세요.'
-                  />
-                  <FormInput
-                    control={form.control}
-                    name='primary_intro'
-                    label='1순위 스터디 신청 사유를 작성해주세요.'
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    disabled={primary_study === '0'}
-                  />
-                  <Typography variant='titleSmall'>
-                    2순위 스터디 신청
-                  </Typography>
-                  <FormCheckbox
-                    control={form.control}
-                    disabled={primary_study === '0' || primary_study === ''}
-                    onChange={handleCheckBoxChange}
-                    label={
-                      <Typography variant='labelSmall' component={'span'}>
-                        1순위 스터디에 선정되지 않을 시 2순위 스터디를 수강하지
-                        않겠습니다.
-                        <br />
-                        <Typography
-                          variant='labelSmall'
-                          color={'text.secondary'}
-                        >
-                          (이 결정은 신청서 제출 이후에도 스터디 신청 기간
-                          내에서 자유롭게 변경할 수 있습니다.)
-                        </Typography>
-                      </Typography>
-                    }
-                    name='is_primary_study_only'
-                  />
-                  <FormSelect
-                    name='secondary_study'
-                    control={form.control}
-                    options={filteredSecondaryOptions}
-                    label='2순위 스터디를 선택해주세요.'
-                    minWidth={'100%'}
-                    required={!is_primary_study_only}
-                    disabled={
-                      is_primary_study_only ||
-                      primary_study === '0' ||
-                      primary_study === ''
-                    }
-                  />
-                  <FormInput
-                    multiline
-                    maxRows={4}
-                    label='2순위 스터디 신청 사유를 작성해주세요.'
-                    name='secondary_intro'
-                    control={form.control}
-                    disabled={
-                      primary_study === '0' ||
-                      primary_study === '' ||
-                      secondary_study === '0' ||
-                      primary_study === '' ||
-                      is_primary_study_only
-                    }
-                    required={!is_primary_study_only}
-                    fullWidth
-                  />
-                  <Typography variant='titleSmall'>
-                    포리프를 접한 경로
-                  </Typography>
-                  <Controller
-                    name='apply_path'
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Select
-                        required
-                        id='from-select'
-                        val={field.value}
-                        setVal={field.onChange}
-                        placeholder='포리프를 접하게 된 경로를 작성해주세요.'
-                        options={APPLY_PATH_OPTIONS}
-                        error={!!fieldState.error}
-                        errorMessage='지원 경로는 필수값입니다.'
-                        minWidth={'100%'}
-                      />
-                    )}
-                  />
-                </Stack>
-                <Stack direction={'row'} gap={2}>
-                  <Button
-                    variant='outlined'
-                    size='large'
-                    fullWidth
-                    disabled={!form.formState.isDirty}
-                    onClick={handleSaveDraft}
-                  >
-                    임시저장
-                  </Button>
-                  <Button
-                    type='submit'
-                    variant='contained'
-                    size='large'
-                    fullWidth
-                  >
-                    제출
-                  </Button>
-                </Stack>
-              </form>
-            </Box>
-          </Box>
-          {status === 'blocked' && (
-            <BlockModal
-              title='스터디 신청서 작성 중'
-              description='신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
-          내용이 사라질 수 있습니다.'
-              proceed={proceed}
-              reset={reset}
-            />
-          )}
-        </>
-      );
-    }
-    openSingleButtonDialog({
-      title: '알 수 없는 오류',
-      message: '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-      dialogIconType: DialogIconType.WARNING,
-      mainButtonText: '확인',
-      mainButtonAction: () => {
-        closeDialog();
-        router.invalidate();
-      },
-    });
-    return (
+  return (
+    <>
       <Box component={'main'}>
         <Box
           sx={{
@@ -355,9 +186,159 @@ function ApplyMember() {
         >
           <Title title='스터디 신청' label='2024-08-26 ~ 2024-09-11' mb={3} />
           <CautionList />
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Stack
+              gap={5}
+              justifyContent={'center'}
+              alignItems={'center'}
+              my={4}
+            >
+              <Typography variant='titleSmall'>신청 부원 정보</Typography>
+              <Input
+                required
+                fullWidth
+                label='학번'
+                defaultValue={id}
+                disabled
+              />
+              <Input
+                required
+                fullWidth
+                label='이름'
+                defaultValue={name}
+                disabled
+              />
+              <Input
+                required
+                fullWidth
+                label='학과'
+                defaultValue={department}
+                disabled
+              />
+              <Input
+                required
+                fullWidth
+                label='전화번호'
+                defaultValue={phone_number}
+                disabled
+              />
+            </Stack>
+            <Stack
+              gap={5}
+              justifyContent={'center'}
+              alignItems={'center'}
+              my={4}
+              width={'100%'}
+            >
+              <Typography variant='titleSmall'>1순위 스터디 신청</Typography>
+              <FormSelect
+                minWidth={'100%'}
+                options={options}
+                control={form.control}
+                name='primary_study'
+                label='1순위 스터디를 선택해주세요.'
+              />
+              <FormInput
+                control={form.control}
+                name='primary_intro'
+                label='1순위 스터디 신청 사유를 작성해주세요.'
+                fullWidth
+                multiline
+                maxRows={4}
+                disabled={primary_study === '0'}
+              />
+              <Typography variant='titleSmall'>2순위 스터디 신청</Typography>
+              <FormCheckbox
+                control={form.control}
+                disabled={primary_study === '0' || primary_study === ''}
+                onChange={handleCheckBoxChange}
+                label={
+                  <Typography variant='labelSmall' component={'span'}>
+                    1순위 스터디에 선정되지 않을 시 2순위 스터디를 수강하지
+                    않겠습니다.
+                    <br />
+                    <Typography variant='labelSmall' color={'text.secondary'}>
+                      (이 결정은 신청서 제출 이후에도 스터디 신청 기간 내에서
+                      자유롭게 변경할 수 있습니다.)
+                    </Typography>
+                  </Typography>
+                }
+                name='is_primary_study_only'
+              />
+              <FormSelect
+                name='secondary_study'
+                control={form.control}
+                options={filteredSecondaryOptions}
+                label='2순위 스터디를 선택해주세요.'
+                minWidth={'100%'}
+                required={!is_primary_study_only}
+                disabled={
+                  is_primary_study_only ||
+                  primary_study === '0' ||
+                  primary_study === ''
+                }
+              />
+              <FormInput
+                multiline
+                maxRows={4}
+                label='2순위 스터디 신청 사유를 작성해주세요.'
+                name='secondary_intro'
+                control={form.control}
+                disabled={
+                  primary_study === '0' ||
+                  primary_study === '' ||
+                  secondary_study === '0' ||
+                  primary_study === '' ||
+                  is_primary_study_only
+                }
+                required={!is_primary_study_only}
+                fullWidth
+              />
+              <Typography variant='titleSmall'>포리프를 접한 경로</Typography>
+              <Controller
+                name='apply_path'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Select
+                    required
+                    id='from-select'
+                    val={field.value}
+                    setVal={field.onChange}
+                    placeholder='포리프를 접하게 된 경로를 작성해주세요.'
+                    options={APPLY_PATH_OPTIONS}
+                    error={!!fieldState.error}
+                    errorMessage='지원 경로는 필수값입니다.'
+                    minWidth={'100%'}
+                  />
+                )}
+              />
+            </Stack>
+            <Stack direction={'row'} gap={2}>
+              <Button
+                variant='outlined'
+                size='large'
+                fullWidth
+                disabled={!form.formState.isDirty && isSaved}
+                onClick={handleSaveDraft}
+              >
+                임시저장
+              </Button>
+              <Button type='submit' variant='contained' size='large' fullWidth>
+                제출
+              </Button>
+            </Stack>
+          </form>
         </Box>
       </Box>
-    );
-  }
-  if (!error && !isLoading) navigate({ to: '/profile/application' });
+      {status === 'blocked' && (
+        <BlockModal
+          title='스터디 신청서 작성 중'
+          description='신청서의 내용을 저장하지 않고 다른 페이지로 이동시에 작성중인 신청서의
+          내용이 사라질 수 있습니다.'
+          proceed={proceed}
+          reset={reset}
+        />
+      )}
+    </>
+  );
 }

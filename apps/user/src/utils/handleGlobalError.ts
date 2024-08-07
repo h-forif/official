@@ -4,7 +4,6 @@ import { AxiosError } from 'axios';
 
 export const handleGlobalError = (error: unknown) => {
   const showToast = useToastStore.getState().showToast;
-
   if (error instanceof AxiosError) {
     let errorMessage = '오류 발생: ';
     if (error.response) {

@@ -16,6 +16,7 @@ import { getUser } from '@services/user.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import {
   createFileRoute,
+  redirect,
   useNavigate,
   useRouter,
 } from '@tanstack/react-router';
@@ -23,6 +24,7 @@ import dayjs from '@utils/dayjs';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
+import axios from 'axios';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -30,6 +32,17 @@ import { Title } from '@components/Title';
 import CautionList from '@components/apply/application/CautionList';
 
 export const Route = createFileRoute('/apply/application')({
+  beforeLoad: async () => {
+    try {
+      await getApplication();
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 404) {
+        redirect({ to: '/apply/member', throw: true });
+      }
+      alert('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
+      redirect({ to: '/', throw: true });
+    }
+  },
   loader: async () => {
     const currentTerm = getCurrentTerm();
     const [application, userInfo, studies] = await Promise.all([

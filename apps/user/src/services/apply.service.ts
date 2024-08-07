@@ -10,19 +10,16 @@ import { authApi } from './axios-instance';
 export const applyMember = async (
   application: z.infer<typeof ApplyMemberSchema>,
 ) => {
-  if (application.secondary_study === null)
-    await authApi
-      .post(`/applications`, {
-        primary_study: Number(application.primary_study),
-        primary_intro: application.primary_intro,
-        secondary_study:
-          application.secondary_study === null
-            ? null
-            : Number(application.secondary_study),
-        secondary_intro: application.secondary_intro,
-        apply_path: application.apply_path,
-      })
-      .then((res) => res.data);
+  await authApi.post(`/applications`, {
+    primary_study: Number(application.primary_study),
+    primary_intro: application.primary_intro,
+    secondary_study:
+      application.secondary_study === null
+        ? null
+        : Number(application.secondary_study),
+    secondary_intro: application.secondary_intro,
+    apply_path: application.apply_path,
+  });
 };
 
 export const getApplication = async () => {
