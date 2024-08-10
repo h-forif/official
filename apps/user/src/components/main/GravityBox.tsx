@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import BackgroundImage from '@assets/images/banner.png';
+import BackgroundImage from '@assets/images/main/banner.png';
 import Matter, {
   Bodies,
   Common,
@@ -59,25 +59,25 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
       Bodies.rectangle(width / 2, 0, width, 50, {
         isStatic: true,
         render: {
-          fillStyle: '#1D40BA', // 상단 벽의 색상
+          fillStyle: 'transparent', // 상단 벽의 색상
         },
       }), // Top boundary
       Bodies.rectangle(width / 2, height, width, 50.5, {
         isStatic: true,
         render: {
-          fillStyle: '#1D40BA', // 하단 벽의 색상
+          fillStyle: 'transparent', // 하단 벽의 색상
         },
       }), // Bottom boundary
       Bodies.rectangle(width, height / 2, 50, height, {
         isStatic: true,
         render: {
-          fillStyle: '#1D40BA', // 우측 벽의 색상
+          fillStyle: 'transparent', // 우측 벽의 색상
         },
       }), // Right boundary
       Bodies.rectangle(0, height / 2, 50, height, {
         isStatic: true,
         render: {
-          fillStyle: '#1D40BA', // 좌측 벽의 색상
+          fillStyle: 'transparent', // 좌측 벽의 색상
         },
       }), // Left boundary
     ]);
