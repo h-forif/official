@@ -3,7 +3,6 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { Box, Stack } from '@mui/material';
 
-import { TAG_OPTIONS } from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { UserProfile } from '@packages/components/types/user';
@@ -80,7 +79,7 @@ function ApplyMember() {
       difficulty: '',
       location: '',
       week_day: '',
-      tag: TAG_OPTIONS[0]!.value,
+      tag: '',
       start_time: '',
       end_time: '',
       primary_mentor_name: user.name!,

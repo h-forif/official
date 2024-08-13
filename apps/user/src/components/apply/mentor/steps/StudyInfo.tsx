@@ -7,6 +7,9 @@ import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { TimeRangeField } from '@packages/components/form/TimeRangeField';
+import { getAppliedStudies } from '@services/apply.service';
+import { useQuery } from '@tanstack/react-query';
+import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -17,6 +20,16 @@ export function StudyInfo({
 }: {
   form: UseFormReturn<z.infer<typeof ApplyMentorSchema>>;
 }) {
+  const appliedStudies = useQuery({
+    queryKey: ['appliedStudies'],
+    queryFn: getAppliedStudies,
+  });
+  const timeLocationPairs = appliedStudies.data?.map((study) => ({
+    weekDay: study.week_day,
+    startTime: study.start_time,
+    endTime: study.end_time,
+    location: study.location,
+  }));
   return (
     <>
       <Title
@@ -66,7 +79,14 @@ export function StudyInfo({
           label='스터디 난이도를 선택해주세요.'
           required
         />
-        <Typography variant='titleSmall'>시간 및 장소</Typography>
+        <Box>
+          <Typography variant='titleSmall' textAlign={'center'} mb={2}>
+            시간 및 장소
+          </Typography>
+          <Typography variant='bodySmall' color={'text.secondary'} mb={1}>
+            시간 및 장소는 추후에 변경가능하니 부담없이 작성해주세요.
+          </Typography>
+        </Box>
         <Stack direction={'row'} gap={2} width={'100%'}>
           <FormSelect
             control={form.control}
@@ -93,8 +113,23 @@ export function StudyInfo({
             required
           />
           <FormHelperText>
-            아직 장소가 정해지지 않았다면 '미정'으로 남겨주세요.
+            아직 장소가 정해지지 않았다면 '미정'으로 남겨주세요. 동아리방에서
+            진행한다면 '동아리방'이라고 입력해주세요.
           </FormHelperText>
+        </Box>
+        <Box width={'100%'} textAlign={'left'}>
+          <Typography variant='bodySmall' mb={2}>
+            현재까지 신청된 스터디 장소 목록은 다음과 같습니다.
+          </Typography>
+          <Typography component={'ul'}>
+            {timeLocationPairs?.map((pair, idx) => (
+              <Typography component={'li'} key={idx}>
+                {getWeekDayAsString(Number(pair.weekDay))}{' '}
+                {formatStudyTimeToKorean(pair.startTime)} ~{' '}
+                {formatStudyTimeToKorean(pair.endTime)}: {pair.location}
+              </Typography>
+            ))}
+          </Typography>
         </Box>
       </Stack>
     </>

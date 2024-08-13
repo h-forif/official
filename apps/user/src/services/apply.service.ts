@@ -49,7 +49,7 @@ export const updateApplication = async (
     });
 };
 
-interface MentorApplication
+export interface MentorApplication
   extends Omit<
     z.infer<typeof ApplyMentorSchema>,
     'study_plans' | 'start_time' | 'end_time'
@@ -66,4 +66,11 @@ interface MentorApplication
 export const applyStudy = async (formData: MentorApplication) => {
   const res = await authApi.post(`/study-apply`, formData);
   return res;
+};
+
+export const getAppliedStudies = async () => {
+  const data: MentorApplication[] = await authApi
+    .get(`/study-apply`)
+    .then((res) => res.data);
+  return data;
 };
