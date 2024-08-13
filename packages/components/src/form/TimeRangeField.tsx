@@ -37,8 +37,6 @@ export function TimeRangeField<T extends FieldValues>({
     rules: { required },
   });
 
-  console.log(startTimeField.value, endTimeField.value);
-
   return (
     <FormControl
       error={startTimeFieldState.invalid || endTimeFieldState.invalid}

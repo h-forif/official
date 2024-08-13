@@ -65,7 +65,7 @@ export const TAG_OPTIONS: SelectOption[] = [
   },
   {
     value: 'basic',
-    label: '기초',
+    label: '프로그래밍 기초',
   },
   {
     value: 'frontend',
@@ -86,6 +86,10 @@ export const TAG_OPTIONS: SelectOption[] = [
   {
     value: 'ai',
     label: '인공지능',
+  },
+  {
+    value: 'ai',
+    label: '데이터',
   },
   {
     value: 'security',

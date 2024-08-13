@@ -5,12 +5,13 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { styled } from '@mui/system';
 
+import DarkLetterIcon from '@assets/logos/forif-letter-dark.svg?react';
 import LetterIcon from '@assets/logos/forif-letter.svg?react';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { setRefreshToken } from '@stores/token.store';
 import { clearUser, getUserState } from '@stores/user.store';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useAnimation } from 'framer-motion';
 
 import { useNavMenu } from '@hooks/useNavMenu';
@@ -80,16 +81,20 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               px: 3,
             }}
           >
-            <a
-              href='/'
+            <Link
+              to='/'
               style={{
                 marginRight: 64,
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
-              <LetterIcon width={100} height={'64'} />
-            </a>
+              {mode === 'light' ? (
+                <LetterIcon width={100} height={'64'} />
+              ) : (
+                <DarkLetterIcon width={100} height={'64'} />
+              )}
+            </Link>
             <DesktopNav
               activeMenu={activeMenu}
               handleClick={handleClick}
@@ -102,6 +107,8 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
             mode={mode}
             userState={userState}
             toggleColorMode={toggleColorMode}
+            handleSignIn={handleSignIn}
+            handleSignOut={handleSignOut}
           />
           <Box
             sx={{

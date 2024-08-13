@@ -61,7 +61,7 @@ function ApplyMember() {
 
   useInterval(() => {
     setCurrentDate(dayjs());
-  }, 1000);
+  }, 5000);
 
   useEffect(() => {
     if (currentDate.isAfter(dayjs('2024-08-16'))) {
@@ -84,9 +84,10 @@ function ApplyMember() {
       start_time: '',
       end_time: '',
       primary_mentor_name: user.name!,
-      primary_mentor_id: user.id!,
+      primary_mentor_id: user.id?.toString(),
       secondary_mentor: false,
-      explanation: '# 마크다운 작성법  이렇게 작성하면 됩니다.',
+      explanation:
+        '# 마크다운 작성법<br/>  이렇게 작성하면 됩니다. 설명은 반드시 50자 이상으로 작성해주세요!',
       secondary_mentor_id: '',
       secondary_mentor_name: '',
       study_plans: Array(15).fill({ section: '', contents: [''] }),
@@ -113,7 +114,7 @@ function ApplyMember() {
   };
 
   const { proceed, reset, status } = useBlocker({
-    condition: form.formState.isDirty,
+    condition: form.formState.isDirty && activeStep !== 4,
   });
 
   useEffect(() => {

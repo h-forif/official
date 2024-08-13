@@ -1,6 +1,7 @@
 import { UseFormReturn } from 'react-hook-form';
 
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/system';
 
 import { TAG_OPTIONS } from '@constants/apply.constant';
 import { FormSelect } from '@packages/components/form/FormSelect';
@@ -17,9 +18,9 @@ export function StudyExplanation({
   form: UseFormReturn<z.infer<typeof ApplyMentorSchema>>;
 }) {
   const explanation = form.watch('explanation');
-
+  const mode = useTheme().palette.mode;
   return (
-    <>
+    <Box component={'main'} data-color-mode={mode}>
       <Title
         title='스터디 설명'
         label='개설하려는 스터디에 대해 자세히 설명해주세요. 마크다운으로 작성해주세요!'
@@ -41,10 +42,13 @@ export function StudyExplanation({
         previewOptions={{
           rehypePlugins: [[rehypeSanitize]],
         }}
+        textareaProps={{
+          placeholder: '설명은 50자 이상 작성해주세요.',
+        }}
       />
       <Typography variant='labelMedium' color={'error'}>
         {form.formState.errors.explanation?.message}
       </Typography>
-    </>
+    </Box>
   );
 }

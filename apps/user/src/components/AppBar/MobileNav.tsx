@@ -32,10 +32,14 @@ import { useMobileNav } from '@hooks/useMobileNav';
 import { AppBarProps } from '../../types/app-bar.type';
 
 interface MobileNavProps extends AppBarProps {
+  handleSignIn: () => Promise<void>;
+  handleSignOut: () => void;
   userState: User['state'];
 }
 
 export default function MobileNav({
+  handleSignIn,
+  handleSignOut,
   mode,
   userState,
   toggleColorMode,
@@ -180,26 +184,46 @@ export default function MobileNav({
               );
             })}
           </Stack>
-          <Stack direction={'column'} gap={2} sx={{ pl: 1 }}>
-            <Button
-              color='primary'
-              variant='contained'
-              size='large'
-              component='a'
-              sx={{ width: '100%' }}
-            >
-              Sign up
-            </Button>
-            <Button
-              color='primary'
-              variant='outlined'
-              component='a'
-              size='large'
-              sx={{ width: '100%' }}
-            >
-              Sign in
-            </Button>
-          </Stack>
+          {userState === 'sign-out' ? (
+            <Stack direction={'column'} gap={2} sx={{ pl: 1 }}>
+              <Button
+                variant='contained'
+                size='large'
+                fullWidth
+                onClick={async () => {
+                  await handleSignIn();
+                  toggleDrawer(false)();
+                }}
+              >
+                Sign up
+              </Button>
+              <Button
+                variant='outlined'
+                size='large'
+                fullWidth
+                onClick={async () => {
+                  await handleSignIn();
+                  toggleDrawer(false)();
+                }}
+              >
+                Sign in
+              </Button>
+            </Stack>
+          ) : (
+            <Stack direction={'column'} gap={2} sx={{ pl: 1 }}>
+              <Button
+                fullWidth
+                variant='outlined'
+                size='large'
+                onClick={() => {
+                  handleSignOut();
+                  toggleDrawer(false)();
+                }}
+              >
+                Sign Out
+              </Button>
+            </Stack>
+          )}
         </Box>
       </Drawer>
     </Box>

@@ -19,6 +19,7 @@ export function MentorInfo({
   userInfo: UserProfile;
 }) {
   const { id, name, department, phone_number } = userInfo;
+
   return (
     <>
       <Title
@@ -58,6 +59,7 @@ export function MentorInfo({
               control={form.control}
               name='secondary_mentor_name'
               label='함께하는 멘토의 이름을 입력해주세요.'
+              required
               placeholder='홍길동'
             />
             <FormInput
@@ -65,6 +67,7 @@ export function MentorInfo({
               control={form.control}
               name='secondary_mentor_id'
               label='함께하는 멘토의 학번을 입력해주세요.'
+              required
               placeholder='0000063845'
             />
           </>

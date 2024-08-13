@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 
 import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Input } from '@packages/components/Input';
@@ -41,6 +41,7 @@ export function StudySubmit({
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const mode = useTheme().palette.mode;
   return (
     <>
       <Title
@@ -154,17 +155,17 @@ export function StudySubmit({
           />
           <Box
             width={'100%'}
-            p={3}
             sx={{
               border: 1,
               borderRadius: 1,
               borderColor: 'divider',
             }}
+            data-color-mode={mode}
           >
             <MDEditor.Markdown
               source={formatMarkdown(explanation)}
               rehypePlugins={[rehypeSanitize]}
-              style={{ whiteSpace: 'pre-wrap' }}
+              style={{ whiteSpace: 'pre-wrap', padding: 24 }}
             />
           </Box>
         </Stack>
