@@ -220,7 +220,7 @@ function ApplyMember() {
 
   return (
     <>
-      <Box component={'main'} mt={8}>
+      <Box mt={8}>
         <Title
           title={`${currentTerm.year}년도 ${currentTerm.semester}학기 스터디 개설`}
           label='2024-08-13 ~ 2024-08-16'

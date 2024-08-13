@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import useMediaQuery from '@mui/system/useMediaQuery';
@@ -59,7 +60,9 @@ function RootComponent() {
             <ThemeProvider theme={mode === 'light' ? lightTheme : darkTheme}>
               <CssBaseline />
               <AppBar mode={mode} toggleColorMode={toggleColorMode} />
-              <Outlet />
+              <Box component={'main'} minHeight={'100vh'}>
+                <Outlet />
+              </Box>
               <Footer mode={mode} />
               <Toast />
               <AlertDialog />

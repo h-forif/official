@@ -36,7 +36,7 @@ function FAQPage() {
   }, [search, faqs]);
 
   return (
-    <Box component={'main'}>
+    <Box>
       <Title
         title='자주 묻는 질문'
         label='자주 묻는 질문 리스트를 검색 및 확인하세요. 각 질문을 클릭하여 답을 확인해보세요.'

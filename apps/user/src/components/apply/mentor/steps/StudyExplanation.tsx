@@ -21,7 +21,7 @@ export function StudyExplanation({
   const explanation = form.watch('explanation');
   const mode = useTheme().palette.mode;
   return (
-    <Box component={'main'} data-color-mode={mode}>
+    <Box data-color-mode={mode}>
       <Title
         title='스터디 설명'
         label='개설하려는 스터디에 대해 자세히 설명해주세요. 마크다운으로 작성해주세요!'

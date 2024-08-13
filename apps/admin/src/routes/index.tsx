@@ -18,7 +18,7 @@ function Home() {
   });
 
   return (
-    <Stack component={'main'} direction={'row'}>
+    <Stack direction={'row'}>
       <Stack
         width={'50%'}
         height={'100vh'}

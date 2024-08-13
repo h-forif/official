@@ -92,7 +92,7 @@ function SignUpPage() {
     });
   };
   return (
-    <Box component={'main'}>
+    <Box>
       <Box
         sx={{
           width: { xs: '100%', md: '512px' },
