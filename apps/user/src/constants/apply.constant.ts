@@ -88,7 +88,7 @@ export const TAG_OPTIONS: SelectOption[] = [
     label: '인공지능',
   },
   {
-    value: 'ai',
+    value: 'data',
     label: '데이터',
   },
   {

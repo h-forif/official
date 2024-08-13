@@ -5,13 +5,13 @@ import banner from '@assets/images/banner.svg';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { Link, createLazyFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute } from '@tanstack/react-router';
 
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 
 import { useSignIn } from '@hooks/useSignIn';
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createFileRoute('/')({
   component: Home,
 });
 

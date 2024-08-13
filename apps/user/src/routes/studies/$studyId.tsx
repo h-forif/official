@@ -1,17 +1,6 @@
 import { SyntheticEvent, useState } from 'react';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Chip,
-  Divider,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Chip, Divider, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import {
   DateCalendar,
@@ -46,10 +35,15 @@ const STUDY_START_DATE = '2024-09-10';
 
 function StudyComponent() {
   const study: Study = Route.useLoaderData();
+  const currentTerm = getCurrentTerm();
 
   const theme = useTheme();
+  const mode = theme.palette.mode;
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
+  const isDisabled =
+    currentTerm.year !== study.act_year.toString() ||
+    currentTerm.semester !== study.act_semester.toString();
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -129,11 +123,14 @@ function StudyComponent() {
           p={6}
           gap={1}
         >
-          <Chip
-            label={study.tag}
-            color='primary'
-            sx={{ width: 'fit-content' }}
-          />
+          {study.tag && (
+            <Chip
+              label={study.tag}
+              color='primary'
+              sx={{ width: 'fit-content' }}
+            />
+          )}
+
           <Typography variant='displaySmall' mb={2}>
             {study.name}
           </Typography>
@@ -147,6 +144,7 @@ function StudyComponent() {
               }}
               variant='contained'
               size='large'
+              disabled={isDisabled}
             >
               스터디 신청하기
             </Button>
@@ -190,11 +188,13 @@ function StudyComponent() {
                 {study.name}
               </Typography>
               <Stack
+                component={'article'}
                 p={3}
                 borderRadius={4}
                 border={1}
                 borderColor={'divider'}
                 width={'100%'}
+                data-color-mode={mode}
               >
                 <MDEditor.Markdown
                   source={formatMarkdown(study.explanation)}
@@ -295,91 +295,20 @@ function StudyComponent() {
               </Stack>
             </Box>
           </Box>
-          <StudySideBox {...study} />
-        </Stack>
-      </Box>
-      <Box
-        id='faq'
-        component={'section'}
-        sx={{
-          px: { xs: 4, md: 8, xl: 12 },
-          py: 10,
-          margin: 'auto',
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        <Stack justifyContent={'center'} alignItems={'center'} gap={4}>
-          <Typography variant='headlineMedium'>자주 묻는 질문</Typography>
-          <Accordion
-            elevation={0}
-            sx={{
-              bgcolor: 'background.default',
-              border: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1-content'
-              id='panel1-header'
-            >
-              Accordion 1
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            elevation={0}
-            sx={{
-              bgcolor: 'background.default',
-              border: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1-content'
-              id='panel1-header'
-            >
-              Accordion 1
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </AccordionDetails>
-          </Accordion>
-          <Accordion
-            elevation={0}
-            sx={{
-              bgcolor: 'background.default',
-              border: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1-content'
-              id='panel1-header'
-            >
-              Accordion 1
-            </AccordionSummary>
-            <AccordionDetails>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </AccordionDetails>
-          </Accordion>
+          <StudySideBox study={study} isDisabled={isDisabled} />
         </Stack>
       </Box>
     </Box>
   );
 }
 
-function StudySideBox(study: Study) {
+function StudySideBox({
+  study,
+  isDisabled,
+}: {
+  study: Study;
+  isDisabled: boolean;
+}) {
   return (
     <Stack
       flexBasis={320}
@@ -393,7 +322,9 @@ function StudySideBox(study: Study) {
       top={64}
       display={{ xs: 'none', md: 'flex' }}
     >
-      <Chip label={study.tag} sx={{ width: 'fit-content' }} color='primary' />
+      {study.tag && (
+        <Chip label={study.tag} sx={{ width: 'fit-content' }} color='primary' />
+      )}
       <Typography variant='labelLarge'>{study.name}</Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
         매주 {getWeekDayAsString(study.week_day)}
@@ -409,7 +340,12 @@ function StudySideBox(study: Study) {
           : ''}
       </Typography>
       <Link to='/apply/member'>
-        <Button variant='contained' fullWidth size='large'>
+        <Button
+          variant='contained'
+          fullWidth
+          size='large'
+          disabled={isDisabled}
+        >
           신청하기
         </Button>
       </Link>

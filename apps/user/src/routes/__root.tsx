@@ -17,6 +17,7 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import AppBar from '@components/AppBar/AppBar';
 import NotFoundPage from '@components/NotFound';
 import { AlertDialog } from '@components/common/Dialog';
+import Footer from '@components/common/Footer';
 import Toast from '@components/common/Toast';
 
 import useInitializeAuth from '@hooks/useInitializeAuth';
@@ -59,6 +60,7 @@ function RootComponent() {
               <CssBaseline />
               <AppBar mode={mode} toggleColorMode={toggleColorMode} />
               <Outlet />
+              <Footer mode={mode} />
               <Toast />
               <AlertDialog />
             </ThemeProvider>

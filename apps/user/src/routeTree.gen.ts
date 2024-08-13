@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
+import { Route as IndexImport } from './routes/index'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as FaqIndexImport } from './routes/faq/index'
 import { Route as AnnouncementIndexImport } from './routes/announcement/index'
@@ -35,7 +36,6 @@ import { Route as LayoutProfileAccountImport } from './routes/_layout/profile/ac
 
 const TeamLazyImport = createFileRoute('/team')()
 const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
 const HackathonIndexLazyImport = createFileRoute('/hackathon/')()
 const ClubTeamLazyImport = createFileRoute('/club/team')()
 const LayoutProfileCertificateLazyImport = createFileRoute(
@@ -59,10 +59,10 @@ const LayoutRoute = LayoutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
 
 const HackathonIndexLazyRoute = HackathonIndexLazyImport.update({
   path: '/hackathon/',
@@ -172,7 +172,7 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/_layout': {
@@ -335,7 +335,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexLazyRoute,
+  IndexRoute,
   LayoutRoute: LayoutRoute.addChildren({
     LayoutProfileAccountRoute,
     LayoutProfileApplicationRoute,
@@ -390,7 +390,7 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.tsx"
     },
     "/_layout": {
       "filePath": "_layout.tsx",

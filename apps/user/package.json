@@ -24,6 +24,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/system": "^5.15.20",
+    "@mui/utils": "^5.16.6",
     "@mui/x-date-pickers": "^7.11.0",
     "@packages/components": "workspace:*",
     "@tanstack/react-query": "^5.50.1",

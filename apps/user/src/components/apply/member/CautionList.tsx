@@ -145,14 +145,14 @@ export default function CautionList() {
         <Typography component={'li'} variant='bodySmall'>
           모든 정보가 정확한지 다시 한 번 확인해주세요. 이름, 학과, 전화번호를
           수정하고 싶다면{' '}
-          <Link
-            to='/profile/account'
-            style={{
-              color: 'black',
-              fontWeight: 'bold',
-            }}
-          >
-            프로필 페이지
+          <Link to='/profile/account'>
+            <Typography
+              component={'span'}
+              variant='bodySmall'
+              sx={{ fontWeight: 'bold', color: 'text.primary' }}
+            >
+              프로필 페이지
+            </Typography>
           </Link>
           에서 수정해주세요.
         </Typography>
