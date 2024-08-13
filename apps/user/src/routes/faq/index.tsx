@@ -76,10 +76,15 @@ function FAQPage() {
           color: 'primary.contrastText',
         }}
       >
-        <Typography variant='titleLarge' mb={6}>
+        <Typography variant='titleLarge' mb={6} px={{ xs: 4 }}>
           아직 질문이 해결되지 않았다면 아래 다양한 채널로 언제든 문의해주세요.
         </Typography>
-        <Stack direction='row' justifyContent='space-evenly' width={'100%'}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          justifyContent={{ xs: 'center', sm: 'space-around' }}
+          alignItems={'center'}
+          width={'100%'}
+        >
           <Image
             src={Peeps1}
             alt='문의사항 캐릭터'

@@ -19,6 +19,7 @@ import {
   useNavigate,
   useRouter,
 } from '@tanstack/react-router';
+import dayjs from '@utils/dayjs';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
@@ -31,6 +32,8 @@ import { z } from 'zod';
 import { Title } from '@components/Title';
 import CautionList from '@components/apply/member/CautionList';
 import BlockModal from '@components/common/BlockModal';
+
+import useInterval from '@hooks/useInterval';
 
 const STORAGE_KEY = 'applyMemberForm';
 
@@ -77,6 +80,23 @@ function ApplyMember() {
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
 
   const { id, name, department, phone_number } = userInfo!;
+  const [currentDate, setCurrentDate] = useState(dayjs());
+  const [isRecruit, setIsRecruit] = useState(false);
+  useInterval(() => {
+    setCurrentDate(dayjs());
+  }, 1000);
+
+  useEffect(() => {
+    if (
+      currentDate.isBefore(dayjs('2024-08-26')) ||
+      currentDate.isAfter(dayjs('2024-09-04'))
+    ) {
+      setIsRecruit(false);
+    } else {
+      setIsRecruit(true);
+    }
+  }, [currentDate]);
+
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
     defaultValues: {
@@ -323,7 +343,13 @@ function ApplyMember() {
               >
                 임시저장
               </Button>
-              <Button type='submit' variant='contained' size='large' fullWidth>
+              <Button
+                type='submit'
+                variant='contained'
+                size='large'
+                fullWidth
+                disabled={!isRecruit}
+              >
                 제출
               </Button>
             </Stack>

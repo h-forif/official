@@ -1,9 +1,9 @@
 import { Announcement, FAQ } from '@packages/components/types/post';
 
-import { api, authApi } from './axios-instance';
+import { api } from './axios-instance';
 
 export const getAnnouncements = async () => {
-  const data: Announcement[] = await authApi
+  const data: Announcement[] = await api
     .get('/posts/announcements')
     .then((res) => res.data);
   return data;

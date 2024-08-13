@@ -79,7 +79,7 @@ const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
         gap: 2,
       }}
     >
-      <Typography variant='titleLarge'>2024-1 스터디 목록</Typography>
+      <Typography variant='titleLarge'>2024-2 스터디 목록</Typography>
       <Box
         sx={{
           width: '100%',

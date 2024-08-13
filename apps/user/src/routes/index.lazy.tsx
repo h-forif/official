@@ -50,7 +50,7 @@ function Home() {
             <Button variant='outlined'>멘토 신청하기</Button>
           </Link>
         </Stack>
-        <AnimatedContainer>스터디 목록이 들어갈 자리입니다.</AnimatedContainer>
+        <AnimatedContainer>현재 스터디 모집 중입니다.</AnimatedContainer>
       </CenteredBox>
       <Image
         src={banner}

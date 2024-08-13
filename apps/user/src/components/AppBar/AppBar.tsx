@@ -98,7 +98,11 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
               userState={userState}
             />
           </Box>
-          <MobileNav mode={mode} toggleColorMode={toggleColorMode} />
+          <MobileNav
+            mode={mode}
+            userState={userState}
+            toggleColorMode={toggleColorMode}
+          />
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -14,9 +16,14 @@ import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/system/Stack';
 
 import LetterIcon from '@assets/logos/forif-letter.svg?react';
-import { NAV_MENUS } from '@constants/nav-menu.constant';
+import {
+  AUTH_NAV_MENUS,
+  NAV_MENUS,
+  NavMenu,
+} from '@constants/nav-menu.constant';
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
+import { User } from '@packages/components/types/user';
 import { Link } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 
@@ -24,10 +31,23 @@ import { useMobileNav } from '@hooks/useMobileNav';
 
 import { AppBarProps } from '../../types/app-bar.type';
 
-const currentTerm = getCurrentTerm();
+interface MobileNavProps extends AppBarProps {
+  userState: User['state'];
+}
 
-export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
+export default function MobileNav({
+  mode,
+  userState,
+  toggleColorMode,
+}: MobileNavProps) {
   const { open, toggleDrawer } = useMobileNav();
+  const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[]>([]);
+  const currentTerm = getCurrentTerm();
+
+  useEffect(() => {
+    const navMenus = userState === 'sign-out' ? NAV_MENUS : AUTH_NAV_MENUS;
+    setSelectedNavMenus(navMenus);
+  }, [userState]);
 
   return (
     <Box sx={{ display: { sm: '', md: 'none' } }}>
@@ -90,7 +110,7 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
             gap={1}
             sx={{ mb: 4 }}
           >
-            {NAV_MENUS.map((menu) => {
+            {selectedNavMenus.map((menu) => {
               const isSubMenu = menu.submenu && menu.submenu.length > 0;
               return (
                 <Box
@@ -117,21 +137,23 @@ export default function MobileNav({ mode, toggleColorMode }: AppBarProps) {
                     }}
                     slotProps={{ transition: { unmountOnExit: true } }}
                   >
-                    <AccordionSummary
-                      expandIcon={
-                        isSubMenu ? (
-                          <ExpandMoreIcon color='primary' />
-                        ) : (
-                          <ArrowOutwardIcon color='primary' />
-                        )
-                      }
-                      id={`${menu.title}-header`}
-                      aria-controls={`${menu.title}-content`}
-                    >
-                      <MenuItem sx={{ color: 'text.primary', pl: 1 }}>
-                        {menu.title}
-                      </MenuItem>
-                    </AccordionSummary>
+                    <Link to={isSubMenu ? undefined : menu.href}>
+                      <AccordionSummary
+                        expandIcon={
+                          isSubMenu ? (
+                            <ExpandMoreIcon color='primary' />
+                          ) : (
+                            <ArrowOutwardIcon color='primary' />
+                          )
+                        }
+                        id={`${menu.title}-header`}
+                        aria-controls={`${menu.title}-content`}
+                      >
+                        <MenuItem sx={{ color: 'text.primary', pl: 1 }}>
+                          {menu.title}
+                        </MenuItem>
+                      </AccordionSummary>
+                    </Link>
                     <AccordionDetails>
                       {menu.submenu?.map((submenu) => (
                         <Link

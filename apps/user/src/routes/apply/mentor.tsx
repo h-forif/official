@@ -30,6 +30,8 @@ import { StudyPlan } from '@components/apply/mentor/steps/StudyPlan';
 import { StudySubmit } from '@components/apply/mentor/steps/StudySubmit';
 import BlockModal from '@components/common/BlockModal';
 
+import useInterval from '@hooks/useInterval';
+
 const STORAGE_KEY = 'applyMentorForm';
 
 export const Route = createFileRoute('/apply/mentor')({
@@ -54,6 +56,22 @@ function ApplyMember() {
   const [activeStep, setActiveStep] = useState(0);
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
   const navigate = useNavigate();
+
+  const [currentDate, setCurrentDate] = useState(dayjs());
+
+  useInterval(() => {
+    setCurrentDate(dayjs());
+  }, 1000);
+
+  useEffect(() => {
+    if (currentDate.isAfter(dayjs('2024-08-16'))) {
+      alert(
+        '스터디 개설 신청 기간이 종료되었습니다. 추가 개설 신청 문의는 공식 메일(contact@forif.org)로 문의해주세요.',
+      );
+      navigate({ to: '/' });
+    }
+  }, [currentDate, navigate]);
+
   const form = useForm<z.infer<typeof ApplyMentorSchema>>({
     resolver: zodResolver(ApplyMentorSchema),
     defaultValues: {
@@ -204,7 +222,7 @@ function ApplyMember() {
       <Box component={'main'} mt={8}>
         <Title
           title={`${currentTerm.year}년도 ${currentTerm.semester}학기 스터디 개설`}
-          label='2024-08-26 ~ 2024-09-11'
+          label='2024-08-13 ~ 2024-08-16'
           mb={3}
         />
         <ApplyMentorStepper steps={steps} activeStep={activeStep} />
