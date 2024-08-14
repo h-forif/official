@@ -11,7 +11,7 @@ import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { setRefreshToken } from '@stores/token.store';
 import { clearUser, getUserState } from '@stores/user.store';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useAnimation } from 'framer-motion';
 
 import { useNavMenu } from '@hooks/useNavMenu';
@@ -27,7 +27,6 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const [isVisible, setIsVisible] = useState(true);
   const controls = useAnimation();
 
-  const navigate = useNavigate();
   const { activeMenu, handleMouseEnter, handleMouseLeave, handleClick } =
     useNavMenu();
 
@@ -54,7 +53,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   const handleSignOut = () => {
     setRefreshToken(null);
     clearUser();
-    navigate({ to: '/' });
+    window.location.href = '/';
   };
 
   return (

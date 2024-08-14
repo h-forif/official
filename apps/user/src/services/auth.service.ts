@@ -1,6 +1,7 @@
 import { User } from '@packages/components/types/user';
 import { setAccessToken, setRefreshToken } from '@stores/token.store';
 import { setUser, setUserState } from '@stores/user.store';
+import axios from 'axios';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 
@@ -31,31 +32,50 @@ const signIn = async (g_access_token: string | null | undefined) => {
 
   setUser({
     email: data.email ? data.email : null,
-    user_authorization: null,
+    auth_level: null,
     name: name ? name : null,
     phone_number: null,
     department: department ? department : null,
     id: null,
   });
-  setAccessToken(g_access_token!);
 
-  const { user, access_token, refresh_token } = await api
-    .get<SignInResponse>('/auth/sign-in', {
-      params: {
+  try {
+    const { user, access_token, refresh_token } = await api
+      .get<SignInResponse>('/auth/sign-in', {
+        params: {
+          access_token: g_access_token,
+        },
+      })
+      .then((res) => res.data);
+
+    setUser(user);
+    setAccessToken(access_token);
+    setRefreshToken(refresh_token);
+    setUserState('sign-in');
+
+    return {
+      data: user,
+      error: null,
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return {
         access_token: g_access_token,
-      },
-    })
-    .then((res) => res.data);
-
-  setUser(user);
-  setAccessToken(access_token);
-  setRefreshToken(refresh_token);
-  setUserState('sign-in');
-
-  return {
-    data: user,
-    error: null,
-  };
+        error: {
+          status: 404,
+        },
+      };
+    } else {
+      return {
+        data: null,
+        error: {
+          title: '로그인 오류',
+          message: '로그인에 실패했습니다. 다시 시도해주세요.',
+          status: 500,
+        },
+      };
+    }
+  }
 };
 
 const handleSignUp = async (
@@ -66,7 +86,7 @@ const handleSignUp = async (
     .post(
       '/auth/sign-up',
       {
-        userName: name,
+        name: name,
         department: department,
         id: id,
         phone_number: phone_number,
@@ -74,7 +94,8 @@ const handleSignUp = async (
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: accessToken,
+          charset: 'utf-8',
+          Authorization: `${accessToken}`,
         },
       },
     )

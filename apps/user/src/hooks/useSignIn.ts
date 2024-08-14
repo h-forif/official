@@ -4,7 +4,6 @@ import { signIn } from '@services/auth.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import useToastStore from '@stores/toast.store';
 import { useNavigate } from '@tanstack/react-router';
-import { handleGlobalError } from '@utils/handleGlobalError';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
@@ -15,30 +14,39 @@ export function useSignIn() {
   const [client, setClient] = useState<TokenClient | null>(null);
   const { showToast } = useToastStore();
   const signInWithToken = async (tokenResponse: TokenResponse) => {
-    try {
-      const res = await signIn(tokenResponse.access_token);
-      if (res.error) {
+    const { data, access_token, error } = await signIn(
+      tokenResponse.access_token,
+    );
+    console.log(data, access_token, error?.status);
+
+    if (error) {
+      if (error?.status === 401) {
         openSingleButtonDialog({
-          title: res.error.title,
-          message: res.error.message,
+          dialogIconType: DialogIconType.WARNING,
+          title: error.title!,
+          message: error.message,
           mainButtonText: '확인',
           mainButtonAction: () => {
+            navigate({ to: '/' });
             closeDialog();
           },
-          dialogIconType: DialogIconType.WARNING,
         });
         return;
       }
+      if (access_token) {
+        navigate({
+          to: `/auth/sign-up`,
+          search: {
+            access_token: access_token,
+          },
+        });
+      }
+    } else {
       showToast({
         message: '포리프 웹사이트에 오신 것을 환영해요!',
         severity: 'success',
       });
       navigate({ to: '/profile' });
-    } catch (err) {
-      if (err === 'UserNotFound') {
-        navigate({ to: '/auth/sign-up' });
-      }
-      handleGlobalError(err);
     }
   };
 
@@ -52,7 +60,7 @@ export function useSignIn() {
         setIsGoogleScriptLoaded(true);
         const tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: GOOGLE_CLIENT_ID,
-          scope: 'https://www.googleapis.com/auth/userinfo.email',
+          scope: 'https://www.googleapis.com/auth/userinfo.profile',
           callback: signInWithToken,
         });
         setClient(tokenClient);

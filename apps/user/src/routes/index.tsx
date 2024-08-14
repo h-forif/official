@@ -5,6 +5,7 @@ import banner from '@assets/images/banner.svg';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { getUserState } from '@stores/user.store';
 import { Link, createFileRoute } from '@tanstack/react-router';
 
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
@@ -16,6 +17,7 @@ export const Route = createFileRoute('/')({
 });
 
 function Home() {
+  const userState = getUserState();
   const { handleSignIn } = useSignIn();
 
   return (
@@ -42,12 +44,27 @@ function Home() {
           지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
           선순환에 동참해주세요.
         </Typography>
-        <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Button variant='contained' onClick={handleSignIn}>
-            부원 가입하기
-          </Button>
-          <Link to='/apply/mentor'>
-            <Button variant='outlined'>멘토 신청하기</Button>
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          gap={1}
+          width={userState === 'sign-in' ? '100%' : 'fit-content'}
+        >
+          {userState === 'sign-out' && (
+            <Button variant='contained' onClick={handleSignIn}>
+              부원 가입하기
+            </Button>
+          )}
+
+          <Link
+            to='/apply/mentor'
+            style={{
+              width: userState === 'sign-in' ? '100%' : 'fit-content',
+            }}
+          >
+            <Button variant='outlined' fullWidth>
+              멘토 신청하기
+            </Button>
           </Link>
         </Stack>
         <AnimatedContainer>현재 스터디 모집 중입니다.</AnimatedContainer>

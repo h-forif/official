@@ -19,8 +19,7 @@ const signIn = async (g_access_token: string | null | undefined) => {
     })
     .then((res) => res.data);
 
-  if (user.user_authorization === '유저')
-    throw new Error('허용되지 않은 계정입니다.');
+  if (user.auth_level === 1) throw new Error('허용되지 않은 계정입니다.');
   setUser(user);
   setAccessToken(access_token);
   setRefreshToken(refresh_token);

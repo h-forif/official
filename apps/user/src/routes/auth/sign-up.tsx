@@ -13,7 +13,6 @@ import { User } from '@packages/components/types/user';
 import { handleSignUp } from '@services/auth.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import useToastStore from '@stores/toast.store';
-import { useAccessToken } from '@stores/token.store';
 import { getUser } from '@stores/user.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { SignUpSchema } from 'src/types/sign-up.schema';
@@ -21,7 +20,16 @@ import { z } from 'zod';
 
 import { Title } from '@components/Title';
 
+type SignUpSearch = {
+  access_token: string;
+};
+
 export const Route = createFileRoute('/auth/sign-up')({
+  validateSearch: (search: Record<string, unknown>): SignUpSearch => {
+    return {
+      access_token: (search?.access_token as string) || '',
+    };
+  },
   loader: () => {
     const user = getUser();
     if (!user.email) {
@@ -34,6 +42,8 @@ export const Route = createFileRoute('/auth/sign-up')({
 
 function SignUpPage() {
   const user = Route.useLoaderData();
+  const { access_token } = Route.useSearch();
+
   const navigate = useNavigate();
 
   const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
@@ -54,8 +64,6 @@ function SignUpPage() {
     },
   });
 
-  const accessToken = useAccessToken();
-
   const onSubmit = async (formData: z.infer<typeof SignUpSchema>) => {
     openDualButtonDialog({
       dialogIconType: DialogIconType.CONFIRM,
@@ -64,7 +72,7 @@ function SignUpPage() {
       mainButtonText: '네, 제출할게요.',
       mainButtonAction: async () => {
         try {
-          await handleSignUp(formData, accessToken);
+          await handleSignUp(formData, access_token);
           showToast({
             message: '회원가입이 완료되었습니다.',
             severity: 'success',
