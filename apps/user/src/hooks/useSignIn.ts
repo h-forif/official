@@ -14,6 +14,7 @@ export function useSignIn() {
   const [client, setClient] = useState<TokenClient | null>(null);
   const { showToast } = useToastStore();
   const signInWithToken = async (tokenResponse: TokenResponse) => {
+    console.log(tokenResponse);
     const { data, access_token, error } = await signIn(
       tokenResponse.access_token,
     );
@@ -60,7 +61,8 @@ export function useSignIn() {
         setIsGoogleScriptLoaded(true);
         const tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: GOOGLE_CLIENT_ID,
-          scope: 'https://www.googleapis.com/auth/userinfo.profile',
+          scope:
+            'https://www.googleapis.com/auth/userinfo.profile  https://www.googleapis.com/auth/userinfo.email',
           callback: signInWithToken,
         });
         setClient(tokenClient);

@@ -19,6 +19,8 @@ const signIn = async (g_access_token: string | null | undefined) => {
   const parts = data.name.split('|').map((part) => part.trim());
   const [name, department] = parts;
 
+  console.log('Here1');
+  console.log(data);
   if (!data.email.endsWith('@hanyang.ac.kr')) {
     return {
       data: null,
