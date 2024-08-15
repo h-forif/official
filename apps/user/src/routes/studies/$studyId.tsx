@@ -1,4 +1,5 @@
 import { SyntheticEvent, useState } from 'react';
+import Markdown from 'react-markdown';
 
 import { Chip, Divider, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { Box, Stack } from '@mui/system';
@@ -13,7 +14,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
 import { Link, createFileRoute } from '@tanstack/react-router';
-import MDEditor from '@uiw/react-md-editor';
 import dayjs from '@utils/dayjs';
 import formatMarkdown from '@utils/formatMarkdown';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
@@ -71,7 +71,7 @@ function StudyComponent() {
     const diffInDays = day.diff(startDate, 'day');
     const index = Math.floor(diffInDays / 7);
 
-    if (index >= study.study_apply_plans.length) {
+    if (index >= study.study_plans.length) {
       return <PickersDay {...props} disabled />;
     }
     return (
@@ -100,8 +100,7 @@ function StudyComponent() {
     if (weekDay !== study.week_day)
       return '해당 날짜에 정해진 일정이 없습니다.';
     return (
-      study.study_apply_plans[index]?.section ||
-      '해당 날짜에 정해진 일정이 없습니다.'
+      study.study_plans[index]?.section || '해당 날짜에 정해진 일정이 없습니다.'
     );
   };
 
@@ -197,10 +196,10 @@ function StudyComponent() {
                 width={'100%'}
                 data-color-mode={mode}
               >
-                <MDEditor.Markdown
-                  source={formatMarkdown(study.explanation)}
+                <Markdown
+                  children={formatMarkdown(study.explanation)}
                   rehypePlugins={[rehypeSanitize]}
-                  style={{ whiteSpace: 'pre-wrap' }}
+                  className={'markdown'}
                 />
               </Stack>
             </Stack>
@@ -219,7 +218,7 @@ function StudyComponent() {
                     기간 내에 서로 협의 하에 일정을 결정하게 됩니다.
                   </Typography>
                 ) : (
-                  study.study_apply_plans.map((plan, index) => (
+                  study.study_plans.map((plan, index) => (
                     <StudyCurriculum
                       key={index}
                       studyPlan={plan}
@@ -274,7 +273,7 @@ function StudyComponent() {
                       {getTodayStudyPlan(date)}
                     </Typography>
                     <Box component={'ul'}>
-                      {study.study_apply_plans
+                      {study.study_plans
                         .find(
                           (plan) => plan.section === getTodayStudyPlan(date),
                         )
