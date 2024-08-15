@@ -10,6 +10,8 @@
     "build": "pnpm -r build",
     "user:add": "pnpm -F user add",
     "user:del": "pnpm -F user remove",
+    "admin:add": "pnpm -F admin add",
+    "admin:del": "pnpm -F admin remove",
     "comp:add": "pnpm -F @packages/components add",
     "comp:del": "pnpm -F @packages/components remove",
     "test": "echo \"Error: no test specified\" && exit 1",

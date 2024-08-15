@@ -114,7 +114,7 @@ export const ApplyMentorSchema = z
         return false;
       }
       for (const plan of val) {
-        if (plan.contents.length < 50) {
+        if (plan.content.length < 50) {
           return false;
         }
       }
@@ -173,5 +173,5 @@ export interface SecondaryStudy {
 
 export interface StudyPlan {
   section: string;
-  contents: string[];
+  content: string[];
 }

@@ -193,13 +193,13 @@ export function StudySubmit({
                 disabled
                 fullWidth
               />
-              {plan.contents?.map((_, contentIndex) => (
+              {plan.content?.map((_, contentIndex) => (
                 <FormInput
                   key={`${sectionIndex}-${contentIndex}`}
                   variant='standard'
                   label={`${sectionIndex + 1}주차 내용을 입력해주세요.`}
                   control={form.control}
-                  name={`study_plans.${sectionIndex}.contents.${contentIndex}`}
+                  name={`study_plans.${sectionIndex}.content.${contentIndex}`}
                   fullWidth
                   disabled
                 />

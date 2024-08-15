@@ -54,7 +54,7 @@ export interface MentorApplication
     z.infer<typeof ApplyMentorSchema>,
     'study_plans' | 'start_time' | 'end_time'
   > {
-  study_plans: { section: string; contents: string }[];
+  study_plans: { section: string; content: string }[];
   start_time: string;
   end_time: string;
 }

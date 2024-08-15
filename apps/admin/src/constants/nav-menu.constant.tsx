@@ -18,7 +18,7 @@ export const NAV_MENUS: NavMenu[] = [
     icon: <BookmarkBorderIcon />,
     submenu: [
       { title: '스터디 목록', href: '/studies' },
-      { title: '스터디 관리', href: '/apply/member' },
+      { title: '스터디 관리', href: '/studies/approve' },
     ],
   },
 ];

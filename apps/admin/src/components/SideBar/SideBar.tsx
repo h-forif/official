@@ -28,6 +28,7 @@ export default function SideBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
   const user = getUser();
+
   const navigate = useNavigate();
   const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[]>([]);
 
