@@ -1,5 +1,6 @@
 import type { User } from '@packages/components/types/user';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type UserAction = {
   updateName: (name: User['name']) => void;
@@ -7,18 +8,26 @@ type UserAction = {
   updateState: (state: User['state']) => void;
 };
 
-const useUserStore = create<User & UserAction>((set) => ({
-  name: null,
-  id: null,
-  department: null,
-  auth_level: null,
-  email: null,
-  phone_number: null,
-  state: null,
-  updateName: (name) => set(() => ({ name: name })),
-  updateDepartment: (department) => set(() => ({ department: department })),
-  updateState: (state) => set(() => ({ state: state })),
-}));
+const useUserStore = create(
+  persist<User & UserAction>(
+    (set) => ({
+      name: null,
+      id: null,
+      department: null,
+      auth_level: null,
+      email: null,
+      phone_number: null,
+      state: null,
+      updateName: (name) => set(() => ({ name })),
+      updateDepartment: (department) => set(() => ({ department })),
+      updateState: (state) => set(() => ({ state })),
+    }),
+    {
+      name: 'userStore',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
 
 const setUser = (user: User) => {
   useUserStore.setState(user);

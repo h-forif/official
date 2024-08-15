@@ -1,18 +1,14 @@
-import { ErrorBoundary } from 'react-error-boundary';
-
+import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 
 import { lightTheme } from '@packages/components/theme.ts';
-import {
-  QueryClient,
-  QueryClientProvider,
-  QueryErrorResetBoundary,
-} from '@tanstack/react-query';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Outlet, createRootRoute } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-import NotFoundPage from '@components/common/NotFoundPage';
+import SideBar from '@components/SideBar/SideBar';
+import { AlertDialog } from '@components/common/Dialog';
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
@@ -20,25 +16,22 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const queryClient = new QueryClient();
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
   return (
     <QueryClientProvider client={queryClient}>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            onReset={reset}
-            fallbackRender={({ resetErrorBoundary }) => (
-              <NotFoundPage onClick={resetErrorBoundary} />
-            )}
-          >
-            <ThemeProvider theme={lightTheme}>
-              <CssBaseline />
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <ThemeProvider theme={lightTheme}>
+          <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <SideBar />
+            <Box component={'main'} minHeight={'100vh'} width={'100%'}>
               <Outlet />
-              <TanStackRouterDevtools />
-            </ThemeProvider>
-          </ErrorBoundary>
-        )}
-      </QueryErrorResetBoundary>
+            </Box>
+          </Box>
+          <AlertDialog />
+        </ThemeProvider>
+      </GoogleOAuthProvider>
     </QueryClientProvider>
   );
 }

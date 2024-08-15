@@ -1,55 +1,129 @@
+import { useRef } from 'react';
+
+import GoogleIcon from '@mui/icons-material/Google';
 import { Stack, Typography } from '@mui/material';
 
+import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { createFileRoute } from '@tanstack/react-router';
+import { useGoogleLogin } from '@react-oauth/google';
+import { signIn } from '@services/auth.service';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
+import { motion, useDragControls } from 'framer-motion';
+
+import getIsAuthenticated from '@hooks/isAuthenticated';
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const isAuthenticated = await getIsAuthenticated();
+    if (isAuthenticated) {
+      throw redirect({
+        to: '/dashboard',
+      });
+    }
+  },
   component: Home,
 });
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
-
 function Home() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
-    callback: (data) => console.log(data),
+  const controls = useDragControls();
+  const navigate = useNavigate();
+  const constraintsRef = useRef(null);
+  const handleSignIn = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse.access_token);
+
+      try {
+        await signIn(tokenResponse.access_token);
+        navigate({ to: '/dashboard' });
+      } catch (err) {
+        console.error(err);
+      }
+    },
   });
 
   return (
-    <Stack direction={'row'}>
+    <Stack direction={'row'} height={'100vh'}>
       <Stack
         width={'50%'}
-        height={'100vh'}
+        height={'100%'}
         sx={{
-          backgroundColor: 'primary.main',
+          backgroundColor: 'primary.dark',
+          display: { xs: 'none', sm: 'block' },
         }}
-      />
-      <CenteredBox p={5} textAlign={'center'} flexGrow={1}>
-        <Stack gap={2}>
-          <Typography variant={'displaySmall'}>
-            Welcome to the Admin Page
-          </Typography>
+      >
+        <motion.div
+          ref={constraintsRef}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <motion.div
+            drag
+            dragControls={controls}
+            dragConstraints={constraintsRef}
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              backgroundColor: 'white',
+            }}
+          />
+          <motion.div
+            drag
+            dragControls={controls}
+            dragConstraints={constraintsRef}
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              backgroundColor: 'white',
+            }}
+          />
+          <motion.div
+            drag
+            dragControls={controls}
+            dragConstraints={constraintsRef}
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              backgroundColor: 'white',
+            }}
+          />
+          <motion.div
+            drag
+            dragControls={controls}
+            dragConstraints={constraintsRef}
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              backgroundColor: 'white',
+            }}
+          />
+        </motion.div>
+      </Stack>
+      <CenteredBox p={5} textAlign={'center'} flexGrow={1} height={'100%'}>
+        <Stack gap={2} width={'100%'}>
+          <Typography variant={'displaySmall'}>멘토 / 운영진 페이지</Typography>
           <Typography variant={'bodyMedium'}>
-            This is the admin page for the Study With Us platform. Please login
-            to access the admin features.
+            2024학년도 2학기 멘토 및 운영진을 위한 페이지입니다. 멘토의 기준은
+            해당 학기에 스터디 승인을 받은 부원입니다.
           </Typography>
-          <div
-            id='g_id_onload'
-            data-client_id='YOUR_GOOGLE_CLIENT_ID'
-            data-login_uri='https://your.domain/your_login_endpoint'
-            data-auto_prompt='false'
-          ></div>
-          <div
-            className='g_id_signin'
-            data-type='standard'
-            data-size='large'
-            data-theme='outline'
-            data-text='sign_in_with'
-            data-shape='rectangular'
-            data-logo_alignment='left'
-          ></div>
+          <Button
+            variant='contained'
+            color='primary'
+            startIcon={<GoogleIcon />}
+            onClick={() => handleSignIn()}
+            sx={{
+              backgroundColor: 'primary.main',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+              py: 1.5,
+              textTransform: 'none', // Capitalization 제거
+            }}
+          >
+            Sign in with Google
+          </Button>
         </Stack>
       </CenteredBox>
     </Stack>
