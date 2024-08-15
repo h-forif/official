@@ -157,6 +157,7 @@ function StudiesPage() {
         </Box>
       </Layout>
       <ApplicationDialog
+        id={application.id}
         key={application.id}
         open={open}
         handleClose={handleClose}

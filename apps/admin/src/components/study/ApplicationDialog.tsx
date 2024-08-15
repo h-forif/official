@@ -28,6 +28,7 @@ import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { ApprovedApplication } from '@routes/studies/approve';
+import { editNotApprovedStudy } from '@services/admin.service';
 import { approveStudies } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
@@ -45,10 +46,12 @@ const Transition = forwardRef(function Transition(
 });
 
 export default function ApplicationDialog({
+  id,
   application,
   open,
   handleClose,
 }: {
+  id: number;
   application: ApprovedApplication;
   open: boolean;
   handleClose: () => void;
@@ -81,6 +84,27 @@ export default function ApplicationDialog({
       study_apply_plans: application.study_apply_plans,
     },
   });
+
+  const handleEdit = async () => {
+    const formData = form.getValues();
+    try {
+      await editNotApprovedStudy(id, formData);
+      openSingleButtonDialog({
+        title: '스터디 수정 완료',
+        message: '스터디 정보가 수정되었습니다.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.CONFIRM,
+      });
+    } catch (err) {
+      console.error(err);
+      openSingleButtonDialog({
+        title: '스터디 수정 실패',
+        message: '스터디 정보 수정에 실패했습니다. 다시 시도해주세요.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.WARNING,
+      });
+    }
+  };
 
   const handleApprove = async () => {
     try {
@@ -119,22 +143,7 @@ export default function ApplicationDialog({
           >
             {application.name}
           </Typography>
-          <Button
-            autoFocus
-            color='inherit'
-            onClick={() => {
-              const formData = form.getValues();
-              console.log(formData);
-
-              // editStudy(formData);
-              openSingleButtonDialog({
-                title: '스터디 수정 완료',
-                message: '스터디 정보가 수정되었습니다.',
-                mainButtonText: '확인',
-                dialogIconType: DialogIconType.CONFIRM,
-              });
-            }}
-          >
+          <Button autoFocus color='inherit' onClick={() => handleEdit()}>
             수정
           </Button>
           <Button
@@ -286,7 +295,26 @@ export default function ApplicationDialog({
             </BorderBox>
           </Grid>
           <Grid item xs={12}>
-            <BorderBox>
+            <BorderBox
+              props={{
+                position: 'relative',
+              }}
+            >
+              <IconButton
+                size='large'
+                sx={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  right: 10,
+                }}
+                onClick={() => (isEdit ? saveExplanation() : setIsEdit(true))}
+              >
+                {isEdit ? (
+                  <DoneIcon color='primary' />
+                ) : (
+                  <EditIcon color='primary' />
+                )}
+              </IconButton>
               <Typography
                 variant='titleSmall'
                 textAlign={'center'}
@@ -300,22 +328,7 @@ export default function ApplicationDialog({
                 오타가 발생하지 않았는지 확인해주세요.
               </Typography>
               <Divider />
-              <Box position={'relative'}>
-                <IconButton
-                  size='large'
-                  sx={{
-                    position: 'absolute',
-                    zIndex: 10,
-                    right: 10,
-                  }}
-                  onClick={() => (isEdit ? saveExplanation() : setIsEdit(true))}
-                >
-                  {isEdit ? (
-                    <DoneIcon color='primary' />
-                  ) : (
-                    <EditIcon color='primary' />
-                  )}
-                </IconButton>
+              <Box>
                 {isEdit ? (
                   <TextField
                     value={explanation}

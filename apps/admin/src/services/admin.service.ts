@@ -8,6 +8,9 @@ export async function getAllUsers() {
   return users;
 }
 
-export async function editNotApprovedStudy(formData: MentorApplication) {
-  await authApi.patch('/study-apply', formData);
+export async function editNotApprovedStudy(
+  id: number,
+  formData: MentorApplication,
+) {
+  await authApi.patch(`/study-apply/${id}`, formData);
 }
