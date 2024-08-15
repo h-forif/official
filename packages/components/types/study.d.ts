@@ -11,7 +11,7 @@ export interface Study {
   image: string;
   location: string;
   tag: string;
-  study_plans: StudyPlan[];
+  study_apply_plans: StudyPlan[];
   one_liner: string;
   act_year: number;
   act_semester: number;

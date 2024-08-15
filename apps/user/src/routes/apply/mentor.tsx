@@ -89,7 +89,7 @@ function ApplyMember() {
         '# 마크다운 작성법<br/>  이렇게 작성하면 됩니다. 설명은 반드시 50자 이상으로 작성해주세요!',
       secondary_mentor_id: '',
       secondary_mentor_name: '',
-      study_plans: Array(15).fill({ section: '', content: [''] }),
+      study_apply_plans: Array(15).fill({ section: '', content: [''] }),
     },
   });
 
@@ -192,7 +192,7 @@ function ApplyMember() {
       ...formData,
       start_time: dayjs(formData.start_time).format('HH:mm'),
       end_time: dayjs(formData.end_time).format('HH:mm'),
-      study_plans: formData.study_plans.map((plan) => ({
+      study_apply_plans: formData.study_apply_plans.map((plan) => ({
         ...plan,
         content: Array.isArray(plan.content)
           ? plan.content.join(';')

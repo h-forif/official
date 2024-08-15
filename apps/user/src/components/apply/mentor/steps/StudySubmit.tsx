@@ -36,7 +36,7 @@ export function StudySubmit({
     explanation,
     tag,
     week_day,
-    study_plans,
+    study_apply_plans,
   } = form.getValues();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -177,7 +177,7 @@ export function StudySubmit({
           width={'100%'}
         >
           <Typography variant='titleSmall'>스터디 계획서</Typography>
-          {study_plans.map((plan, sectionIndex) => (
+          {study_apply_plans.map((plan, sectionIndex) => (
             <Stack
               key={`${plan.section} - ${sectionIndex}`}
               width={'100%'}
@@ -186,7 +186,7 @@ export function StudySubmit({
               <FormInput
                 variant='outlined'
                 control={form.control}
-                name={`study_plans.${sectionIndex}.section`}
+                name={`study_apply_plans.${sectionIndex}.section`}
                 label={`${sectionIndex + 1}주차 주제`}
                 placeholder={`${sectionIndex + 1}주차 주제를 입력해주세요.`}
                 required
@@ -199,7 +199,7 @@ export function StudySubmit({
                   variant='standard'
                   label={`${sectionIndex + 1}주차 내용을 입력해주세요.`}
                   control={form.control}
-                  name={`study_plans.${sectionIndex}.content.${contentIndex}`}
+                  name={`study_apply_plans.${sectionIndex}.content.${contentIndex}`}
                   fullWidth
                   disabled
                 />

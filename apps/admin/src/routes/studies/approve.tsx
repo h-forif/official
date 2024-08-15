@@ -25,7 +25,7 @@ interface Plan {
 }
 
 export interface ApprovedApplication
-  extends Omit<MentorApplication, 'study_plans'> {
+  extends Omit<MentorApplication, 'study_apply_plans'> {
   study_apply_plans: Plan[];
   primary_mentor_email: string;
   primary_mentor_phone_number: string;

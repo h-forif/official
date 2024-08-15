@@ -109,7 +109,7 @@ export const ApplyMentorSchema = z
     ),
     tag: z.string().min(1, '태그를 선택해주세요'),
     week_day: z.string().min(1, '스터디 요일을 선택해주세요.'),
-    study_plans: z.custom<StudyPlan[]>((val) => {
+    study_apply_plans: z.custom<StudyPlan[]>((val) => {
       if (val.length !== 8) {
         return false;
       }

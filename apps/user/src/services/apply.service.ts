@@ -52,9 +52,9 @@ export const updateApplication = async (
 export interface MentorApplication
   extends Omit<
     z.infer<typeof ApplyMentorSchema>,
-    'study_plans' | 'start_time' | 'end_time'
+    'study_apply_plans' | 'start_time' | 'end_time'
   > {
-  study_plans: { section: string; content: string }[];
+  study_apply_plans: { section: string; content: string }[];
   start_time: string;
   end_time: string;
 }
