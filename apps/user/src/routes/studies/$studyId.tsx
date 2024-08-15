@@ -71,7 +71,7 @@ function StudyComponent() {
     const diffInDays = day.diff(startDate, 'day');
     const index = Math.floor(diffInDays / 7);
 
-    if (index >= study.study_plans.length) {
+    if (index >= study.study_apply_plans.length) {
       return <PickersDay {...props} disabled />;
     }
     return (
@@ -100,7 +100,8 @@ function StudyComponent() {
     if (weekDay !== study.week_day)
       return '해당 날짜에 정해진 일정이 없습니다.';
     return (
-      study.study_plans[index]?.section || '해당 날짜에 정해진 일정이 없습니다.'
+      study.study_apply_plans[index]?.section ||
+      '해당 날짜에 정해진 일정이 없습니다.'
     );
   };
 
@@ -218,7 +219,7 @@ function StudyComponent() {
                     기간 내에 서로 협의 하에 일정을 결정하게 됩니다.
                   </Typography>
                 ) : (
-                  study.study_plans.map((plan, index) => (
+                  study.study_apply_plans.map((plan, index) => (
                     <StudyCurriculum
                       key={index}
                       studyPlan={plan}
@@ -273,7 +274,7 @@ function StudyComponent() {
                       {getTodayStudyPlan(date)}
                     </Typography>
                     <Box component={'ul'}>
-                      {study.study_plans
+                      {study.study_apply_plans
                         .find(
                           (plan) => plan.section === getTodayStudyPlan(date),
                         )

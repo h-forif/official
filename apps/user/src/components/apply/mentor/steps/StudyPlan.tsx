@@ -17,17 +17,17 @@ export function StudyPlan({
 }) {
   const { fields } = useFieldArray({
     control: form.control,
-    name: 'study_plans',
+    name: 'study_apply_plans',
   });
 
   const studyPlanContents = useWatch({
     control: form.control,
-    name: 'study_plans',
+    name: 'study_apply_plans',
   });
 
   const addNewContent = (sectionIndex: number) => {
     const currentContents = studyPlanContents[sectionIndex]?.content || [];
-    form.setValue(`study_plans.${sectionIndex}.content`, [
+    form.setValue(`study_apply_plans.${sectionIndex}.content`, [
       ...currentContents,
       '',
     ]);
@@ -38,7 +38,7 @@ export function StudyPlan({
     const newContents = currentContents.filter(
       (_, index) => index !== contentIndex,
     );
-    form.setValue(`study_plans.${sectionIndex}.content`, newContents);
+    form.setValue(`study_apply_plans.${sectionIndex}.content`, newContents);
   };
 
   return (
@@ -56,7 +56,7 @@ export function StudyPlan({
               <FormInput
                 variant='outlined'
                 control={form.control}
-                name={`study_plans.${sectionIndex}.section`}
+                name={`study_apply_plans.${sectionIndex}.section`}
                 label={`${sectionIndex + 1}주차 주제`}
                 placeholder={`${sectionIndex + 1}주차 주제를 입력해주세요.`}
                 required
@@ -68,7 +68,7 @@ export function StudyPlan({
                     variant='standard'
                     label={`${sectionIndex + 1}주차 내용을 입력해주세요.`}
                     control={form.control}
-                    name={`study_plans.${sectionIndex}.content.${contentIndex}`}
+                    name={`study_apply_plans.${sectionIndex}.content.${contentIndex}`}
                     fullWidth
                     InputProps={{
                       endAdornment: (

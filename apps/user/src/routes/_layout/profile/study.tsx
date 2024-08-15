@@ -142,7 +142,7 @@ function MyStudy() {
                               <List dense={false}>
                                 {currentStudy.data!.id === 0
                                   ? '자율스터디는 계획서가 없습니다.'
-                                  : currentStudy.data!.study_plans.map(
+                                  : currentStudy.data!.study_apply_plans.map(
                                       (plan, index) => (
                                         <Box key={`plan-${index}`}>
                                           <ListItemButton>
