@@ -17,7 +17,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: 변경사항 검사 - User
+        id: check_user_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD ./apps/user; then
+            echo "user_changed=false" >> $GITHUB_ENV
+          else
+            echo "user_changed=true" >> $GITHUB_ENV
+          fi
+
+      - name: 변경사항 검사 - Admin
+        id: check_admin_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD ./apps/admin; then
+            echo "admin_changed=false" >> $GITHUB_ENV
+          else
+            echo "admin_changed=true" >> $GITHUB_ENV
+          fi
+
       - name: 환경 변수 설정
+        if: env.user_changed == 'true' || env.admin_changed == 'true'
         run: |
           echo "VITE_BASE_URL=$VITE_BASE_URL" >> .env.production
           echo "VITE_OAUTH_CLIENT_ID=$VITE_OAUTH_CLIENT_ID" >> .env.production
@@ -26,7 +45,8 @@ jobs:
           echo "AWS_ACCESS_KEY_SECRET=$AWS_ACCESS_KEY_SECRET" >> .env.production
           echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> .env.production
           echo "AWS_ROLE_TO_ASSUME=$AWS_ROLE_TO_ASSUME" >> .env.production
-          echo "AWS_STAGING_BUCKET_NAME=$AWS_STAGING_BUCKET_NAME" >> .env.production
+          echo "USER_BUCKET_NAME=$USER_BUCKET_NAME" >> .env.production
+          echo "ADMIN_BUCKET_NAME=$ADMIN_BUCKET_NAME" >> .env.production
           echo "REMOTE_IP=$REMOTE_IP" >> .env.production
           echo "REMOTE_PRIVATE_KEY=$REMOTE_PRIVATE_KEY" >> .env.production
           echo "REMOTE_SSH_PORT=$REMOTE_SSH_PORT" >> .env.production
@@ -39,43 +59,74 @@ jobs:
           AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          AWS_STAGING_BUCKET_NAME: ${{ secrets.AWS_STAGING_BUCKET_NAME }}
+          USER_BUCKET_NAME: ${{ secrets.USER_BUCKET_NAME }}
+          ADMIN_BUCKET_NAME: ${{ secrets.ADMIN_BUCKET_NAME }}
           REMOTE_IP: ${{ secrets.REMOTE_IP }}
           REMOTE_PRIVATE_KEY: ${{ secrets.REMOTE_PRIVATE_KEY }}
           REMOTE_SSH_PORT: ${{ secrets.REMOTE_SSH_PORT }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          
+
       - uses: pnpm/action-setup@v4
         name: pnpm을 설치합니다.
+        if: env.user_changed == 'true' || env.admin_changed == 'true'
         with:
           run_install: false
 
       - name: Node.js를 설치합니다.
         uses: actions/setup-node@v4
+        if: env.user_changed == 'true' || env.admin_changed == 'true'
         with:
           node-version: 20
           cache: 'pnpm'
       
-      - name: 의존 패키지 설치
-        run: pnpm install
+      - name: 의존 패키지 설치 - User
+        if: env.user_changed == 'true'
+        run: pnpm install --filter user...
 
-      - name: 린트
-        run: pnpm run lint
+      - name: 의존 패키지 설치 - Admin
+        if: env.admin_changed == 'true'
+        run: pnpm install --filter admin...
 
-      - name: 타입 체크
-        run: pnpm run type-check
+      - name: 린트 - User
+        if: env.user_changed == 'true'
+        run: pnpm run lint --filter user...
 
-      - name: 빌드
-        run: pnpm run build
+      - name: 린트 - Admin
+        if: env.admin_changed == 'true'
+        run: pnpm run lint --filter admin...
+
+      - name: 타입 체크 - User
+        if: env.user_changed == 'true'
+        run: pnpm run type-check --filter user...
+
+      - name: 타입 체크 - Admin
+        if: env.admin_changed == 'true'
+        run: pnpm run type-check --filter admin...
+
+      - name: 빌드 - User
+        if: env.user_changed == 'true'
+        run: pnpm run build --filter user...
+
+      - name: 빌드 - Admin
+        if: env.admin_changed == 'true'
+        run: pnpm run build --filter admin...
 
       - name: AWS Credential 설정
+        if: env.user_changed == 'true' || env.admin_changed == 'true'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION}}
           output-credentials: true
       
-      - name: S3에 배포
+      - name: S3에 배포 - User
+        if: env.user_changed == 'true'
         run: |
           aws s3 sync \
-            ./apps/user/dist s3://${{ secrets.AWS_STAGING_BUCKET_NAME}}
+            ./apps/user/dist s3://${{ secrets.USER_BUCKET_NAME }}
+
+      - name: S3에 배포 - Admin
+        if: env.admin_changed == 'true'
+        run: |
+          aws s3 sync \
+            ./apps/admin/dist s3://${{ secrets.ADMIN_BUCKET_NAME }}

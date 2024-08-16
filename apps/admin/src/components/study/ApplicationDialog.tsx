@@ -20,6 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
+import { GridRowId } from '@mui/x-data-grid';
 
 import { TAG_OPTIONS, WEEKDAYS_OPTIONS } from '@constants/apply.constant';
 import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
@@ -56,7 +57,8 @@ export default function ApplicationDialog({
   open: boolean;
   handleClose: () => void;
 }) {
-  const { openSingleButtonDialog } = useDialogStore();
+  const { openSingleButtonDialog, openDualButtonDialog, closeDialog } =
+    useDialogStore();
   const [isEdit, setIsEdit] = useState(false);
   const [explanation, setExplanation] = useState(application.explanation);
 
@@ -106,13 +108,29 @@ export default function ApplicationDialog({
     }
   };
 
-  const handleApprove = async () => {
-    try {
-      await approveStudies([application.id]);
-      handleClose();
-    } catch (err) {
-      console.error(err);
-    }
+  const handleApprove = async (id: GridRowId) => {
+    openDualButtonDialog({
+      title: '스터디 승인',
+      message: '해당 스터디를 승인할까요? 승인 즉시 부원들에게 노출됩니다.',
+      mainButtonText: '승인',
+      dialogIconType: DialogIconType.CONFIRM,
+      mainButtonAction: async () => {
+        try {
+          await approveStudies([Number(id)]);
+          closeDialog();
+          openSingleButtonDialog({
+            title: '해당 스터디가 승인되었습니다.',
+            message:
+              '해당 스터디가 승인되었습니다. "스터디 목록"에서 해당 스터디가 성공적으로 추가되었는지 확인해주세요.',
+            mainButtonText: '확인',
+            dialogIconType: DialogIconType.CONFIRM,
+          });
+        } catch (e) {
+          console.error(`Failed to approve study with ID ${id}:`, e);
+        }
+      },
+      subButtonText: '취소',
+    });
   };
   return (
     <Dialog
@@ -143,16 +161,19 @@ export default function ApplicationDialog({
           >
             {application.name}
           </Typography>
-          <Button autoFocus color='inherit' onClick={() => handleEdit()}>
+          <Button
+            autoFocus
+            color='inherit'
+            disabled={application.status === 1}
+            onClick={() => handleEdit()}
+          >
             수정
           </Button>
           <Button
             autoFocus
             color='inherit'
-            onClick={() => {
-              handleApprove;
-              handleClose;
-            }}
+            disabled={application.status === 1}
+            onClick={() => handleApprove(id)}
           >
             승낙
           </Button>
