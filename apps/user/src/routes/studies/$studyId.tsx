@@ -137,7 +137,13 @@ function StudyComponent() {
           <Typography variant='bodyMedium' mb={2} fontWeight={300}>
             {study.one_liner}
           </Typography>
-          <Link to='/apply/member'>
+          <Link
+            to={isDisabled ? '' : '/apply/member'}
+            style={{
+              width: 'fit-content',
+              pointerEvents: isDisabled ? 'none' : 'auto',
+            }}
+          >
             <Button
               sx={{
                 width: 'fit-content',
@@ -339,7 +345,12 @@ function StudySideBox({
           ? `| ${study.secondary_mentor_name} 멘토`
           : ''}
       </Typography>
-      <Link to='/apply/member'>
+      <Link
+        to={isDisabled ? '' : '/apply/member'}
+        style={{
+          pointerEvents: isDisabled ? 'none' : 'auto',
+        }}
+      >
         <Button
           variant='contained'
           fullWidth

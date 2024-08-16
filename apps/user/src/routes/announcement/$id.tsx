@@ -1,9 +1,8 @@
 import Markdown from 'react-markdown';
 
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Box, Divider, Typography } from '@mui/material';
 
-import { Button } from '@packages/components/Button';
+import { Button, ScrollToTopButton } from '@packages/components/Button';
 import { Layout } from '@packages/components/elements/Layout';
 import { getAnnouncement } from '@services/post.service';
 import { Link, createFileRoute } from '@tanstack/react-router';
@@ -20,10 +19,6 @@ export const Route = createFileRoute('/announcement/$id')({
 
 function AnnounceComponent() {
   const announcement = Route.useLoaderData();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (
     <Box>
@@ -51,27 +46,7 @@ function AnnounceComponent() {
           className={'markdown'}
         />
       </Layout>
-      <Box
-        component={'button'}
-        position={'fixed'}
-        borderRadius={'50%'}
-        border={1}
-        borderColor={'divider'}
-        right={16}
-        bottom={16}
-        width={64}
-        height={64}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
-        sx={{
-          backgroundColor: 'background.default',
-          cursor: 'pointer',
-        }}
-        onClick={scrollToTop}
-      >
-        <ArrowUpwardIcon />
-      </Box>
+      <ScrollToTopButton />
     </Box>
   );
 }

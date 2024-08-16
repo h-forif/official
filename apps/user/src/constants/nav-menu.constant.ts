@@ -19,6 +19,10 @@ export const NAV_MENUS: NavMenu[] = [
         title: '회계 공시',
         href: '/club/finance',
       },
+      {
+        title: '회칙',
+        href: '/club/rule',
+      },
     ],
   },
   {

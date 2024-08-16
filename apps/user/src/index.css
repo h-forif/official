@@ -23,6 +23,19 @@ a {
   text-decoration: none;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  transform-origin: 0%;
+}
+
 body {
   -ms-overflow-style: none;
 }

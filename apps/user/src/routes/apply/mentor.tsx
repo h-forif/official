@@ -63,7 +63,7 @@ function ApplyMember() {
   }, 5000);
 
   useEffect(() => {
-    if (currentDate.isAfter(dayjs('2024-08-16'))) {
+    if (currentDate.isAfter(dayjs('2024-08-17'))) {
       alert(
         '스터디 개설 신청 기간이 종료되었습니다. 추가 개설 신청 문의는 공식 메일(contact@forif.org)로 문의해주세요.',
       );

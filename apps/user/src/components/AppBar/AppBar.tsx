@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import MUIAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,10 +10,8 @@ import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { setRefreshToken } from '@stores/token.store';
 import { clearUser, getUserState } from '@stores/user.store';
 import { Link } from '@tanstack/react-router';
-import { useAnimation } from 'framer-motion';
 
 import { useNavMenu } from '@hooks/useNavMenu';
-import useScrollPosition from '@hooks/useScrollPosition';
 import { useSignIn } from '@hooks/useSignIn';
 
 import { AppBarProps } from '../../types/app-bar.type';
@@ -23,28 +19,8 @@ import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
-  const scrollPosition = useScrollPosition();
-  const [isVisible, setIsVisible] = useState(true);
-  const controls = useAnimation();
-
   const { activeMenu, handleMouseEnter, handleMouseLeave, handleClick } =
     useNavMenu();
-
-  useEffect(() => {
-    if (scrollPosition > 64) {
-      setIsVisible(false);
-    } else {
-      setIsVisible(true);
-    }
-  }, [scrollPosition]);
-
-  useEffect(() => {
-    if (isVisible) {
-      controls.start('visible');
-    } else {
-      controls.start('hidden');
-    }
-  }, [isVisible, controls]);
 
   const userState = getUserState();
 
