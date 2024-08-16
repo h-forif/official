@@ -26,7 +26,8 @@ export default function CautionList() {
       </Typography>
       <Stack component={'ol'} gap={1}>
         <Typography component={'li'} variant='bodySmall'>
-          포리프 부원으로써 다양한 행사 및 혜택에 참여하고 싶다면{' '}
+          포리프 부원으로써 다양한 행사 및 혜택에 참여하고 싶다면 정규스터디를
+          수강하거나{' '}
           <Modal>
             <ModalTrigger>
               <Typography
@@ -38,12 +39,12 @@ export default function CautionList() {
                   textDecoration: 'underline',
                 }}
               >
-                자율 스터디
+                자율 부원
               </Typography>
             </ModalTrigger>
             <ModalContent>
               <ModalHeader>
-                <ModalTitle>자율 스터디란?</ModalTitle>
+                <ModalTitle>자율 부원이란?</ModalTitle>
               </ModalHeader>
               <ModalDescription>
                 포리프에는 두 가지 유형의 스터디가 있습니다. 자율 스터디와 정규
@@ -70,7 +71,7 @@ export default function CautionList() {
               </ModalDescription>
             </ModalContent>
           </Modal>
-          와 정규스터디 중 하나를 반드시 수강해야합니다.
+          으로 신청해야 합니다.
         </Typography>
         <Typography component={'li'} variant='bodySmall'>
           스터디는 한 학기에 하나만 신청 가능합니다. 다른 수업을 추가로 듣고
@@ -135,7 +136,7 @@ export default function CautionList() {
           를 이용해주세요.
         </Typography>
         <Typography component={'li'} variant='bodySmall'>
-          스터디 신청 기간은 2024-08-26 ~ 2024-09-11입니다. 이 기간 이후에는{' '}
+          스터디 신청 기간은 2024-08-26 ~ 2024-09-04입니다. 이 기간 이후에는{' '}
           <strong>신청서 수정이 불가능합니다.</strong>
         </Typography>
         <Typography component={'li'} variant='bodySmall'>

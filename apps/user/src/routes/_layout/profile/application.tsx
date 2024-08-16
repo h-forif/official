@@ -8,6 +8,10 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 
+import {
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import { Layout } from '@packages/components/elements/Layout';
 import { Link, createFileRoute } from '@tanstack/react-router';
@@ -18,6 +22,8 @@ import { getApplication } from 'src/services/apply.service';
 
 import { Title } from '@components/Title';
 import { ApplicationState } from '@components/profile/application/ApplicationState';
+
+import { usePeriod } from '@hooks/usePeriod';
 
 export const Route = createFileRoute('/_layout/profile/application')({
   loader: async () => {
@@ -37,18 +43,18 @@ export const Route = createFileRoute('/_layout/profile/application')({
 function MyApplication() {
   const currentTerm = getCurrentTerm();
   const { application, err } = Route.useLoaderData();
-
+  const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   if (err) {
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       return (
         <Box width={'100%'}>
           <Title
             title='스터디 지원서'
-            label='이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다.'
+            label={`이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다. 지원서 수정은 스터디 신청 기간(${RECRUIT_START_DATE} - ${RECRUIT_END_DATE})에만 가능합니다.`}
             pt={0}
           />
           <Layout>
-            <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
+            <Grid container spacing={{ xs: 2, md: 4, xl: 6 }} sx={{ mt: 2 }}>
               <Grid item xs={12}>
                 <Card
                   sx={{
@@ -86,8 +92,10 @@ function MyApplication() {
                       >
                         <Button variant='outlined'>스터디 목록 보기</Button>
                       </Link>
-                      <Link to='/apply/member'>
-                        <Button variant='contained'>스터디 신청하기</Button>
+                      <Link to='/apply/member' disabled={!isIncluded}>
+                        <Button variant='contained' disabled={!isIncluded}>
+                          스터디 신청하기
+                        </Button>
                       </Link>
                     </Stack>
                   </CardContent>
