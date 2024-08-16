@@ -7,37 +7,32 @@ import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { useGoogleLogin } from '@react-oauth/google';
 import { signIn } from '@services/auth.service';
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { motion, useDragControls } from 'framer-motion';
 
-import getIsAuthenticated from '@hooks/isAuthenticated';
-
 export const Route = createFileRoute('/')({
-  beforeLoad: async () => {
-    const isAuthenticated = await getIsAuthenticated();
-    if (isAuthenticated) {
-      throw redirect({
-        to: '/dashboard',
-      });
-    }
-  },
   component: Home,
 });
 
 function Home() {
   const controls = useDragControls();
   const navigate = useNavigate();
+  const { openSingleButtonDialog } = useDialogStore();
   const constraintsRef = useRef(null);
   const handleSignIn = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse.access_token);
-
-      try {
-        await signIn(tokenResponse.access_token);
-        navigate({ to: '/dashboard' });
-      } catch (err) {
-        console.error(err);
+      const res = await signIn(tokenResponse.access_token);
+      if (res.error) {
+        openSingleButtonDialog({
+          title: res.error,
+          message: '멘토나 운영진이라면 SW팀 혹은 회장단에게 문의해주세요.',
+          dialogIconType: DialogIconType.WARNING,
+          mainButtonText: '확인',
+        });
+        return;
       }
+      navigate({ to: '/dashboard' });
     },
   });
 

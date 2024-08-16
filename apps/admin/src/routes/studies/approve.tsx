@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { Box, Typography } from '@mui/material';
 import {
   DataGrid,
@@ -11,7 +12,11 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 
-import { MentorApplication, getAppliedStudies } from '@services/study.service';
+import {
+  MentorApplication,
+  approveStudies,
+  getAppliedStudies,
+} from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -31,6 +36,7 @@ export interface ApprovedApplication
   primary_mentor_phone_number: string;
   secondary_mentor_email?: string;
   secondary_mentor_phone_number?: string;
+  status?: number;
 }
 
 export const Route = createFileRoute('/studies/approve')({
@@ -39,11 +45,12 @@ export const Route = createFileRoute('/studies/approve')({
 });
 
 function StudiesPage() {
-  const initialRows: ApprovedApplication[] = Route.useLoaderData();
-  const [rows, setRows] = useState<ApprovedApplication[]>(initialRows);
+  const rows: ApprovedApplication[] = Route.useLoaderData();
+
   const [application, setApplication] = useState<ApprovedApplication>(rows[0]!);
   const [open, setOpen] = useState(false);
-  const { openDualButtonDialog } = useDialogStore();
+  const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
+    useDialogStore();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -63,30 +70,37 @@ function StudiesPage() {
   const handleApprove = async (id: GridRowId) => {
     openDualButtonDialog({
       title: '스터디 승인',
-      message:
-        '해당 스터디를 승인할까요? 승인하는 즉시 부원들에게 노출되는 스터디 페이지로 이동합니다.',
+      message: '해당 스터디를 승인할까요? 승인 즉시 부원들에게 노출됩니다.',
       mainButtonText: '승인',
       dialogIconType: DialogIconType.CONFIRM,
       mainButtonAction: async () => {
         try {
-          // await approveStudies([Number(id)]);
-          console.log(`Study with ID ${id} approved`);
-          setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-          alert(
-            '해당 스터디가 승인되었습니다. "스터디 목록"에서 해당 스터디가 성공적으로 추가되었는지 확인해주세요.',
-          );
+          await approveStudies([Number(id)]);
+          closeDialog();
+          openSingleButtonDialog({
+            title: '해당 스터디가 승인되었습니다.',
+            message:
+              '해당 스터디가 승인되었습니다. "스터디 목록"에서 해당 스터디가 성공적으로 추가되었는지 확인해주세요.',
+            mainButtonText: '확인',
+            dialogIconType: DialogIconType.CONFIRM,
+          });
         } catch (e) {
           console.error(`Failed to approve study with ID ${id}:`, e);
         }
       },
       subButtonText: '취소',
-      subButtonAction: () => {
-        console.log('Canceled');
-      },
     });
   };
 
   const columns: GridColDef<ApprovedApplication>[] = [
+    {
+      field: 'status',
+      headerName: '승인 여부',
+      flex: 1,
+      valueFormatter: (value: number) => {
+        return value === 1 ? 'O' : 'X';
+      },
+    },
     { field: 'name', headerName: '스터디 이름', flex: 2 },
     { field: 'primary_mentor_name', headerName: '멘토1', flex: 1 },
     {
@@ -94,6 +108,7 @@ function StudiesPage() {
       headerName: '멘토2',
       flex: 1,
     },
+
     {
       field: 'actions',
       type: 'actions',
@@ -101,9 +116,17 @@ function StudiesPage() {
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
+        const status = rows.find((row) => row.id === id)?.status;
         return [
           <GridActionsCellItem
-            icon={<CheckCircleOutlineOutlinedIcon />}
+            disabled={status === 1}
+            icon={
+              status === 1 ? (
+                <ThumbUpOffAltIcon />
+              ) : (
+                <CheckCircleOutlineOutlinedIcon />
+              )
+            }
             label='Save'
             sx={{
               color: 'primary.main',

@@ -1,15 +1,15 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 import { User } from '@packages/components/types/user';
 import { getAllUsers } from '@services/admin.service';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
 
 export const Route = createFileRoute('/members/')({
-  loader: async () => getAllUsers(),
   component: MembersPage,
 });
 
@@ -22,7 +22,14 @@ const columns: GridColDef<User>[] = [
 ];
 
 function MembersPage() {
-  const users = Route.useLoaderData();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => getAllUsers(),
+  });
+
+  if (error) {
+    console.error(error);
+  }
   return (
     <Box>
       <Title
@@ -30,16 +37,10 @@ function MembersPage() {
         label='현재 홈페이지에 가입한 부원 목록을 볼 수 있습니다.'
       />
       <Layout>
-        <Typography variant='titleSmall'>
-          승인 대기 중인 스터디 목록입니다.
-        </Typography>
-        <Typography variant='bodySmall'>
-          각 스터디를 클릭하여 부족한 정보가 없는지 확인하고 승인버튼을
-          클릭해주세요.
-        </Typography>
         <Box sx={{ height: 640, width: '100%', mt: 2 }}>
           <DataGrid
-            rows={users}
+            rows={data}
+            loading={isLoading}
             columns={columns}
             initialState={{
               pagination: {

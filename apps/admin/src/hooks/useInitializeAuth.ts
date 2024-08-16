@@ -28,7 +28,7 @@ const useInitializeAuth = () => {
             .then((res) => res.data);
           setAccessToken(access_token);
           const { data } = await signIn(access_token);
-          setUser(data);
+          setUser(data!);
           setUserState('sign-in');
         } catch (error) {
           console.error('Error refreshing access token:', error);

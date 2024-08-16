@@ -24,3 +24,7 @@ export const getAllStudies = ({ year, semester }: StudySearch) => {
     .then((res: AxiosResponse<Study[]>) => res.data);
   return data;
 };
+
+export const deleteStudy = async (studyId: string) => {
+  await api.delete(`/studies/${studyId}`);
+};

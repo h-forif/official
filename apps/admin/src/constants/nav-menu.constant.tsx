@@ -18,30 +18,8 @@ export const NAV_MENUS: NavMenu[] = [
     icon: <BookmarkBorderIcon />,
     submenu: [
       { title: '스터디 목록', href: '/studies' },
-      { title: '스터디 관리', href: '/studies/approve' },
-    ],
-  },
-];
-
-export const MENTOR_NAV_MENUS: NavMenu[] = [
-  ...NAV_MENUS,
-  {
-    title: '프로필',
-    href: '/profile',
-    submenu: [
-      { title: '계정', href: '/profile/account' },
-      {
-        title: '스터디',
-        href: '/profile/study',
-      },
-      {
-        title: '지원서',
-        href: '/profile/application',
-      },
-      {
-        title: '인증서',
-        href: '/profile/certificate',
-      },
+      { title: '스터디 승인', href: '/studies/approve' },
+      { title: '내 스터디 관리', href: '/studies/me' },
     ],
   },
 ];
@@ -66,9 +44,4 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
       { title: '부원 관리', href: '/members/manage' },
     ],
   },
-];
-
-export const MENTOR_ADMIN_NAV_MENUS: NavMenu[] = [
-  ...MENTOR_NAV_MENUS,
-  ...ADMIN_NAV_MENUS,
 ];

@@ -1,4 +1,7 @@
+import { GridRowId } from '@mui/x-data-grid';
+
 import { Study } from '@packages/components/types/study';
+import { ApprovedApplication } from '@routes/studies/approve';
 import { AxiosResponse } from 'axios';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
@@ -21,11 +24,32 @@ export const getStudyInfo = async (studyId: string) => {
   return studyInfo;
 };
 
-export const getAllStudies = ({ year, semester }: StudySearch) => {
+export const getAllStudies = async ({ year, semester }: StudySearch) => {
   const params = { year, semester };
-  const data = api
+  const data = await api
     .get('/studies', { params })
     .then((res: AxiosResponse<Study[]>) => res.data);
+  return data;
+};
+
+export interface StudyId {
+  act_year: number;
+  act_semester: number;
+  id: number;
+}
+
+export const getMyStudyId = async () => {
+  const id: StudyId[] = await authApi
+    .get('/studies/my-created')
+    .then((res) => res.data);
+
+  return id;
+};
+
+export const editStudy = async (studyId: number, formData: Study) => {
+  const data = await authApi
+    .patch(`/studies/${studyId}`, formData)
+    .then((res) => res.data);
   return data;
 };
 
@@ -40,7 +64,7 @@ export interface MentorApplication
   end_time: string;
 }
 export const getAppliedStudies = async () => {
-  const data: MentorApplication[] = await authApi
+  const data: ApprovedApplication[] = await authApi
     .get(`/study-apply`)
     .then((res) => res.data);
   return data;
@@ -50,4 +74,8 @@ export const approveStudies = async (studyIds: number[]) => {
   await authApi.post(`/study-apply/move`, {
     id_list: studyIds,
   });
+};
+
+export const deleteStudy = async (studyId: GridRowId) => {
+  await authApi.delete(`/studies/${studyId}`);
 };

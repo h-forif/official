@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import LogoutIcon from '@mui/icons-material/Logout';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -12,13 +13,13 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import { useMediaQuery } from '@mui/system';
 
+import { AUTH_LEVEL } from '@constants/auth.constant';
 import {
   ADMIN_NAV_MENUS,
-  MENTOR_NAV_MENUS,
   NAV_MENUS,
   NavMenu,
 } from '@constants/nav-menu.constant.tsx';
-import { getUser } from '@stores/user.store';
+import { clearUser, getUser } from '@stores/user.store';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 
 const drawerWidth = 240;
@@ -30,20 +31,28 @@ export default function SideBar() {
   const user = getUser();
 
   const navigate = useNavigate();
-  const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[]>([]);
+  const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[] | null>(
+    NAV_MENUS,
+  );
 
   useEffect(() => {
-    if (user.state === 'sign-in' && user.auth_level) {
-      // TODO: 관리자만의 메뉴 추가
-      if (user.auth_level >= 3) {
-        setSelectedNavMenus(ADMIN_NAV_MENUS);
-      } else if (user.auth_level === 2) {
-        setSelectedNavMenus(MENTOR_NAV_MENUS);
-      }
+    if (!user) {
+      setSelectedNavMenus(null);
     } else {
-      setSelectedNavMenus(NAV_MENUS);
+      if (user.auth_level! >= 3) {
+        setSelectedNavMenus(ADMIN_NAV_MENUS);
+      } else {
+        setSelectedNavMenus(NAV_MENUS);
+      }
     }
   }, [user]);
+
+  const handleSignOut = () => {
+    clearUser();
+    navigate({
+      to: '/',
+    });
+  };
 
   return (
     location.pathname !== '/' && (
@@ -65,9 +74,11 @@ export default function SideBar() {
         anchor='left'
       >
         <Toolbar>
-          <Typography>
-            반가워요, <strong>{user.name}</strong>님.
+          <Typography variant='bodySmall'>
+            반가워요, {AUTH_LEVEL[user.auth_level!]}{' '}
+            <strong>{user.name}</strong>님.
           </Typography>
+          <Typography variant='bodySmall'></Typography>
         </Toolbar>
         <Divider />
         <List
@@ -82,35 +93,49 @@ export default function SideBar() {
             pb: 2,
           }}
         >
-          {selectedNavMenus.map((menu) => (
-            <Box key={menu.title}>
-              <Stack direction={'row'} alignItems={'center'} my={2}>
-                <ListItemIcon>
-                  {menu.icon ? menu.icon : <InboxIcon />}
-                </ListItemIcon>
-                <Typography variant='labelMedium'>{menu.title}</Typography>
-              </Stack>
-              {menu.submenu &&
-                menu.submenu.map((submenu, index) => (
-                  <ListItem
-                    key={`menu-${index}`}
-                    onClick={() => navigate({ to: submenu.href })}
-                    disableGutters
-                    disablePadding
-                  >
-                    <ListItemButton>
-                      <ListItemText
-                        primary={
-                          <Typography variant='bodySmall'>
-                            {submenu.title}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-            </Box>
-          ))}
+          {selectedNavMenus &&
+            selectedNavMenus.map((menu) => (
+              <Box key={menu.title}>
+                <Stack direction={'row'} alignItems={'center'} my={2}>
+                  <ListItemIcon>
+                    {menu.icon ? menu.icon : <InboxIcon />}
+                  </ListItemIcon>
+                  <Typography variant='labelMedium'>{menu.title}</Typography>
+                </Stack>
+                {menu.submenu &&
+                  menu.submenu.map((submenu, index) => (
+                    <ListItem
+                      key={`menu-${index}`}
+                      onClick={() => navigate({ to: submenu.href })}
+                      disableGutters
+                      disablePadding
+                    >
+                      <ListItemButton>
+                        <ListItemText
+                          primary={
+                            <Typography variant='bodySmall'>
+                              {submenu.title}
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+              </Box>
+            ))}
+          <Stack direction={'row'} alignItems={'center'} my={2}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <Typography variant='labelMedium'>계정</Typography>
+          </Stack>
+          <ListItem disableGutters disablePadding>
+            <ListItemButton onClick={handleSignOut}>
+              <ListItemText
+                primary={<Typography variant='bodySmall'>로그아웃</Typography>}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
     )
