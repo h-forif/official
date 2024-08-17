@@ -37,6 +37,7 @@
     "react-hook-form": "^7.52.0",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^6.24.0",
+    "rehype-raw": "^7.0.0",
     "vite-tsconfig-paths": "^4.3.2",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"

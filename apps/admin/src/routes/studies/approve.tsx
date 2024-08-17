@@ -175,6 +175,10 @@ function StudiesPage() {
               toolbar: {
                 showQuickFilter: true,
               },
+              loadingOverlay: {
+                variant: 'skeleton',
+                noRowsVariant: 'skeleton',
+              },
             }}
           />
         </Box>

@@ -86,3 +86,12 @@ export const WEEKDAYS_OPTIONS: SelectOption[] = [
     label: '일',
   },
 ];
+
+export const REVIEW_START_DATE = '2024-09-11T20:00:00'; //TODO: Change this to the actual date
+export const REVIEW_END_DATE = '2024-09-12T20:00:00'; //TODO: Change this to the actual date
+
+export const MENTOR_RECRUIT_START_DATE = '2024-08-13';
+export const MENTOR_RECRUIT_END_DATE = '2024-08-16';
+
+export const RECRUIT_START_DATE = '2024-08-17';
+export const RECRUIT_END_DATE = '2024-09-04';
