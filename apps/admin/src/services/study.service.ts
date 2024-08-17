@@ -42,7 +42,6 @@ export const getMyStudyId = async () => {
   const id: StudyId[] = await authApi
     .get('/studies/my-created')
     .then((res) => res.data);
-
   return id;
 };
 

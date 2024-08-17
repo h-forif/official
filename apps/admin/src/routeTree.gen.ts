@@ -17,6 +17,7 @@ import { Route as MembersIndexImport } from './routes/members/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as StudiesMeImport } from './routes/studies/me'
 import { Route as StudiesApproveImport } from './routes/studies/approve'
+import { Route as StudiesAcceptImport } from './routes/studies/accept'
 
 // Create/Update Routes
 
@@ -50,6 +51,11 @@ const StudiesApproveRoute = StudiesApproveImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const StudiesAcceptRoute = StudiesAcceptImport.update({
+  path: '/studies/accept',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -59,6 +65,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/studies/accept': {
+      id: '/studies/accept'
+      path: '/studies/accept'
+      fullPath: '/studies/accept'
+      preLoaderRoute: typeof StudiesAcceptImport
       parentRoute: typeof rootRoute
     }
     '/studies/approve': {
@@ -103,6 +116,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  StudiesAcceptRoute,
   StudiesApproveRoute,
   StudiesMeRoute,
   DashboardIndexRoute,
@@ -119,6 +133,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/studies/accept",
         "/studies/approve",
         "/studies/me",
         "/dashboard/",
@@ -128,6 +143,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/studies/accept": {
+      "filePath": "studies/accept.tsx"
     },
     "/studies/approve": {
       "filePath": "studies/approve.tsx"
