@@ -2,6 +2,12 @@ import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/system';
 
 import banner from '@assets/images/banner.svg';
+import {
+  MENTOR_RECRUIT_END_DATE,
+  MENTOR_RECRUIT_START_DATE,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
@@ -10,6 +16,7 @@ import { Link, createFileRoute } from '@tanstack/react-router';
 
 import AnimatedContainer from '@components/study/AnimatedStudyContainer';
 
+import { usePeriod } from '@hooks/usePeriod';
 import { useSignIn } from '@hooks/useSignIn';
 
 export const Route = createFileRoute('/')({
@@ -18,7 +25,12 @@ export const Route = createFileRoute('/')({
 
 function Home() {
   const userState = getUserState();
+
   const { handleSignIn } = useSignIn();
+  const { isIncluded } = usePeriod(
+    MENTOR_RECRUIT_START_DATE,
+    MENTOR_RECRUIT_END_DATE,
+  );
 
   return (
     <main>
@@ -41,28 +53,20 @@ function Home() {
           Upgrade your passion
         </Typography>
         <Typography variant='titleLarge' fontWeight={300} color='text.primary'>
-          지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
-          선순환에 동참해주세요.
+          프로그래밍을 하고 싶은 누구나, 포리프와 함께
         </Typography>
-        <Stack
-          direction={'row'}
-          alignItems={'center'}
-          gap={1}
-          width={userState === 'sign-in' ? '100%' : 'fit-content'}
-        >
+        <Typography variant='labelLarge' color='text.secondary'>
+          {RECRUIT_START_DATE} - {RECRUIT_END_DATE}
+        </Typography>
+        <Stack direction={'row'} alignItems={'center'} gap={1}>
           {userState === 'sign-out' && (
             <Button variant='contained' onClick={handleSignIn}>
               부원 가입하기
             </Button>
           )}
 
-          <Link
-            to='/apply/mentor'
-            style={{
-              width: userState === 'sign-in' ? '100%' : 'fit-content',
-            }}
-          >
-            <Button variant='outlined' fullWidth>
+          <Link to='/apply/mentor' disabled={!isIncluded}>
+            <Button variant='outlined' disabled={!isIncluded}>
               멘토 신청하기
             </Button>
           </Link>

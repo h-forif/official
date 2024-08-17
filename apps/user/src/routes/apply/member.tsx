@@ -3,7 +3,11 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Box, Stack, Typography } from '@mui/material';
 
-import { APPLY_PATH_OPTIONS } from '@constants/apply.constant';
+import {
+  APPLY_PATH_OPTIONS,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
@@ -19,7 +23,6 @@ import {
   useNavigate,
   useRouter,
 } from '@tanstack/react-router';
-import dayjs from '@utils/dayjs';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
@@ -33,7 +36,7 @@ import { Title } from '@components/Title';
 import CautionList from '@components/apply/member/CautionList';
 import BlockModal from '@components/common/BlockModal';
 
-import useInterval from '@hooks/useInterval';
+import { usePeriod } from '@hooks/usePeriod';
 
 const STORAGE_KEY = 'applyMemberForm';
 
@@ -80,22 +83,7 @@ function ApplyMember() {
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
 
   const { id, name, department, phone_number } = userInfo!;
-  const [currentDate, setCurrentDate] = useState(dayjs());
-  const [isRecruit, setIsRecruit] = useState(false);
-  useInterval(() => {
-    setCurrentDate(dayjs());
-  }, 1000);
-
-  useEffect(() => {
-    if (
-      currentDate.isBefore(dayjs('2024-08-26')) ||
-      currentDate.isAfter(dayjs('2024-09-04'))
-    ) {
-      setIsRecruit(false);
-    } else {
-      setIsRecruit(true);
-    }
-  }, [currentDate]);
+  const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
 
   const form = useForm<z.infer<typeof ApplyMemberSchema>>({
     resolver: zodResolver(ApplyMemberSchema),
@@ -204,7 +192,11 @@ function ApplyMember() {
             margin: 'auto',
           }}
         >
-          <Title title='스터디 신청' label='2024-08-26 ~ 2024-09-11' mb={3} />
+          <Title
+            title='스터디 신청'
+            label={`${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}`}
+            mb={3}
+          />
           <CautionList />
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Stack
@@ -257,6 +249,7 @@ function ApplyMember() {
                 control={form.control}
                 name='primary_study'
                 label='1순위 스터디를 선택해주세요.'
+                disabled={!isIncluded}
               />
               <FormInput
                 control={form.control}
@@ -265,7 +258,7 @@ function ApplyMember() {
                 fullWidth
                 multiline
                 maxRows={4}
-                disabled={primary_study === '0'}
+                disabled={primary_study === '0' || !isIncluded}
               />
               <Typography variant='titleSmall'>2순위 스터디 신청</Typography>
               <FormCheckbox
@@ -295,7 +288,8 @@ function ApplyMember() {
                 disabled={
                   is_primary_study_only ||
                   primary_study === '0' ||
-                  primary_study === ''
+                  primary_study === '' ||
+                  !isIncluded
                 }
               />
               <FormInput
@@ -309,7 +303,8 @@ function ApplyMember() {
                   primary_study === '' ||
                   secondary_study === '0' ||
                   primary_study === '' ||
-                  is_primary_study_only
+                  is_primary_study_only ||
+                  !isIncluded
                 }
                 required={!is_primary_study_only}
                 fullWidth
@@ -329,6 +324,7 @@ function ApplyMember() {
                     error={!!fieldState.error}
                     errorMessage='지원 경로는 필수값입니다.'
                     minWidth={'100%'}
+                    disabled={!isIncluded}
                   />
                 )}
               />
@@ -338,7 +334,7 @@ function ApplyMember() {
                 variant='outlined'
                 size='large'
                 fullWidth
-                disabled={!form.formState.isDirty && isSaved}
+                disabled={(!form.formState.isDirty && isSaved) || !isIncluded}
                 onClick={handleSaveDraft}
               >
                 임시저장
@@ -348,7 +344,7 @@ function ApplyMember() {
                 variant='contained'
                 size='large'
                 fullWidth
-                disabled={!isRecruit}
+                disabled={!isIncluded}
               >
                 제출
               </Button>

@@ -11,6 +11,10 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+import {
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
 import { Link, createFileRoute } from '@tanstack/react-router';
@@ -24,6 +28,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import { getStudyInfo } from 'src/services/study.service';
 
 import StudyCurriculum from '@components/study/StudyCurriculum';
+
+import { usePeriod } from '@hooks/usePeriod';
 
 export const Route = createFileRoute('/studies/$studyId')({
   loader: ({ params }) => getStudyInfo(params.studyId),
@@ -41,9 +47,11 @@ function StudyComponent() {
   const mode = theme.palette.mode;
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
+  const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   const isDisabled =
     currentTerm.year !== study.act_year.toString() ||
-    currentTerm.semester !== study.act_semester.toString();
+    currentTerm.semester !== study.act_semester.toString() ||
+    !isIncluded;
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -138,10 +146,10 @@ function StudyComponent() {
             {study.one_liner}
           </Typography>
           <Link
-            to={isDisabled ? '' : '/apply/member'}
+            to={'/apply/member'}
+            disabled={isDisabled}
             style={{
               width: 'fit-content',
-              pointerEvents: isDisabled ? 'none' : 'auto',
             }}
           >
             <Button
@@ -345,12 +353,7 @@ function StudySideBox({
           ? `| ${study.secondary_mentor_name} 멘토`
           : ''}
       </Typography>
-      <Link
-        to={isDisabled ? '' : '/apply/member'}
-        style={{
-          pointerEvents: isDisabled ? 'none' : 'auto',
-        }}
-      >
+      <Link to={'/apply/member'} disabled={isDisabled}>
         <Button
           variant='contained'
           fullWidth
@@ -364,8 +367,8 @@ function StudySideBox({
         to='/studies'
         onClick={() => window.scrollTo(0, 0)}
         search={{
-          semester: Number(getCurrentTerm().semester),
-          year: Number(getCurrentTerm().year),
+          semester: study.act_semester,
+          year: study.act_year,
         }}
       >
         <Button variant='outlined' fullWidth size='large'>

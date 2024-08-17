@@ -14,11 +14,7 @@ export function useSignIn() {
   const [client, setClient] = useState<TokenClient | null>(null);
   const { showToast } = useToastStore();
   const signInWithToken = async (tokenResponse: TokenResponse) => {
-    console.log(tokenResponse);
-    const { data, access_token, error } = await signIn(
-      tokenResponse.access_token,
-    );
-    console.log(data, access_token, error?.status);
+    const { access_token, error } = await signIn(tokenResponse.access_token);
 
     if (error) {
       if (error?.status === 401) {

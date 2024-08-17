@@ -3,6 +3,10 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { Box, Stack } from '@mui/material';
 
+import {
+  MENTOR_RECRUIT_END_DATE,
+  MENTOR_RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { UserProfile } from '@packages/components/types/user';
@@ -29,7 +33,7 @@ import { StudyPlan } from '@components/apply/mentor/steps/StudyPlan';
 import { StudySubmit } from '@components/apply/mentor/steps/StudySubmit';
 import BlockModal from '@components/common/BlockModal';
 
-import useInterval from '@hooks/useInterval';
+import { usePeriod } from '@hooks/usePeriod';
 
 const STORAGE_KEY = 'applyMentorForm';
 
@@ -56,20 +60,19 @@ function ApplyMember() {
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
   const navigate = useNavigate();
 
-  const [currentDate, setCurrentDate] = useState(dayjs());
-
-  useInterval(() => {
-    setCurrentDate(dayjs());
-  }, 5000);
+  const { isIncluded } = usePeriod(
+    MENTOR_RECRUIT_START_DATE,
+    MENTOR_RECRUIT_END_DATE,
+  );
 
   useEffect(() => {
-    if (currentDate.isAfter(dayjs('2024-08-17'))) {
+    if (!isIncluded) {
       alert(
-        '스터디 개설 신청 기간이 종료되었습니다. 추가 개설 신청 문의는 공식 메일(contact@forif.org)로 문의해주세요.',
+        '스터디 개설 신청 기간이 아닙니다. 추가 개설 신청 문의는 공식 메일(contact@forif.org)로 문의해주세요.',
       );
       navigate({ to: '/' });
     }
-  }, [currentDate, navigate]);
+  }, [isIncluded, navigate]);
 
   const form = useForm<z.infer<typeof ApplyMentorSchema>>({
     resolver: zodResolver(ApplyMentorSchema),
