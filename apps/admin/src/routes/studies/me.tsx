@@ -31,9 +31,10 @@ import { FormSelect } from '@packages/components/form/FormSelect';
 import { Study } from '@packages/components/types/study';
 import { User } from '@packages/components/types/user';
 import { getMentees } from '@services/admin.service';
-import { StudyId, getStudyInfo } from '@services/study.service';
+import { getMyStudyId, getStudyInfo } from '@services/study.service';
 import { useQuery } from '@tanstack/react-query';
 import { ReactNode, createFileRoute, redirect } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 import rehypeRaw from 'rehype-raw';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 
@@ -58,36 +59,24 @@ const columns: GridColDef<User>[] = [
 
 export const Route = createFileRoute('/studies/me')({
   loader: async () => {
+    const currentTerm = getCurrentTerm();
     try {
-      const currentId: StudyId = { act_year: 2024, act_semester: 2, id: 66 };
-      console.log(currentId.id.toString());
+      const ids = await getMyStudyId();
 
-      const study = await getStudyInfo(currentId.id.toString());
-      return { study };
-    } catch {
-      alert('스터디 정보를 불러오는데 실패했습니다.');
+      const currentId = ids.find(
+        (studyId) =>
+          studyId.act_year.toString() === currentTerm.year &&
+          studyId.act_semester.toString() === currentTerm.semester,
+      );
+      const study = await getStudyInfo(currentId!.id.toString());
+      return { ids, study };
+    } catch (err) {
+      console.error(err);
+      alert('개최한 스터디가 없거나 스터디 정보를 불러오는데 실패했습니다.');
       throw redirect({
         to: '/dashboard',
       });
     }
-    // const currentTerm = getCurrentTerm();
-    // try {
-    //   const ids = await getMyStudyId();
-
-    //   const currentId = ids.find(
-    //     (studyId) =>
-    //       studyId.act_year.toString() === currentTerm.year &&
-    //       studyId.act_semester.toString() === currentTerm.semester,
-    //   );
-    //   const study = await getStudyInfo(currentId!.id.toString());
-    //   return { ids, study };
-    // } catch (err) {
-    //   console.error(err);
-    //   alert('개최한 스터디가 없거나 스터디 정보를 불러오는데 실패했습니다.');
-    //   throw redirect({
-    //     to: '/dashboard',
-    //   });
-    // }
   },
   onError: (err) => {
     console.error(err);

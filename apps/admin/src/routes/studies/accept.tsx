@@ -16,10 +16,11 @@ import {
   acceptStudies,
   getApplications,
 } from '@services/admin.service';
-import { StudyId } from '@services/study.service';
+import { getMyStudyId } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
@@ -28,8 +29,23 @@ import AcceptDialog from '@components/study/AcceptDialog';
 
 export const Route = createFileRoute('/studies/accept')({
   loader: async () => {
-    const currentId: StudyId = { act_year: 2024, act_semester: 2, id: 66 };
-    return currentId;
+    const currentTerm = getCurrentTerm();
+    try {
+      const ids = await getMyStudyId();
+
+      const currentId = ids.find(
+        (studyId) =>
+          studyId.act_year.toString() === currentTerm.year &&
+          studyId.act_semester.toString() === currentTerm.semester,
+      );
+      return currentId;
+    } catch (err) {
+      console.error(err);
+      alert('개최한 스터디가 없거나 스터디 정보를 불러오는데 실패했습니다.');
+      throw redirect({
+        to: '/dashboard',
+      });
+    }
   },
   component: StudyAcceptPage,
 });
@@ -64,7 +80,7 @@ function StudyAcceptPage() {
       dialogIconType: DialogIconType.CONFIRM,
       mainButtonAction: async () => {
         try {
-          await acceptStudies([Number(id)], currentId.id);
+          await acceptStudies([Number(id)], currentId!.id);
           closeDialog();
           openSingleButtonDialog({
             title: `해당 멘티가 승인되었습니다.`,
@@ -212,7 +228,7 @@ function StudyAcceptPage() {
         application={application}
         key={application?.id}
         id={application?.id}
-        studyId={currentId.id}
+        studyId={currentId!.id}
       />
     </Box>
   );

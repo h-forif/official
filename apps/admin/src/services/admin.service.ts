@@ -36,9 +36,9 @@ export async function editNotApprovedStudy(
 
 export async function acceptStudies(id: number[], studyId: number) {
   await authApi.post(`/applications/accept`, {
-    applierIds: id,
-    applyStatus: '승낙',
-    studyId: studyId,
+    applier_ids: id,
+    apply_status: '승낙',
+    study_id: studyId,
   });
 }
 
