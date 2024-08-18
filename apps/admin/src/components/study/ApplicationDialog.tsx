@@ -244,7 +244,7 @@ export default function ApplicationDialog({
                           {application.secondary_mentor_name}
                         </Typography>
                         <Typography variant='bodySmall'>
-                          {application.primary_mentor_phone_number}
+                          {application.secondary_mentor_phone_number}
                         </Typography>
                       </Box>
                     </>
