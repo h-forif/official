@@ -7,6 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import useMediaQuery from '@mui/system/useMediaQuery';
 
+import * as ChannelService from '@channel.io/channel-web-sdk-loader';
 import { PaletteMode } from '@packages/components/PaletteMode';
 import { darkTheme, lightTheme } from '@packages/components/theme.ts';
 import {
@@ -50,6 +51,18 @@ function RootComponent() {
   const queryClient = new QueryClient();
   useInitializeAuth();
   ReactGA.initialize(GA4_MEASUREMENT_ID);
+
+  useEffect(() => {
+    ChannelService.loadScript();
+
+    ChannelService.boot({
+      pluginKey: import.meta.env.VITE_CHANNELTALK_PLUGIN_KEY,
+    });
+
+    return () => {
+      ChannelService.shutdown();
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

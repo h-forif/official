@@ -49,6 +49,7 @@ import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 
 import { Layout } from '@components/common/Layout';
+import { TabPanel } from '@components/common/TabPanel';
 import { Title } from '@components/common/Title';
 import NoResultsOverlay from '@components/common/table/NoResultOverlay';
 
@@ -93,28 +94,6 @@ export const Route = createFileRoute('/studies/me')({
   },
   component: MyStudyPage,
 });
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role='tabpanel'
-      hidden={value !== index}
-      id={`my-study-tabpanel-${index}`}
-      aria-labelledby={`my-study-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
 
 function a11yProps(index: number) {
   return {

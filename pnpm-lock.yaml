@@ -189,6 +189,9 @@ importers:
 
   apps/user:
     dependencies:
+      '@channel.io/channel-web-sdk-loader':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.13.0(@types/react@18.3.3)(react@18.3.1)
@@ -1196,6 +1199,9 @@ packages:
 
   '@base2/pretty-print-object@1.0.1':
     resolution: {integrity: sha512-4iri8i1AqYHJE2DstZYkyEprg6Pq6sKx3xn5FpySk9sNhH7qN2LLlHJCfDTZRILNwQNPD7mATWM0TBui7uC1pA==}
+
+  '@channel.io/channel-web-sdk-loader@2.0.0':
+    resolution: {integrity: sha512-Z8DDpf2lAaYr/3aAnwQtxg0L8MYWgi/hhGV8c5/SLCV6Fx5Gssj7mfyHHrCVC315B0icmLYqZsXBlmbf6cN8Jg==}
 
   '@chromatic-com/storybook@1.6.0':
     resolution: {integrity: sha512-6sHj0l194KMBIZ0D5SeJ+Ys+zslehKHcC2d6Hd/YEn4cCl7p9mLuxrZjvf8xharGKy8vf9Q1tKrU2YdldzUBoQ==}
@@ -6758,6 +6764,8 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@base2/pretty-print-object@1.0.1': {}
+
+  '@channel.io/channel-web-sdk-loader@2.0.0': {}
 
   '@chromatic-com/storybook@1.6.0(react@18.3.1)':
     dependencies:

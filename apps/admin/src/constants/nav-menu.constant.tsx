@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import EmailIcon from '@mui/icons-material/Email';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import MoneyIcon from '@mui/icons-material/Money';
 
@@ -56,6 +57,15 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
     submenu: [
       { title: '공지사항 관리', href: '/posts/announcements' },
       { title: 'FAQ 관리', href: '/posts/faqs' },
+    ],
+  },
+  {
+    title: '문자 발송 서비스',
+    href: '/message',
+    icon: <EmailIcon />,
+    submenu: [
+      { title: '문자 발송', href: '/message' },
+      { title: '문자 발송 내역', href: '/message/status' },
     ],
   },
 ];

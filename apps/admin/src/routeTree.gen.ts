@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as StudiesIndexImport } from './routes/studies/index'
+import { Route as MessageIndexImport } from './routes/message/index'
 import { Route as MembersIndexImport } from './routes/members/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as StudiesMeImport } from './routes/studies/me'
@@ -30,6 +31,11 @@ const IndexRoute = IndexImport.update({
 
 const StudiesIndexRoute = StudiesIndexImport.update({
   path: '/studies/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MessageIndexRoute = MessageIndexImport.update({
+  path: '/message/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -128,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MembersIndexImport
       parentRoute: typeof rootRoute
     }
+    '/message/': {
+      id: '/message/'
+      path: '/message'
+      fullPath: '/message'
+      preLoaderRoute: typeof MessageIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/studies/': {
       id: '/studies/'
       path: '/studies'
@@ -149,6 +162,7 @@ export const routeTree = rootRoute.addChildren({
   StudiesMeRoute,
   DashboardIndexRoute,
   MembersIndexRoute,
+  MessageIndexRoute,
   StudiesIndexRoute,
 })
 
@@ -168,6 +182,7 @@ export const routeTree = rootRoute.addChildren({
         "/studies/me",
         "/dashboard/",
         "/members/",
+        "/message/",
         "/studies/"
       ]
     },
@@ -194,6 +209,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/members/": {
       "filePath": "members/index.tsx"
+    },
+    "/message/": {
+      "filePath": "message/index.tsx"
     },
     "/studies/": {
       "filePath": "studies/index.tsx"
