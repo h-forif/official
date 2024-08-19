@@ -1,6 +1,14 @@
 import AddchartIcon from '@mui/icons-material/Addchart';
+import CloudIcon from '@mui/icons-material/Cloud';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, Chip, Grid } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Chip,
+  Grid,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box, Stack } from '@mui/system';
 
@@ -9,55 +17,50 @@ import Box2 from '@assets/images/main/box2.svg';
 import Box3 from '@assets/images/main/box3.svg';
 import Box4 from '@assets/images/main/box4.svg';
 import Box5 from '@assets/images/main/box5.svg';
-import { AccordionSummary } from '@packages/components/Accordion';
+import {
+  MENTOR_RECRUIT_END_DATE,
+  MENTOR_RECRUIT_START_DATE,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Layout } from '@packages/components/elements/Layout';
 import { getFaqs } from '@services/post.service';
-import { getAllStudies } from '@services/study.service';
+import { getUserState } from '@stores/user.store';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
-import { getUniqueRandomInts } from '@utils/random';
-import { max, min } from 'es-toolkit/compat';
 
 import GravityBox from '@components/main/GravityBox';
 import JourneyImageList from '@components/main/JourneyImageList';
-import ParallaxContainer from '@components/main/ParallaxContainer';
-import AnimatedContainer from '@components/study/AnimatedStudyContainer';
-import { StudyCard } from '@components/study/StudyCard';
 
+import { usePeriod } from '@hooks/usePeriod';
 import { useSignIn } from '@hooks/useSignIn';
 
 export const Route = createFileRoute('/')({
-  loader: async () => {
-    const currentTerm = getCurrentTerm();
-
-    const [studies, faq] = await Promise.all([
-      getAllStudies({
-        year: Number(currentTerm.year),
-        semester: Number(currentTerm.semester),
-      }),
-      getFaqs(),
-    ]);
-    return { studies, faq };
-  },
+  loader: () => getFaqs(),
   component: Home,
 });
 
 function Home() {
-  const { studies, faq } = Route.useLoaderData();
-  const studyIds = studies.map((study) => study.id).filter((id) => id !== 0);
-  const { handleSignIn } = useSignIn();
-  const uniqueStudyIds = getUniqueRandomInts(
-    min(studyIds),
-    max(studyIds),
-    2,
-    studyIds,
+  const faq = Route.useLoaderData();
+  const userState = getUserState();
+
+  const { isIncluded } = usePeriod(
+    MENTOR_RECRUIT_START_DATE,
+    MENTOR_RECRUIT_END_DATE,
   );
+  const { isIncluded: isMemberIncluded } = usePeriod(
+    RECRUIT_START_DATE,
+    RECRUIT_END_DATE,
+  );
+
+  // const studyIds = studies.map((study) => study.id).filter((id) => id !== 0);
+  const { handleSignIn } = useSignIn();
 
   return (
     <main>
-      <ParallaxContainer />
+      {/* <ParallaxContainer /> */}
       <CenteredBox
         sx={{
           paddingX: 3,
@@ -67,6 +70,8 @@ function Home() {
           textAlign: 'center',
           maxWidth: '780px',
           margin: 'auto',
+          minHeight: '100vh',
+          position: 'relative',
         }}
       >
         <Typography
@@ -76,44 +81,55 @@ function Home() {
         >
           Upgrade your passion
         </Typography>
+        <Typography variant='titleLarge'>
+          {RECRUIT_START_DATE} - {RECRUIT_END_DATE}
+        </Typography>
         <Typography variant='titleLarge' fontWeight={300} color='text.primary'>
           지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
           선순환에 동참해주세요.
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
-          <Button variant='contained' onClick={handleSignIn}>
-            부원 가입하기
-          </Button>
-          <Link to='/apply/mentor'>
-            <Button variant='outlined'>멘토 신청하기</Button>
+          {userState === 'sign-out' && (
+            <Button variant='outlined' onClick={handleSignIn}>
+              부원 가입하기
+            </Button>
+          )}
+          <Link
+            to='/studies'
+            search={{
+              year: Number(getCurrentTerm().year),
+              semester: Number(getCurrentTerm().semester),
+            }}
+          >
+            <Button variant='contained'>스터디 보러가기</Button>
           </Link>
+          {userState === 'sign-in' && (
+            <>
+              <Link to='/apply/member' disabled={!isMemberIncluded}>
+                <Button variant='contained' disabled={!isMemberIncluded}>
+                  스터디 신청하기
+                </Button>
+              </Link>
+            </>
+          )}
+          {isIncluded && (
+            <Link to='/apply/mentor' disabled={!isIncluded}>
+              <Button variant='outlined' disabled={!isIncluded}>
+                멘토 신청하기
+              </Button>
+            </Link>
+          )}
         </Stack>
-        <AnimatedContainer>
-          {uniqueStudyIds.map((id) => {
-            const study = studies.find((study) => study.id === id);
-            return (
-              <StudyCard
-                key={study!.id}
-                title={study!.name}
-                image={study!.image}
-                difficulty={study!.difficulty}
-                id={study!.id}
-                primaryMentorName={study!.primary_mentor_name}
-                secondaryMentorName={study!.secondary_mentor_name}
-              />
-            );
-          })}
-        </AnimatedContainer>
       </CenteredBox>
-      <Box sx={{ backgroundColor: 'primary.light', my: 4 }}>
+      <Box sx={{ backgroundColor: 'primary.light' }}>
         <GravityBox images={[Box1, Box2, Box3, Box4, Box5]} />
       </Box>
       <Layout>
         <Box py={16} mb={8} textAlign={'center'}>
-          <Typography variant={'titleLarge'} mb={2}>
+          <Typography variant={'headlineSmall'} mb={2}>
             왜 포리프인가요?
           </Typography>
-          <Typography variant={'bodySmall'} mb={2}>
+          <Typography variant={'labelLarge'} mb={2}>
             포리프는 멘토와 멘티가 함께 성장합니다. 이후 해커톤으로 이어지는
             마무리까지, 포리프의 여정을 함께 살펴보세요.
           </Typography>
@@ -129,6 +145,13 @@ function Home() {
                 alignItems={'flex-start'}
                 p={4}
                 gap={2}
+                sx={{
+                  '&:hover': {
+                    transition: 'all 0.2s',
+                    border: 1,
+                    borderColor: 'primary.main',
+                  },
+                }}
               >
                 <CenteredBox
                   p={1}
@@ -138,9 +161,9 @@ function Home() {
                 >
                   <AddchartIcon fontSize='large' color='primary' />
                 </CenteredBox>
-                <Typography variant={'titleLarge'}>멘토링</Typography>
+                <Typography variant={'titleLarge'}>GROWTH</Typography>
                 <Typography variant={'bodySmall'}>
-                  멘토와 멘티가 함께 성장합니다.
+                  멘토와 멘티가 함께 성장하는 기회
                 </Typography>
               </Box>
             </Grid>
@@ -155,6 +178,13 @@ function Home() {
                 alignItems={'flex-start'}
                 p={4}
                 gap={2}
+                sx={{
+                  '&:hover': {
+                    transition: 'all 0.2s',
+                    border: 1,
+                    borderColor: 'primary.main',
+                  },
+                }}
               >
                 <CenteredBox
                   p={1}
@@ -162,11 +192,11 @@ function Home() {
                   borderColor={'primary.main'}
                   borderRadius={'50%'}
                 >
-                  <AddchartIcon fontSize='large' color='primary' />
+                  <ShareIcon fontSize='large' color='primary' />
                 </CenteredBox>
-                <Typography variant={'titleLarge'}>멘토링</Typography>
+                <Typography variant={'titleLarge'}>SHARING</Typography>
                 <Typography variant={'bodySmall'}>
-                  멘토와 멘티가 함께 성장합니다.
+                  부원들과의 지식 공유
                 </Typography>
               </Box>
             </Grid>
@@ -181,6 +211,13 @@ function Home() {
                 alignItems={'flex-start'}
                 p={4}
                 gap={2}
+                sx={{
+                  '&:hover': {
+                    transition: 'all 0.2s',
+                    border: 1,
+                    borderColor: 'primary.main',
+                  },
+                }}
               >
                 <CenteredBox
                   p={1}
@@ -188,11 +225,11 @@ function Home() {
                   borderColor={'primary.main'}
                   borderRadius={'50%'}
                 >
-                  <AddchartIcon fontSize='large' color='primary' />
+                  <CloudIcon fontSize='large' color='primary' />
                 </CenteredBox>
-                <Typography variant={'titleLarge'}>멘토링</Typography>
+                <Typography variant={'titleLarge'}>NETWORKING</Typography>
                 <Typography variant={'bodySmall'}>
-                  멘토와 멘티가 함께 성장합니다.
+                  다양한 학과, 분야의 사람들과의 네트워킹
                 </Typography>
               </Box>
             </Grid>
@@ -234,14 +271,7 @@ function Home() {
         </Layout>
       </Box>
 
-      <Box bgcolor={'text.primary'} height={'100vh'} width={'100%'} />
-      <Box
-        py={16}
-        textAlign={'center'}
-        sx={{
-          background: 'linear-gradient(to right, #faf8ff, white)',
-        }}
-      >
+      <Box py={16} textAlign={'center'}>
         <Layout>
           <Box px={{ md: 12, sm: 4 }}>
             <Stack direction={'row'} justifyContent={'space-between'} mb={4}>
@@ -270,7 +300,7 @@ function Home() {
                         backgroundColor: 'transparent',
                       },
                       '&:before': {
-                        display: 'none', // Accordion의 기본 구분선 제거
+                        display: 'none',
                       },
                     }}
                   >
@@ -297,7 +327,7 @@ function Home() {
                     </AccordionDetails>
                   </Accordion>
                 ))}
-                <Button fullWidth variant='contained'>
+                <Button fullWidth variant='outlined' size='large'>
                   더 많은 자주 묻는 질문 보러가기
                 </Button>
               </Layout>

@@ -34,7 +34,11 @@ export default function ParallaxContainer() {
 
   const opacity = useTransform(scrollY, [0, SECTION_HEIGHT + 500], [1, 0]);
 
-  const textOpacity = useTransform(scrollY, [200, SECTION_HEIGHT / 2], [0, 1]);
+  const textOpacity = useTransform(
+    scrollY,
+    [200, SECTION_HEIGHT / 2, SECTION_HEIGHT, SECTION_HEIGHT + 500],
+    [0, 1, 1, 0],
+  );
 
   const backgroundSize = useTransform(
     scrollY,

@@ -14,6 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   RECRUIT_END_DATE,
   RECRUIT_START_DATE,
+  TAG_OPTIONS,
 } from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
@@ -133,7 +134,9 @@ function StudyComponent() {
         >
           {study.tag && (
             <Chip
-              label={study.tag}
+              label={
+                TAG_OPTIONS.find((option) => option.value === study.tag)?.label
+              }
               color='primary'
               sx={{ width: 'fit-content' }}
             />

@@ -31,7 +31,7 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
 
     // Fixed height, dynamic width
     const width = sceneRef.current.clientWidth;
-    const height = 300; // Fixed height
+    const height = 400; // Fixed height
 
     // Create renderer
     const render = Render.create({
@@ -43,7 +43,6 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
         wireframes: false,
         background: `url(${BackgroundImage}) no-repeat`,
         showVelocity: true,
-        showAngleIndicator: true,
       },
     });
     renderRef.current = render;
@@ -89,7 +88,7 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
     images.forEach((src) => {
       const imageBody = Bodies.rectangle(
         Common.random(width - 150, width - 50), // Random X position near the right edge
-        Common.random(100, 300), // Random Y position
+        Common.random(100, 400), // Random Y position
         80, // Width of image
         80, // Height of image
         {
@@ -181,7 +180,7 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
       ref={sceneRef}
       style={{
         width: '100%', // Full width, responsive
-        height: '300px', // Fixed height
+        height: '400px', // Fixed height
         position: 'relative',
       }}
     />

@@ -3,9 +3,12 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
 import Hackathon2 from '@assets/images/main/hackathon2.jpg';
-import HPEC from '@assets/images/main/hpec.jpeg';
 import OT from '@assets/images/main/ot_2024_1.jpeg';
 import Study2 from '@assets/images/main/study2.jpg';
+import {
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@constants/apply.constant';
 import { motion } from 'framer-motion';
 
 import OutwardBtn from '@components/button/outward-btn';
@@ -41,7 +44,7 @@ export default function JourneyImageList() {
       <ImageList
         sx={{ width: '100%', height: '584px' }}
         variant='woven'
-        cols={4}
+        cols={3}
         gap={12}
       >
         {itemData.map((item) => (
@@ -69,6 +72,15 @@ export default function JourneyImageList() {
                     {item.title}
                   </Typography>
                 }
+                subtitle={
+                  <Typography
+                    variant='bodySmall'
+                    color='inherit'
+                    textAlign={'left'}
+                  >
+                    {item.desc}
+                  </Typography>
+                }
                 position='below'
                 actionIcon={<OutwardBtn to={item.link} />}
                 actionPosition='right'
@@ -84,22 +96,20 @@ export default function JourneyImageList() {
 const itemData = [
   {
     img: OT,
-    title: '멘토 · 부원 모집',
+    title: `멘토 · 부원 모집`,
+    desc: `${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}`,
     link: '/apply/member',
   },
   {
     img: Study2,
     title: '스터디 진행',
+    desc: `한 학기 동안 이루어지는 지식의 나눔`,
     link: '/studies',
-  },
-  {
-    img: HPEC,
-    title: '다양한 행사 개최',
-    link: '/announcement',
   },
   {
     img: Hackathon2,
     title: '해커톤',
-    link: '/hackathon',
+    desc: `한 해의 마무리를 장식하는 해커톤`,
+    link: '/',
   },
 ];

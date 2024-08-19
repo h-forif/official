@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import dayjs from '@utils/dayjs';
 
@@ -15,20 +15,18 @@ import useInterval from './useInterval';
  */
 export function usePeriod(startDate: string, endDate: string) {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [isIncluded, setIsIncluded] = useState(true);
   useInterval(() => {
     setCurrentDate(dayjs());
-  }, 1000);
+  }, 60000);
 
-  useEffect(() => {
-    if (
-      currentDate.isBefore(dayjs(startDate)) ||
-      currentDate.isAfter(dayjs(endDate).add(1, 'day'))
-    ) {
-      setIsIncluded(false);
-    } else {
-      setIsIncluded(true);
-    }
+  const isIncluded = useMemo(() => {
+    const start = dayjs(startDate);
+    const end = dayjs(endDate).add(1, 'day');
+
+    return (
+      (currentDate.isAfter(start) || currentDate.isSame(start, 'day')) &&
+      (currentDate.isBefore(end) || currentDate.isSame(end, 'day'))
+    );
   }, [currentDate, startDate, endDate]);
 
   return { currentDate, isIncluded };
