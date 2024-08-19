@@ -1,5 +1,6 @@
 import { SyntheticEvent, useState } from 'react';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import { Chip, Divider, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { Box, Stack } from '@mui/system';
@@ -26,6 +27,7 @@ import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
 import rehypeSanitize from 'rehype-sanitize';
+import remarkGfm from 'remark-gfm';
 import { getStudyInfo } from 'src/services/study.service';
 
 import StudyCurriculum from '@components/study/StudyCurriculum';
@@ -216,7 +218,24 @@ function StudyComponent() {
                 <Markdown
                   children={formatMarkdown(study.explanation)}
                   rehypePlugins={[rehypeSanitize]}
-                  className={'markdown'}
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code(props) {
+                      const { children, className, ...rest } = props;
+                      const match = /language-(\w+)/.exec(className || '');
+                      return match ? (
+                        <SyntaxHighlighter
+                          PreTag={'div'}
+                          children={String(children).replace(/\n$/, '')}
+                          language={match[1]}
+                        />
+                      ) : (
+                        <code {...rest} className={className}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
                 />
               </Stack>
             </Stack>

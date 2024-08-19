@@ -18,7 +18,7 @@ import {
 } from '@services/admin.service';
 import { getMyStudyId } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 
@@ -52,6 +52,7 @@ export const Route = createFileRoute('/studies/accept')({
 
 function StudyAcceptPage() {
   const currentId = Route.useLoaderData();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -82,6 +83,9 @@ function StudyAcceptPage() {
         try {
           await acceptStudies([Number(id)], currentId!.id);
           closeDialog();
+          queryClient.invalidateQueries({
+            queryKey: ['applications'],
+          });
           openSingleButtonDialog({
             title: `해당 멘티가 승인되었습니다.`,
             message: `해당 멘티(${application?.id} ${application?.name})가 승인되었습니다. "내 스터디 관리"에서 해당 멘티가 성공적으로 추가되었는지 확인해주세요.`,

@@ -18,7 +18,7 @@ import {
   getAppliedStudies,
 } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
@@ -46,7 +46,7 @@ export const Route = createFileRoute('/studies/approve')({
 
 function StudiesPage() {
   const rows: ApprovedApplication[] = Route.useLoaderData();
-
+  const router = useRouter();
   const [application, setApplication] = useState<ApprovedApplication>(rows[0]!);
   const [open, setOpen] = useState(false);
   const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
@@ -76,6 +76,7 @@ function StudiesPage() {
       mainButtonAction: async () => {
         try {
           await approveStudies([Number(id)]);
+          router.invalidate();
           closeDialog();
           openSingleButtonDialog({
             title: '해당 스터디가 승인되었습니다.',

@@ -1,4 +1,5 @@
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import { Box, Divider, Typography } from '@mui/material';
 
@@ -9,6 +10,7 @@ import { Link, createFileRoute } from '@tanstack/react-router';
 import dayjs from '@utils/dayjs';
 import formatMarkdown from '@utils/formatMarkdown';
 import rehypeSanitize from 'rehype-sanitize';
+import remarkGfm from 'remark-gfm';
 
 import { Title } from '@components/Title';
 
@@ -43,7 +45,24 @@ function AnnounceComponent() {
         <Markdown
           children={formatMarkdown(announcement.content)}
           rehypePlugins={[rehypeSanitize]}
-          className={'markdown'}
+          remarkPlugins={[remarkGfm]}
+          components={{
+            code(props) {
+              const { children, className, ...rest } = props;
+              const match = /language-(\w+)/.exec(className || '');
+              return match ? (
+                <SyntaxHighlighter
+                  PreTag={'div'}
+                  children={String(children).replace(/\n$/, '')}
+                  language={match[1]}
+                />
+              ) : (
+                <code {...rest} className={className}>
+                  {children}
+                </code>
+              );
+            },
+          }}
         />
       </Layout>
       <ScrollToTopButton />

@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode, Ref, forwardRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DoneIcon from '@mui/icons-material/Done';
@@ -32,6 +33,8 @@ import { ApprovedApplication } from '@routes/studies/approve';
 import { editNotApprovedStudy } from '@services/admin.service';
 import { approveStudies } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 
 import { Layout } from '@components/common/Layout';
@@ -362,7 +365,28 @@ export default function ApplicationDialog({
                     }}
                   />
                 ) : (
-                  <Markdown>{explanation}</Markdown>
+                  <Markdown
+                    children={explanation}
+                    rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code(props) {
+                        const { children, className, ...rest } = props;
+                        const match = /language-(\w+)/.exec(className || '');
+                        return match ? (
+                          <SyntaxHighlighter
+                            PreTag={'div'}
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                          />
+                        ) : (
+                          <code {...rest} className={className}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  />
                 )}
               </Box>
             </BorderBox>

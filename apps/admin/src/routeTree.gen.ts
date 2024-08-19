@@ -18,6 +18,8 @@ import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as StudiesMeImport } from './routes/studies/me'
 import { Route as StudiesApproveImport } from './routes/studies/approve'
 import { Route as StudiesAcceptImport } from './routes/studies/accept'
+import { Route as PostsFaqsImport } from './routes/posts/faqs'
+import { Route as PostsAnnouncementsImport } from './routes/posts/announcements'
 
 // Create/Update Routes
 
@@ -56,6 +58,16 @@ const StudiesAcceptRoute = StudiesAcceptImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PostsFaqsRoute = PostsFaqsImport.update({
+  path: '/posts/faqs',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostsAnnouncementsRoute = PostsAnnouncementsImport.update({
+  path: '/posts/announcements',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -65,6 +77,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/announcements': {
+      id: '/posts/announcements'
+      path: '/posts/announcements'
+      fullPath: '/posts/announcements'
+      preLoaderRoute: typeof PostsAnnouncementsImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/faqs': {
+      id: '/posts/faqs'
+      path: '/posts/faqs'
+      fullPath: '/posts/faqs'
+      preLoaderRoute: typeof PostsFaqsImport
       parentRoute: typeof rootRoute
     }
     '/studies/accept': {
@@ -116,6 +142,8 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  PostsAnnouncementsRoute,
+  PostsFaqsRoute,
   StudiesAcceptRoute,
   StudiesApproveRoute,
   StudiesMeRoute,
@@ -133,6 +161,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/posts/announcements",
+        "/posts/faqs",
         "/studies/accept",
         "/studies/approve",
         "/studies/me",
@@ -143,6 +173,12 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/posts/announcements": {
+      "filePath": "posts/announcements.tsx"
+    },
+    "/posts/faqs": {
+      "filePath": "posts/faqs.tsx"
     },
     "/studies/accept": {
       "filePath": "studies/accept.tsx"

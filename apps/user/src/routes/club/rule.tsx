@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import { Box, Divider, Stack, Typography, useTheme } from '@mui/material';
 
@@ -8,6 +9,7 @@ import { Layout } from '@packages/components/elements/Layout';
 import { createFileRoute } from '@tanstack/react-router';
 import { motion, useScroll } from 'framer-motion';
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 
 import { Title } from '@components/Title';
 
@@ -34,7 +36,29 @@ function RulePage() {
       />
       <Layout display={'flex'} flexDirection={'row'}>
         <Box>
-          <Markdown rehypePlugins={[rehypeRaw]}>{rule}</Markdown>
+          <Markdown
+            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code(props) {
+                const { children, className, ...rest } = props;
+                const match = /language-(\w+)/.exec(className || '');
+                return match ? (
+                  <SyntaxHighlighter
+                    PreTag={'div'}
+                    children={String(children).replace(/\n$/, '')}
+                    language={match[1]}
+                  />
+                ) : (
+                  <code {...rest} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {rule}
+          </Markdown>
         </Box>
         <RuleSideNav />
       </Layout>
