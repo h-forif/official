@@ -95,11 +95,11 @@ jobs:
 
       - name: 빌드 - User
         if: env.user_changed == 'true'
-        run: pnpm run build --filter user
+        run: pnpm -F user run build
 
       - name: 빌드 - Admin
         if: env.admin_changed == 'true'
-        run: pnpm run build --filter admin
+        run: pnpm -F admin run build
 
       - name: AWS Credential 설정
         if: env.user_changed == 'true' || env.admin_changed == 'true'
