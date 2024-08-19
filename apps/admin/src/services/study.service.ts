@@ -46,8 +46,18 @@ export const getMyStudyId = async () => {
 };
 
 export const editStudy = async (studyId: number, formData: Study) => {
+  const transformedStudyPlans = formData.study_plans.map((plan) => ({
+    ...plan,
+    content: Array.isArray(plan.content)
+      ? plan.content.join(';')
+      : plan.content,
+  }));
+  const transformedFormData = {
+    ...formData,
+    study_plans: transformedStudyPlans,
+  };
   const data = await authApi
-    .patch(`/studies/${studyId}`, formData)
+    .patch(`/studies/${studyId}`, transformedFormData)
     .then((res) => res.data);
   return data;
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/system/Box';
 
@@ -32,6 +32,10 @@ export const Route = createFileRoute('/studies/')({
 });
 
 function StudiesPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { year, semester }: StudySearch = Route.useSearch();
   const [difficulty, setDifficulty] = useState<DIFFICULTY_TYPES>(
     DIFFICULTY['전체'],

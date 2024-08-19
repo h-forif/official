@@ -5,7 +5,7 @@ import { api } from './axios-instance';
 
 export const getProjects = () => {
   const projects = api
-    .get('/products')
+    .get('/hackathons')
     .then((res: AxiosResponse<Project[]>) => res.data);
 
   return projects;

@@ -57,12 +57,10 @@ const AnimatedStudyContainer = ({ children }: { children: ReactNode }) => {
   const theme = useTheme();
   const currentTerm = getCurrentTerm();
   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
-  const isSm = useMediaQuery(theme.breakpoints.only('sm'));
 
   const getGridTemplateColumns = () => {
     if (isXs) return 'repeat(1, 1fr)';
-    if (isSm) return 'repeat(2, 1fr)';
-    return 'repeat(3, 1fr)';
+    return 'repeat(2, 1fr)';
   };
 
   return (

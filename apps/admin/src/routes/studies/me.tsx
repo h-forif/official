@@ -2,6 +2,7 @@ import { SyntheticEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
 
+import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -26,12 +27,14 @@ import {
 } from '@constants/apply.constant';
 import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { Study } from '@packages/components/types/study';
 import { User } from '@packages/components/types/user';
 import { getMentees } from '@services/admin.service';
-import { getMyStudyId, getStudyInfo } from '@services/study.service';
+import { editStudy, getMyStudyId, getStudyInfo } from '@services/study.service';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery } from '@tanstack/react-query';
 import { ReactNode, createFileRoute, redirect } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
@@ -69,7 +72,7 @@ export const Route = createFileRoute('/studies/me')({
           studyId.act_semester.toString() === currentTerm.semester,
       );
       const study = await getStudyInfo(currentId!.id.toString());
-      return { ids, study };
+      return { currentId, study };
     } catch (err) {
       console.error(err);
       alert('개최한 스터디가 없거나 스터디 정보를 불러오는데 실패했습니다.');
@@ -97,8 +100,8 @@ function TabPanel(props: TabPanelProps) {
     <div
       role='tabpanel'
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`my-study-tabpanel-${index}`}
+      aria-labelledby={`my-study-tab-${index}`}
       {...other}
     >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
@@ -108,24 +111,65 @@ function TabPanel(props: TabPanelProps) {
 
 function a11yProps(index: number) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `my-study-tab-${index}`,
+    'aria-controls': `my-study-tabpanel-${index}`,
   };
 }
 
 function MyStudyPage() {
-  const { study } = Route.useLoaderData();
-  const [isEdit, setIsEdit] = useState(false);
+  const { currentId, study } = Route.useLoaderData();
+
+  const [isExplanationEdit, setIsExplanationEdit] = useState(false);
+  const [isCurriculumEdit, setIsCurriculumEdit] = useState(false);
   const [explanation, setExplanation] = useState(study.explanation);
+  const [studyPlan, setStudyPlan] = useState(study.study_plans);
   const [value, setValue] = useState(0);
+  const { openSingleButtonDialog } = useDialogStore();
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const saveExplanation = () => {
-    form.setValue('explanation', explanation);
-    setIsEdit(false);
+  const handleSectionChange = (index: number, value: string) => {
+    const updatedPlans = [...studyPlan];
+    if (updatedPlans[index]) {
+      updatedPlans[index].section = value;
+      setStudyPlan(updatedPlans);
+    }
+  };
+
+  const handleContentChange = (
+    sectionIndex: number,
+    contentIndex: number,
+    value: string,
+  ) => {
+    const updatedPlans = [...studyPlan];
+    if (updatedPlans[sectionIndex]?.content) {
+      updatedPlans[sectionIndex].content[contentIndex] = value;
+      setStudyPlan(updatedPlans);
+    }
+  };
+
+  const handleEdit = async () => {
+    const formData = form.getValues();
+
+    try {
+      await editStudy(currentId!.id, formData);
+      openSingleButtonDialog({
+        title: '스터디 수정 완료',
+        message: '스터디 정보가 수정되었습니다.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.CONFIRM,
+      });
+    } catch (err) {
+      console.error(err);
+      openSingleButtonDialog({
+        title: '스터디 수정 실패',
+        message: '스터디 정보 수정에 실패했습니다. 다시 시도해주세요.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.WARNING,
+      });
+    }
   };
 
   const form = useForm<Study>({
@@ -145,6 +189,26 @@ function MyStudyPage() {
       study_plans: study.study_plans,
     },
   });
+
+  const saveExplanation = () => {
+    form.setValue('explanation', explanation);
+    setIsExplanationEdit(false);
+  };
+
+  const saveCurriculum = () => {
+    form.setValue('study_plans', studyPlan);
+    setIsCurriculumEdit(false);
+  };
+
+  const cancelExplanationEdit = () => {
+    setExplanation(form.getValues('explanation'));
+    setIsExplanationEdit(false);
+  };
+
+  const cancelCurriculumEdit = () => {
+    setStudyPlan(form.getValues('study_plans'));
+    setIsCurriculumEdit(false);
+  };
 
   const { data: mentees, isLoading } = useQuery({
     queryKey: ['mentee'],
@@ -168,9 +232,29 @@ function MyStudyPage() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Grid container spacing={2}>
+        <BorderBox
+          props={{
+            minHeight: 0,
+          }}
+        >
+          <Typography variant='titleMedium' mb={2}>
+            내 스터디 정보를 수정하세요.
+          </Typography>
+          <Typography variant='bodySmall' color={'text.secondary'} mb={2}>
+            일부 정보는 부원 모집 기간({RECRUIT_START_DATE} - {RECRUIT_END_DATE}
+            ) 이후에는 수정이 불가능합니다.
+          </Typography>
+          <Button variant='contained' onClick={handleEdit}>
+            수정
+          </Button>
+        </BorderBox>
+        <Grid container spacing={2} mt={2}>
           <Grid item xs={12}>
-            <BorderBox>
+            <BorderBox
+              props={{
+                minHeight: 0,
+              }}
+            >
               <Typography variant='bodySmall' mb={2}>
                 한 줄 소개
               </Typography>
@@ -184,13 +268,9 @@ function MyStudyPage() {
                   mb: 2,
                 }}
               />
-              <Typography variant='bodySmall' color={'text.secondary'}>
-                스터디에 대한 간략한 설명입니다. 흥미를 유발하고, 참여자들에게
-                스터디의 목적을 알려주고 있는 지 확인해주세요.
-              </Typography>
             </BorderBox>
           </Grid>
-          <Grid item sm={6} xs={12}>
+          <Grid item md={6} sm={12}>
             <BorderBox>
               <Typography variant='bodySmall' mb={2}>
                 진행 요일
@@ -216,12 +296,12 @@ function MyStudyPage() {
                 <TextField value={study.end_time} disabled />
               </Stack>
               <Typography variant='bodySmall' color={'text.secondary'}>
-                진행 요일 및 진행 시간은 부원 모집 기간({RECRUIT_START_DATE} -{' '}
-                {RECRUIT_END_DATE}) 이후에는 수정할 수 없습니다.
+                진행 요일 및 진행 시간은 수정할 수 없습니다. 수정이 필요한 경우
+                회장단이나 SW팀에 말씀해주세요.
               </Typography>
             </BorderBox>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item md={6} sm={12}>
             <BorderBox>
               <Typography variant='bodySmall' mb={2}>
                 난이도
@@ -241,6 +321,10 @@ function MyStudyPage() {
                 name='tag'
                 sx={{ mb: 2 }}
               />
+              <Typography variant='bodySmall' color={'text.secondary'}>
+                난이도 및 태그는 부원 모집 기간({RECRUIT_START_DATE} -{' '}
+                {RECRUIT_END_DATE}) 이후에 수정할 수 없습니다.
+              </Typography>
             </BorderBox>
           </Grid>
           <Grid item xs={12}>
@@ -256,13 +340,28 @@ function MyStudyPage() {
                   zIndex: 10,
                   right: 10,
                 }}
-                onClick={() => (isEdit ? saveExplanation() : setIsEdit(true))}
+                onClick={() =>
+                  isExplanationEdit
+                    ? saveExplanation()
+                    : setIsExplanationEdit(true)
+                }
               >
-                {isEdit ? (
+                {isExplanationEdit ? (
                   <DoneIcon color='primary' />
                 ) : (
                   <EditIcon color='primary' />
                 )}
+              </IconButton>
+              <IconButton
+                size='large'
+                sx={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  right: 48,
+                }}
+                onClick={() => isExplanationEdit && cancelExplanationEdit()}
+              >
+                {isExplanationEdit && <CloseIcon />}
               </IconButton>
               <Typography
                 variant='titleSmall'
@@ -278,7 +377,7 @@ function MyStudyPage() {
               </Typography>
               <Divider />
               <Box>
-                {isEdit ? (
+                {isExplanationEdit ? (
                   <TextField
                     value={explanation}
                     onChange={(e) => setExplanation(e.target.value)}
@@ -296,59 +395,116 @@ function MyStudyPage() {
             </BorderBox>
           </Grid>
           <Grid item xs={12}>
-            <BorderBox>
+            <BorderBox
+              props={{
+                position: 'relative',
+              }}
+            >
+              <IconButton
+                size='large'
+                sx={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  right: 10,
+                }}
+                onClick={() =>
+                  isCurriculumEdit
+                    ? saveCurriculum()
+                    : setIsCurriculumEdit(true)
+                }
+              >
+                {isCurriculumEdit ? (
+                  <DoneIcon color='primary' />
+                ) : (
+                  <EditIcon color='primary' />
+                )}
+              </IconButton>
+              <IconButton
+                size='large'
+                sx={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  right: 48,
+                }}
+                onClick={cancelCurriculumEdit}
+              >
+                {isCurriculumEdit && <CloseIcon />}
+              </IconButton>
               <Stack gap={5} my={4} width={'100%'}>
                 <Typography variant='titleSmall' textAlign={'center'}>
                   커리큘럼
                 </Typography>
                 <Typography
-                  component={'ul'}
+                  component={'ol'}
                   variant='bodySmall'
                   color={'text.secondary'}
+                  sx={{
+                    wordBreak: 'keep-all',
+                  }}
                 >
-                  * 커리큘럼은 부원들이 스터디를 선택하는 가장 중요한
-                  요소입니다. 다음과 같은 내용들을 확인해주세요.
-                  <li>1. 실질적인 스터디 일정이 8주차 이상인가?</li>
-                  <li>2. 중간고사 / 기말고사를 고려한 스터디일정인가?</li>
+                  커리큘럼은 부원들이 스터디를 선택하는 가장 중요한 요소입니다.
+                  다음과 같은 주의사항을 확인해주세요.
+                  <li>실질적인 스터디 일정이 8주차 이상인가?</li>
+                  <li>중간고사 / 기말고사를 고려한 스터디일정인가?</li>
                   <li>
-                    3. 온라인 수업이 시험기간을 제외한 기간에 포함되어 있는가?
+                    온라인 수업이 시험기간을 제외한 기간에 포함되어 있는가?
                   </li>
-                  <li>4. 오타는 없는가?</li>
-                  <Typography
-                    component={'span'}
-                    variant='bodySmall'
-                    color={'error'}
-                  >
-                    개발 미흡으로 커리큘럼은 현재 직접적인 수정이 불가능합니다.
-                    만약 수정사항이나 문제가 있다면 회장단이나 SW팀에{' '}
-                    <strong>반드시</strong> 말씀해주세요.
-                  </Typography>
+                  <li>오타는 없는가?</li>
                 </Typography>
                 <Divider />
-                {study.study_plans.map((plan, sectionIndex) => {
-                  return (
-                    <Stack
-                      key={`${plan.section} - ${sectionIndex}`}
-                      width={'100%'}
-                      gap={2}
-                    >
-                      <Typography variant='titleMedium'>
-                        {sectionIndex + 1}주차. {plan.section}
+                {studyPlan.map((plan, sectionIndex) => (
+                  <Stack key={sectionIndex} width={'100%'} gap={2}>
+                    <Box>
+                      <Typography component={'span'} variant='titleMedium'>
+                        {sectionIndex + 1}주차:{' '}
                       </Typography>
-                      <Stack component={'ul'} gap={1} my={0}>
-                        {plan.content.map((content, index) => (
+                      {isCurriculumEdit ? (
+                        <TextField
+                          value={plan.section}
+                          onChange={(e) =>
+                            handleSectionChange(sectionIndex, e.target.value)
+                          }
+                          variant='outlined'
+                          size='small'
+                          sx={{ width: '60%' }}
+                        />
+                      ) : (
+                        <Typography component={'span'} variant='titleMedium'>
+                          {plan.section}
+                        </Typography>
+                      )}
+                    </Box>
+
+                    <Stack component={'ul'} gap={1} my={0}>
+                      {plan.content.map((content, contentIndex) =>
+                        isCurriculumEdit ? (
+                          <TextField
+                            key={contentIndex}
+                            value={content}
+                            onChange={(e) =>
+                              handleContentChange(
+                                sectionIndex,
+                                contentIndex,
+                                e.target.value,
+                              )
+                            }
+                            variant='outlined'
+                            size='small'
+                            fullWidth
+                          />
+                        ) : (
                           <Typography
                             component={'li'}
-                            key={index}
+                            key={contentIndex}
                             variant='bodySmall'
                           >
                             {content}
                           </Typography>
-                        ))}
-                      </Stack>
+                        ),
+                      )}
                     </Stack>
-                  );
-                })}
+                  </Stack>
+                ))}
               </Stack>
             </BorderBox>
           </Grid>

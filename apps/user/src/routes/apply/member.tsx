@@ -74,6 +74,10 @@ function ApplyMember() {
     checkApplication();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const loaderData = Route.useLoaderData();
   const navigate = useNavigate();
   const router = useRouter();
