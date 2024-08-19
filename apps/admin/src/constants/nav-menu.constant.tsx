@@ -1,12 +1,13 @@
 import { ReactNode } from 'react';
 
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import MoneyIcon from '@mui/icons-material/Money';
 
 export interface NavMenu {
   title: string;
-  href: string;
+  href?: string;
   icon?: ReactNode;
   submenu?: NavMenu[];
 }
@@ -14,7 +15,6 @@ export interface NavMenu {
 export const NAV_MENUS: NavMenu[] = [
   {
     title: '스터디',
-    href: '/studies',
     icon: <BookmarkBorderIcon />,
     submenu: [
       { title: '내 스터디 관리', href: '/studies/me' },
@@ -26,7 +26,6 @@ export const NAV_MENUS: NavMenu[] = [
 export const ADMIN_NAV_MENUS: NavMenu[] = [
   {
     title: '스터디',
-    href: '/studies',
     icon: <BookmarkBorderIcon />,
     submenu: [
       { title: '스터디 목록', href: '/studies' },
@@ -37,7 +36,6 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
   },
   {
     title: '회비',
-    href: '/subscription',
     icon: <MoneyIcon />,
     submenu: [
       { title: '회비 내역', href: '/subscription' },
@@ -46,11 +44,18 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
   },
   {
     title: '부원 관리',
-    href: '/members',
     icon: <GroupOutlinedIcon />,
     submenu: [
       { title: '부원 목록', href: '/members' },
       { title: '부원 관리', href: '/members/manage' },
+    ],
+  },
+  {
+    title: '게시물 관리',
+    icon: <CampaignIcon />,
+    submenu: [
+      { title: '공지사항 관리', href: '/posts/announcements' },
+      { title: 'FAQ 관리', href: '/posts/faqs' },
     ],
   },
 ];

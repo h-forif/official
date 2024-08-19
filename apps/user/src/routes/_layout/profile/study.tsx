@@ -1,4 +1,5 @@
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import {
   Card,
@@ -29,6 +30,7 @@ import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { getStudyInfo } from 'src/services/study.service';
 import { getUser } from 'src/services/user.service';
 
@@ -105,7 +107,26 @@ function MyStudy() {
                           children={formatMarkdown(
                             currentStudy.data!.explanation,
                           )}
-                          className={'markdown'}
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            code(props) {
+                              const { children, className, ...rest } = props;
+                              const match = /language-(\w+)/.exec(
+                                className || '',
+                              );
+                              return match ? (
+                                <SyntaxHighlighter
+                                  PreTag={'div'}
+                                  children={String(children).replace(/\n$/, '')}
+                                  language={match[1]}
+                                />
+                              ) : (
+                                <code {...rest} className={className}>
+                                  {children}
+                                </code>
+                              );
+                            },
+                          }}
                         />
                         <Typography variant='bodyMedium'>
                           {currentStudy.data!.id === 0

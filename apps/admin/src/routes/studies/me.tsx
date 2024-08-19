@@ -1,6 +1,7 @@
 import { SyntheticEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
@@ -36,9 +37,15 @@ import { getMentees } from '@services/admin.service';
 import { editStudy, getMyStudyId, getStudyInfo } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery } from '@tanstack/react-query';
-import { ReactNode, createFileRoute, redirect } from '@tanstack/react-router';
+import {
+  ReactNode,
+  createFileRoute,
+  redirect,
+  useRouter,
+} from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 
 import { Layout } from '@components/common/Layout';
@@ -117,6 +124,7 @@ function a11yProps(index: number) {
 }
 
 function MyStudyPage() {
+  const router = useRouter();
   const { currentId, study } = Route.useLoaderData();
 
   const [isExplanationEdit, setIsExplanationEdit] = useState(false);
@@ -155,6 +163,7 @@ function MyStudyPage() {
 
     try {
       await editStudy(currentId!.id, formData);
+      router.invalidate();
       openSingleButtonDialog({
         title: '스터디 수정 완료',
         message: '스터디 정보가 수정되었습니다.',
@@ -389,7 +398,29 @@ function MyStudyPage() {
                     }}
                   />
                 ) : (
-                  <Markdown rehypePlugins={[rehypeRaw]}>{explanation}</Markdown>
+                  <Markdown
+                    rehypePlugins={[rehypeRaw]}
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code(props) {
+                        const { children, className, ...rest } = props;
+                        const match = /language-(\w+)/.exec(className || '');
+                        return match ? (
+                          <SyntaxHighlighter
+                            PreTag={'div'}
+                            children={String(children).replace(/\n$/, '')}
+                            language={match[1]}
+                          />
+                        ) : (
+                          <code {...rest} className={className}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {explanation}
+                  </Markdown>
                 )}
               </Box>
             </BorderBox>
