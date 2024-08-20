@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 
@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Outlet, createRootRoute, redirect } from '@tanstack/react-router';
 
+import TopBar from '@components/AppBar';
 import SideBar from '@components/SideBar/SideBar';
 import { AlertDialog } from '@components/common/Dialog';
 
@@ -39,9 +40,17 @@ function RootComponent() {
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <SideBar />
-            <Box component={'main'} minHeight={'100vh'} width={'100%'}>
-              <Outlet />
-            </Box>
+            <Stack direction={'column'} width={'100%'}>
+              <TopBar />
+              <Box
+                component={'main'}
+                minHeight={'100vh'}
+                width={'100%'}
+                bgcolor={'#f5f7f9'}
+              >
+                <Outlet />
+              </Box>
+            </Stack>
           </Box>
           <AlertDialog />
         </ThemeProvider>

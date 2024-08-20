@@ -37,7 +37,14 @@ function MembersPage() {
         label='현재 홈페이지에 가입한 부원 목록을 볼 수 있습니다.'
       />
       <Layout>
-        <Box sx={{ height: 640, width: '100%', mt: 2 }}>
+        <Box
+          sx={{
+            height: 640,
+            width: '100%',
+            mt: 2,
+            bgcolor: 'background.default',
+          }}
+        >
           <DataGrid
             rows={data}
             loading={isLoading}
