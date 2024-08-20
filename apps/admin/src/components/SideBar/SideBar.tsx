@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import LogoutIcon from '@mui/icons-material/Logout';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
@@ -14,13 +12,11 @@ import Toolbar from '@mui/material/Toolbar';
 import { useMediaQuery } from '@mui/system';
 
 import { AUTH_LEVEL } from '@constants/auth.constant';
-import {
-  ADMIN_NAV_MENUS,
-  NAV_MENUS,
-  NavMenu,
-} from '@constants/nav-menu.constant.tsx';
+import { Button } from '@packages/components/Button';
 import { clearUser, getUser } from '@stores/user.store';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+
+import useNavMenu from '@hooks/useNavMenu';
 
 const drawerWidth = 240;
 
@@ -29,23 +25,9 @@ export default function SideBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
   const user = getUser();
+  const { menus } = useNavMenu();
 
   const navigate = useNavigate();
-  const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[] | null>(
-    NAV_MENUS,
-  );
-
-  useEffect(() => {
-    if (!user) {
-      setSelectedNavMenus(null);
-    } else {
-      if (user.auth_level! >= 3) {
-        setSelectedNavMenus(ADMIN_NAV_MENUS);
-      } else {
-        setSelectedNavMenus(NAV_MENUS);
-      }
-    }
-  }, [user]);
 
   const handleSignOut = () => {
     clearUser();
@@ -73,12 +55,20 @@ export default function SideBar() {
         variant={isMobile ? 'temporary' : 'permanent'}
         anchor='left'
       >
-        <Toolbar>
-          <Typography variant='bodySmall'>
-            반가워요, {AUTH_LEVEL[user.auth_level!]}{' '}
-            <strong>{user.name}</strong>님.
-          </Typography>
-          <Typography variant='bodySmall'></Typography>
+        <Toolbar
+          sx={{
+            pt: 4,
+          }}
+        >
+          <Box>
+            <Typography variant='bodySmall'>
+              반가워요, {AUTH_LEVEL[user.auth_level!]}{' '}
+              <strong>{user.name}</strong>님.
+            </Typography>
+            <Link to='/dashboard'>
+              <Button fullWidth>대시보드로 이동</Button>
+            </Link>
+          </Box>
         </Toolbar>
         <Divider />
         <List
@@ -93,8 +83,8 @@ export default function SideBar() {
             pb: 2,
           }}
         >
-          {selectedNavMenus &&
-            selectedNavMenus.map((menu) => (
+          {menus &&
+            menus.map((menu) => (
               <Box key={menu.title}>
                 <Stack direction={'row'} alignItems={'center'} my={2}>
                   <ListItemIcon>

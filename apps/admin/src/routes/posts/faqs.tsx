@@ -31,7 +31,7 @@ import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { FAQ } from '@packages/components/types/post';
-import { addFaq, getFaqs } from '@services/post.service';
+import { addFaq, editFaq, getFaqs } from '@services/post.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -66,6 +66,7 @@ function FaqPage() {
       title: '',
       content: '',
       tag: '',
+      id: 0,
     },
   });
 
@@ -83,22 +84,36 @@ function FaqPage() {
       form.setValue('title', faqs[idx!]!.title);
       form.setValue('content', faqs[idx!]!.content);
       form.setValue('tag', faqs[idx!]!.tag);
+      form.setValue('id', faqs[idx!]!.id);
       setOpen(true);
     }
   };
 
-  const handleEdit = () => {
-    // TODO: Update the faq
-    queryClient.invalidateQueries({
-      queryKey: ['faqs'],
-    });
-    openSingleButtonDialog({
-      title: '수정 완료',
-      message: '해당 자주 묻는 질문 수정을 완료했습니다.',
-      dialogIconType: DialogIconType.CONFIRM,
-      mainButtonText: '확인',
-    });
-    setOpen(false);
+  const handleEdit = async () => {
+    const formData = form.getValues();
+    console.log(formData);
+
+    try {
+      await editFaq(formData);
+      queryClient.invalidateQueries({
+        queryKey: ['faqs'],
+      });
+      openSingleButtonDialog({
+        title: '수정 완료',
+        message: '해당 자주 묻는 질문 수정을 완료했습니다.',
+        dialogIconType: DialogIconType.CONFIRM,
+        mainButtonText: '확인',
+      });
+      setOpen(false);
+    } catch (e) {
+      console.error(e);
+      openSingleButtonDialog({
+        title: '수정 실패',
+        message: 'FAQ 수정에 실패했습니다. 다시 시도해주세요.',
+        dialogIconType: DialogIconType.WARNING,
+        mainButtonText: '확인',
+      });
+    }
   };
 
   const handleClose = () => {
@@ -310,6 +325,7 @@ function FaqPage() {
             </>
           ) : (
             <>
+              <Typography variant='labelMedium'>태그</Typography>
               <Select
                 val={form.getValues('tag')}
                 placeholder=''
@@ -319,6 +335,7 @@ function FaqPage() {
                   mb: 2,
                 }}
               />
+              <Typography variant='labelMedium'>답변</Typography>
               <TextField
                 fullWidth
                 multiline

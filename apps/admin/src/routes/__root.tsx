@@ -1,38 +1,36 @@
-import { useEffect } from 'react';
-
 import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/system/ThemeProvider';
 
 import { lightTheme } from '@packages/components/theme.ts';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { getUser } from '@stores/user.store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Outlet, createRootRoute, useLocation } from '@tanstack/react-router';
+import { Outlet, createRootRoute, redirect } from '@tanstack/react-router';
 
 import SideBar from '@components/SideBar/SideBar';
 import { AlertDialog } from '@components/common/Dialog';
 
+import { isAuthenticated } from '@hooks/isAuthenticated';
+
 export const Route = createRootRoute({
+  beforeLoad: async ({ location }) => {
+    if (!isAuthenticated()) {
+      if (location.pathname === '/') return;
+      throw redirect({
+        to: '/',
+      });
+    } else if (isAuthenticated() && location.pathname === '/') {
+      throw redirect({
+        to: '/dashboard',
+      });
+    }
+  },
   component: () => <RootComponent />,
 });
 
 function RootComponent() {
-  const location = useLocation();
   const queryClient = new QueryClient();
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
-
-  useEffect(() => {
-    async function getAuthenticate() {
-      const user = getUser();
-
-      const pathname = location.pathname;
-      if (!user.id && pathname !== '/') {
-        window.location.href = '/';
-      }
-    }
-    getAuthenticate();
-  }, [location]);
 
   return (
     <QueryClientProvider client={queryClient}>

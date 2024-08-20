@@ -32,7 +32,18 @@ export async function getFaqs() {
 
 export async function addFaq(faq: FAQ) {
   const newFaq: FAQ = await authApi
-    .post('/posts/faqs', faq)
+    .post('/posts/faqs', {
+      tag: faq.tag,
+      title: faq.title,
+      content: faq.content,
+    })
     .then((res) => res.data);
   return newFaq;
+}
+
+export async function editFaq(faq: FAQ) {
+  const updatedFaq: FAQ = await authApi
+    .patch(`/posts/faqs/${faq.id}`, faq)
+    .then((res) => res.data);
+  return updatedFaq;
 }

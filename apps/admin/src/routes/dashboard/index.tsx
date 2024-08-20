@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 
 import { createFileRoute } from '@tanstack/react-router';
 
+import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
 
 export const Route = createFileRoute('/dashboard/')({
@@ -15,6 +16,7 @@ function DashboardPage() {
         title='Dashboard'
         label='항상 포리프를 위해 활동해주셔서 감사드려요.'
       />
+      <Layout></Layout>
     </Box>
   );
 }

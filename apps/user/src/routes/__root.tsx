@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import ReactGA from 'react-ga4';
 
 import { Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,6 +23,8 @@ import Footer from '@components/common/Footer';
 import Toast from '@components/common/Toast';
 
 import useInitializeAuth from '@hooks/useInitializeAuth';
+
+const GA4_MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
@@ -46,6 +49,7 @@ function RootComponent() {
 
   const queryClient = new QueryClient();
   useInitializeAuth();
+  ReactGA.initialize(GA4_MEASUREMENT_ID);
 
   return (
     <QueryClientProvider client={queryClient}>

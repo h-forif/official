@@ -1,43 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export function useNavMenu() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const timerRef = useRef<number | null>(null);
+import {
+  ADMIN_NAV_MENUS,
+  NAV_MENUS,
+  NavMenu,
+} from '@constants/nav-menu.constant';
+import { getUser } from '@stores/user.store';
 
-  const handleMouseEnter = (menuTitle: string) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    timerRef.current = setTimeout(() => {
-      setActiveMenu(menuTitle);
-    }, 200);
-  };
-
-  const handleMouseLeave = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    timerRef.current = setTimeout(() => {
-      setActiveMenu(null);
-    }, 100);
-  };
-
-  const handleClick = () => {
-    setActiveMenu(null);
-  };
+export default function useNavMenu() {
+  const user = getUser();
+  const [menus, setMenus] = useState<NavMenu[] | null>(NAV_MENUS);
 
   useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
+    if (!user) {
+      setMenus(null);
+    } else {
+      if (user.auth_level! >= 3) {
+        setMenus(ADMIN_NAV_MENUS);
+      } else {
+        setMenus(NAV_MENUS);
       }
-    };
-  }, []);
-
-  return {
-    activeMenu,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleClick,
-  };
+    }
+  }, [user]);
+  return { menus };
 }
