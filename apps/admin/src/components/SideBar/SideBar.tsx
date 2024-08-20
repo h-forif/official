@@ -1,20 +1,27 @@
+import { useState } from 'react';
+
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LogoutIcon from '@mui/icons-material/Logout';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import { Box, Stack, Typography, useTheme } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
-import { useMediaQuery } from '@mui/system';
+import {
+  Collapse,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { Box, Stack, useMediaQuery } from '@mui/system';
 
 import { AUTH_LEVEL } from '@constants/auth.constant';
-import { Button } from '@packages/components/Button';
 import { clearUser, getUser } from '@stores/user.store';
-import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 import useNavMenu from '@hooks/useNavMenu';
 
@@ -26,7 +33,6 @@ export default function SideBar() {
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
   const user = getUser();
   const { menus } = useNavMenu();
-
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -34,6 +40,16 @@ export default function SideBar() {
     navigate({
       to: '/',
     });
+  };
+
+  // State to manage which menu is open
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+
+  const handleMenuToggle = (menuTitle: string) => {
+    setOpenMenus((prevState) => ({
+      ...prevState,
+      [menuTitle]: !prevState[menuTitle],
+    }));
   };
 
   return (
@@ -49,26 +65,17 @@ export default function SideBar() {
         }}
         PaperProps={{
           sx: {
-            backgroundColor: '#f5f7f9',
+            backgroundColor: 'background.default',
           },
         }}
         variant={isMobile ? 'temporary' : 'permanent'}
         anchor='left'
       >
-        <Toolbar
-          sx={{
-            pt: 4,
-          }}
-        >
-          <Box>
-            <Typography variant='bodySmall'>
-              반가워요, {AUTH_LEVEL[user.auth_level!]}{' '}
-              <strong>{user.name}</strong>님.
-            </Typography>
-            <Link to='/dashboard'>
-              <Button fullWidth>대시보드로 이동</Button>
-            </Link>
-          </Box>
+        <Toolbar>
+          <Typography variant='bodySmall'>
+            반가워요, {AUTH_LEVEL[user.auth_level!]}{' '}
+            <strong>{user.name}</strong>님.
+          </Typography>
         </Toolbar>
         <Divider />
         <List
@@ -86,31 +93,54 @@ export default function SideBar() {
           {menus &&
             menus.map((menu) => (
               <Box key={menu.title}>
-                <Stack direction={'row'} alignItems={'center'} my={2}>
-                  <ListItemIcon>
-                    {menu.icon ? menu.icon : <InboxIcon />}
-                  </ListItemIcon>
-                  <Typography variant='labelMedium'>{menu.title}</Typography>
+                <Stack
+                  direction={'row'}
+                  alignItems={'center'}
+                  justifyContent='space-between'
+                  my={2}
+                  onClick={() => handleMenuToggle(menu.title)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <Stack direction={'row'} alignItems={'center'}>
+                    <ListItemIcon>
+                      {menu.icon ? menu.icon : <InboxIcon />}
+                    </ListItemIcon>
+                    <Typography variant='labelMedium'>{menu.title}</Typography>
+                  </Stack>
+                  {menu.submenu ? (
+                    openMenus[menu.title] ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )
+                  ) : null}
                 </Stack>
-                {menu.submenu &&
-                  menu.submenu.map((submenu, index) => (
-                    <ListItem
-                      key={`menu-${index}`}
-                      onClick={() => navigate({ to: submenu.href })}
-                      disableGutters
-                      disablePadding
-                    >
-                      <ListItemButton>
-                        <ListItemText
-                          primary={
-                            <Typography variant='bodySmall'>
-                              {submenu.title}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
+                {menu.submenu && (
+                  <Collapse
+                    in={openMenus[menu.title]}
+                    timeout='auto'
+                    unmountOnExit
+                  >
+                    {menu.submenu.map((submenu, index) => (
+                      <ListItem
+                        key={`submenu-${index}`}
+                        onClick={() => navigate({ to: submenu.href })}
+                        disableGutters
+                        disablePadding
+                      >
+                        <ListItemButton>
+                          <ListItemText
+                            primary={
+                              <Typography variant='bodySmall'>
+                                {submenu.title}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </Collapse>
+                )}
               </Box>
             ))}
           <Stack direction={'row'} alignItems={'center'} my={2}>

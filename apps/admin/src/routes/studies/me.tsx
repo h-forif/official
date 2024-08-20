@@ -566,6 +566,7 @@ function BorderBox({
       width={'100%'}
       borderRadius={2}
       minHeight={240}
+      bgcolor={'background.default'}
       {...props}
     >
       {children}
