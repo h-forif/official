@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as SubscriptionIndexImport } from './routes/subscription/index'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as MessageIndexImport } from './routes/message/index'
 import { Route as MembersIndexImport } from './routes/members/index'
@@ -26,6 +27,11 @@ import { Route as PostsAnnouncementsImport } from './routes/posts/announcements'
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SubscriptionIndexRoute = SubscriptionIndexImport.update({
+  path: '/subscription/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -148,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesIndexImport
       parentRoute: typeof rootRoute
     }
+    '/subscription/': {
+      id: '/subscription/'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -164,6 +177,7 @@ export const routeTree = rootRoute.addChildren({
   MembersIndexRoute,
   MessageIndexRoute,
   StudiesIndexRoute,
+  SubscriptionIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -183,7 +197,8 @@ export const routeTree = rootRoute.addChildren({
         "/dashboard/",
         "/members/",
         "/message/",
-        "/studies/"
+        "/studies/",
+        "/subscription/"
       ]
     },
     "/": {
@@ -215,6 +230,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/": {
       "filePath": "studies/index.tsx"
+    },
+    "/subscription/": {
+      "filePath": "subscription/index.tsx"
     }
   }
 }

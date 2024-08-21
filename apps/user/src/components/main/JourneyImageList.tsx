@@ -1,4 +1,9 @@
-import { ImageListItemBar, Typography } from '@mui/material';
+import {
+  ImageListItemBar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
@@ -34,6 +39,8 @@ const itemVariants = {
 };
 
 export default function JourneyImageList() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <motion.div
       variants={containerVariants}
@@ -43,7 +50,7 @@ export default function JourneyImageList() {
     >
       <ImageList
         sx={{ width: '100%', height: '584px' }}
-        variant='woven'
+        variant={isMobile ? 'standard' : 'woven'}
         cols={3}
         gap={12}
       >
@@ -74,7 +81,7 @@ export default function JourneyImageList() {
                 }
                 subtitle={
                   <Typography
-                    variant='bodySmall'
+                    variant='labelSmall'
                     color='inherit'
                     textAlign={'left'}
                   >
@@ -82,7 +89,13 @@ export default function JourneyImageList() {
                   </Typography>
                 }
                 position='below'
-                actionIcon={<OutwardBtn to={item.link} />}
+                actionIcon={
+                  <OutwardBtn
+                    width={isMobile ? 24 : 48}
+                    height={isMobile ? 24 : 48}
+                    to={item.link}
+                  />
+                }
                 actionPosition='right'
               />
             </motion.div>

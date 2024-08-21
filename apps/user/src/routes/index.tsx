@@ -8,9 +8,10 @@ import {
   AccordionSummary,
   Chip,
   Grid,
+  useTheme,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { Box, Stack } from '@mui/system';
+import { Box, Stack, useMediaQuery } from '@mui/system';
 
 import Box1 from '@assets/images/main/box1.svg';
 import Box2 from '@assets/images/main/box2.svg';
@@ -45,6 +46,8 @@ export const Route = createFileRoute('/')({
 function Home() {
   const faq = Route.useLoaderData();
   const userState = getUserState();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { isIncluded } = usePeriod(
     MENTOR_RECRUIT_START_DATE,
@@ -57,6 +60,7 @@ function Home() {
 
   // const studyIds = studies.map((study) => study.id).filter((id) => id !== 0);
   const { handleSignIn } = useSignIn();
+  const titleVariant = isMobile ? 'titleSmall' : 'titleLarge';
 
   return (
     <main>
@@ -75,16 +79,20 @@ function Home() {
         }}
       >
         <Typography
-          variant='displayLarge'
+          variant={isMobile ? 'displaySmall' : 'displayLarge'}
           color='text.primary'
           sx={{ textTransform: 'uppercase' }}
         >
           Upgrade your passion
         </Typography>
-        <Typography variant='titleLarge'>
+        <Typography variant={titleVariant}>
           {RECRUIT_START_DATE} - {RECRUIT_END_DATE}
         </Typography>
-        <Typography variant='titleLarge' fontWeight={300} color='text.primary'>
+        <Typography
+          variant={titleVariant}
+          fontWeight={300}
+          color='text.primary'
+        >
           지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
           선순환에 동참해주세요.
         </Typography>
@@ -126,7 +134,7 @@ function Home() {
       </Box>
       <Layout>
         <Box py={16} mb={8} textAlign={'center'}>
-          <Typography variant={'headlineSmall'} mb={2}>
+          <Typography variant={'titleLarge'} mb={2}>
             왜 포리프인가요?
           </Typography>
           <Typography variant={'labelLarge'} mb={2}>
@@ -247,7 +255,7 @@ function Home() {
           <Box px={{ md: 12, sm: 4 }}>
             <Stack direction={'row'} justifyContent={'space-between'} mb={4}>
               <Typography
-                variant={'headlineSmall'}
+                variant={isMobile ? 'titleLarge' : 'headlineSmall'}
                 mb={2}
                 textAlign={'left'}
                 width={'30%'}
@@ -274,12 +282,16 @@ function Home() {
       <Box py={16} textAlign={'center'}>
         <Layout>
           <Box px={{ md: 12, sm: 4 }}>
-            <Stack direction={'row'} justifyContent={'space-between'} mb={4}>
+            <Stack
+              direction={isMobile ? 'column' : 'row'}
+              justifyContent={'space-between'}
+              mb={4}
+            >
               <Typography
-                variant={'headlineSmall'}
+                variant={isMobile ? 'titleLarge' : 'headlineSmall'}
                 mb={2}
-                textAlign={'left'}
-                width={'40%'}
+                textAlign={isMobile ? 'center' : 'left'}
+                width={isMobile ? '100%' : '40%'}
                 sx={{ wordBreak: 'keep-all' }}
               >
                 일반적으로 자주 묻는 질문을 확인해보세요.
@@ -289,6 +301,7 @@ function Home() {
                 flexDirection={'column'}
                 gap={2}
                 minHeight={320}
+                px={isMobile ? '0!important' : ''}
               >
                 {faq.slice(0, 3).map((faq, index) => (
                   <Accordion
@@ -299,6 +312,7 @@ function Home() {
                       '&.MuiAccordion-root': {
                         backgroundColor: 'transparent',
                       },
+
                       '&:before': {
                         display: 'none',
                       },
@@ -308,6 +322,11 @@ function Home() {
                       expandIcon={<ExpandMore />}
                       aria-controls={`panel${index}-content`}
                       id={`panel${index}-header`}
+                      sx={{
+                        '&.MuiAccordionSummary-root': {
+                          padding: isMobile ? '0!important' : '',
+                        },
+                      }}
                     >
                       <Stack direction={'row'} alignItems={'center'} gap={1.5}>
                         <Typography variant='labelLarge' fontWeight={'300'}>
@@ -327,9 +346,11 @@ function Home() {
                     </AccordionDetails>
                   </Accordion>
                 ))}
-                <Button fullWidth variant='outlined' size='large'>
-                  더 많은 자주 묻는 질문 보러가기
-                </Button>
+                <Link to='/faq'>
+                  <Button fullWidth variant='outlined' size='large'>
+                    더 많은 자주 묻는 질문 보러가기
+                  </Button>
+                </Link>
               </Layout>
             </Stack>
           </Box>
