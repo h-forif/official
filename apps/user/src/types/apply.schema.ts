@@ -28,8 +28,8 @@ export const ApplyMemberSchema = z
       if (!data.primary_intro || data.primary_intro.length > 500) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
-          maximum: 500,
-          message: '500자 이하로 입력해주세요.',
+          maximum: 1000,
+          message: '1000자 이하로 입력해주세요.',
           inclusive: true,
           type: 'string',
           path: ['primary_intro'],
