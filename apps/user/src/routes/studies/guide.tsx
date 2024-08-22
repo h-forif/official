@@ -33,6 +33,7 @@ import { Title } from '@components/Title';
 export const Route = createFileRoute('/studies/guide')({
   component: StudyGuidePage,
 });
+
 interface ProgrammingCard {
   id: number;
   title: string;
@@ -220,57 +221,60 @@ interface Question {
   id: number;
   title: string;
   text: string;
-  options: [string, string];
+  options: string[];
 }
 
 const questions: Question[] = [
   {
     id: 1,
-    title: '학습 스타일',
-    text: '새로운 기술을 배우는 것을 선호하십니까, 아니면 기존 기술을 깊이 있게 탐구하는 것을 선호하십니까?',
-    options: ['새로운 기술', '기존 기술 탐구'],
+    title: '관심 분야',
+    text: '2학기 개강을 맞아 포리는 새로운 동아리에 들어가려 해요. 어떤 동아리에 들어갈까요?',
+    options: ['FORIF', '포리프'],
   },
   {
     id: 2,
-    title: '학습 스타일',
-    text: '멘토의 강의를 들으며 비교적 대규모로 진행되는 강의형 스터디와 팀원들과 함께 결과물을 만들어내는 프로젝트형 스터디 중 어떤 형태를 선호하시나요?',
-    options: ['강의형 방식', '프로젝트형 방식'],
+    title: '관심 분야',
+    text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민입니다. 어떤 분야에 관심이 있나요?',
+    options: [
+      '나는 눈에 바로바로 보이는게 좋아 ! (Front-end)',
+      '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해 ! (Back-end)',
+      '데이터를 다루어보자 !',
+      '알고리즘 공부를 해볼까?',
+      '요즘 AI가 핫하다며? GPT는 어때?',
+      '쉽게 배울수 없는 주제를 배워보고 싶어.',
+    ],
   },
   {
     id: 3,
     title: '학습 스타일',
-    text: '이론 학습과 실습 중 어느 것을 더 중요하게 생각하십니까?',
-    options: ['이론 학습', '실습'],
+    text: '이론 학습과 실습 중 어느 것을 더 중요시하나요?',
+    options: ['이론 학습', '실습', '둘 다'],
   },
   {
     id: 4,
-    title: '학습 스타일',
-    text: '프론트엔드와 백엔드 중 어느 쪽에 더 관심이 있으십니까?',
-    options: ['프론트엔드', '백엔드'],
+    title: '스터디 난이도',
+    text: '나는 프로그래밍을 어느 정도 알고있나요?',
+    options: [
+      '완전 처음 해본다! 기초 스터디를 수강하고 싶다.',
+      '어느정도 기초 지식이 있다. (창컴/공창컴 이수)',
+      '나는 전공자다. (2학년 이상)',
+      '심도깊은 스터디에 참여하고 싶다.',
+    ],
   },
   {
     id: 5,
-    title: '학습 스타일',
-    text: '단기 집중 학습과 장기 지속 학습 중 어느 것을 선호하십니까?',
-    options: ['단기 집중', '장기 지속'],
+    title: '스터디 방식',
+    text: '강의형과 프로젝트형 스터디 중 어떤 방식을 선호하시나요?',
+    options: [
+      '대규모로 멘토가 강의식으로 진행하는 [강의형 진행 방식]',
+      '소수의 사람들이 모여 결과물을 만들어내는 [프로젝트형 진행 방식]',
+    ],
   },
   {
     id: 6,
-    title: '학습 스타일',
-    text: '코딩 챌린지와 프로젝트 기반 학습 중 어느 것을 선호하십니까?',
-    options: ['코딩 챌린지', '프로젝트 기반'],
-  },
-  {
-    id: 7,
-    title: '학습 스타일',
-    text: '온라인 학습과 오프라인 학습 중 어느 것을 선호하십니까?',
-    options: ['온라인', '오프라인'],
-  },
-  {
-    id: 8,
-    title: '학습 스타일',
-    text: '구조화된 커리큘럼과 자유로운 학습 방식 중 어느 것을 선호하십니까?',
-    options: ['구조화된 커리큘럼', '자유로운 학습'],
+    title: '마지막 질문',
+    text: '포리프 어때요',
+    options: ['좋아요', '좋아요'],
   },
 ];
 
@@ -336,7 +340,7 @@ export default function StudyGuidePage() {
               </Typography>
               <Typography>
                 프로그래밍은 다양한 분야로 나뉘며, 각 분야마다 특징적인 기술과
-                도구를 사용합니다. 다음은 주요 프로그래밍 분야들입니다:
+                도구를 사용합니다. 다음은 주요 프로그래밍 분야들입니다
               </Typography>
               <Box sx={{ mt: 4 }}>
                 <FlippableProgrammingCards />
@@ -367,8 +371,8 @@ export default function StudyGuidePage() {
                   <List>
                     <ListItem>
                       <ListItemText
-                        primary='진행 횟수'
-                        secondary='총 15주 중 중간고사 / 기말고사 기간을 고려하여 8주 이상의 스터디가 진행됩니다.'
+                        primary='모집'
+                        secondary='9월 초 부원 모집 기간'
                       />
                     </ListItem>
                     <ListItem>
@@ -389,6 +393,7 @@ export default function StudyGuidePage() {
                         secondary='개설 스터디는 매 학기마다 달라집니다.'
                       />
                     </ListItem>
+
                     <ListItem>
                       <ListItemText
                         primary='진행 방식'
@@ -411,6 +416,12 @@ export default function StudyGuidePage() {
                         }
                       />
                     </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary='혜택'
+                        secondary='일정 요건 충족 시 수료증이 발급됩니다.'
+                      />
+                    </ListItem>
                   </List>
                 </Box>
                 <Box>
@@ -425,15 +436,39 @@ export default function StudyGuidePage() {
                   </Typography>
                   <List>
                     <ListItem>
+                      <ListItemText primary='모집' secondary='9월 중순' />
+                    </ListItem>
+                    <ListItem>
                       <ListItemText
                         primary='진행 횟수 및 일시'
-                        secondary='정규스터디에 비해 자유롭습니다.'
+                        secondary='스터디원들간의 조율로 진행 계획을 세웁니다.'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
                         primary='개설 방법'
                         secondary='운영진측에 스터디 계획서를 제출하면 스터디 홍보가 진행됩니다.'
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary='혜택'
+                        secondary={
+                          <Fragment>
+                            <Typography component='span' display='block'>
+                              스터디 별 기준에 따라 최대 5만원 지급
+                            </Typography>
+
+                            <Typography component='span' display='block'>
+                              <br />* 자율스터디 수강은 포리프 인증서가 발급되지
+                              않습니다.
+                            </Typography>
+                            <Typography component='span' display='block'>
+                              * 자율스터디는 출석체크 대상에 포함되지 않으며
+                              정해진 회차나 일정이 없습니다.
+                            </Typography>
+                          </Fragment>
+                        }
                       />
                     </ListItem>
                   </List>
@@ -520,64 +555,177 @@ export function StudyRecommendationModal({
       setShowResult(true);
     }
   };
+  // 스터디 정의
+  const studies = [
+    { id: 'DataAnalysis', name: '김유진과 함께하는 데이터 분석 실전' },
+    { id: 'AI', name: 'GPT야 나를 믿니? 네~ 띰장님' },
+    { id: 'FrontEndWebProject', name: '프론트엔드 웹 프로젝트 with React' },
+    {
+      id: 'ServiceArchitecture',
+      name: '한스타그램을 설계해보자! (대형 서비스 설계)',
+    },
+    { id: 'NPMPackage', name: '나만의 NPM 패키지 만들기' },
+    { id: 'DataModeling', name: '제대로 배우는 데이터 모델링' },
+    { id: 'Algorithm', name: '백준과 서강준은 취향차이' },
+    { id: 'Python', name: '오 파이썬 진짜 쩐다 (아직 시작 안함 ㅎㅎ)' },
+    {
+      id: 'WebDevelopmentBasis',
+      name: '당근마켓을 만들며 배워보는 웹 개발 기초',
+    },
+    { id: 'DataCheck', name: '외모췍? 데이터췍!' },
+  ];
+
+  // 질문 및 답변에 따른 점수 정의
+  const questionScores = [
+    {
+      // FORIF vs 포리프
+      scores: [], // 이 질문은 점수에 영향을 주지 않음
+    },
+    {
+      // 관심 분야
+      scores: [
+        { WebDevelopmentBasis: 2, FrontEndWebProject: 2 },
+        { DataAnalysis: 1, Python: 1, DataCheck: 1 },
+        { DataAnalysis: 2, DataCheck: 2, DataModeling: 2 },
+        { Algorithm: 2 },
+        { AI: 2 },
+        {
+          ServiceArchitecture: 2,
+          NPMPackage: 2,
+          DataModeling: 2,
+          AI: 2,
+        },
+      ],
+    },
+    {
+      // 이론 vs 실습 vs 둘 다
+      scores: [
+        {},
+        {},
+        {}, // '둘 다'를 선택한 경우 점수 변화 없음
+      ],
+    },
+    {
+      // 프로그래밍 경험 수준
+      scores: [
+        { Python: 3 },
+        { DataAnalysis: 1, DataCheck: 1, Algorithm: 2, WebDevelopmentBasis: 2 },
+        { AI: 1, DataAnalysis: 1, NPMPackage: 1, DataModeling: 1 },
+        { AI: 3, ServiceArchitecture: 3, NPMPackage: 2 },
+      ],
+    },
+    {
+      // 강의형 vs 프로젝트형
+      scores: [
+        {
+          AI: 4,
+          ServiceArchitecture: 4,
+          DataModeling: 4,
+          Algorithm: 5,
+          Python: 5,
+          WebDevelopmentBasis: 5,
+          DataCheck: 5,
+        },
+        { FrontEndWebProject: 5, NPMPackage: 5 },
+      ],
+    },
+    {
+      // 마지막 질문 (포리프 어때요)
+      scores: [], // 이 질문은 점수에 영향을 주지 않음
+    },
+  ];
 
   const calculateResult = () => {
-    let webDevelopmentScore = 0;
-    let algorithmScore = 0;
+    const scores = Object.fromEntries(studies.map((study) => [study.id, 0]));
 
-    // 각 질문에 대한 답변을 개별적으로 분석
     Object.entries(answers).forEach(([questionIndex, answer]) => {
-      const questionNumber = parseInt(questionIndex);
-      const answerValue = parseInt(answer);
-
-      switch (questionNumber) {
-        case 0: // 새로운 기술 vs 기존 기술
-          answerValue === 0 ? webDevelopmentScore++ : algorithmScore++;
-          break;
-        case 1: // 강의형 vs 프로젝트형
-          answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-          break;
-        case 2: // 이론 vs 실습
-          answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-          break;
-        case 3: // 프론트엔드 vs 백엔드
-          webDevelopmentScore++; // 둘 다 웹 개발 관련이므로
-          break;
-        case 4: // 단기 집중 vs 장기 지속
-          answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-          break;
-        case 5: // 코딩 챌린지 vs 프로젝트 기반
-          answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-          break;
-        case 6: // 온라인 vs 오프라인
-          // 이 질문은 스터디 유형 결정에 큰 영향을 주지 않으므로 건너뜁니다
-          break;
-        case 7: // 구조화된 커리큘럼 vs 자유로운 학습
-          answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-          break;
+      const questionScoreData = questionScores[parseInt(questionIndex)];
+      const answerScores = questionScoreData!.scores[parseInt(answer)];
+      if (answerScores) {
+        Object.entries(answerScores).forEach(([study, score]) => {
+          scores[study] += score;
+        });
       }
     });
 
-    // 결과 결정
-    if (webDevelopmentScore > algorithmScore) {
-      setResult(
-        "당신에게는 '웹 개발 종합 스터디'를 추천합니다! 웹 개발에 대한 관심과 프로젝트 기반 학습 선호도가 높습니다.",
-      );
-    } else if (algorithmScore > webDevelopmentScore) {
-      setResult(
-        "당신에게는 '알고리즘 마스터 스터디'를 추천합니다! 알고리즘과 코딩 챌린지에 대한 관심이 높습니다.",
-      );
-    } else {
-      setResult(
-        '당신은 웹 개발과 알고리즘 모두에 균형 잡힌 관심을 가지고 있습니다. 두 스터디 모두 고려해보는 것이 좋겠습니다.',
-      );
-    }
+    const topStudies = Object.entries(scores)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([studyId, score]) => ({
+        name: studies.find((s) => s.id === studyId)?.name || studyId,
+        score,
+      }));
 
-    // 추가 정보 제공
-    setAdditionalInfo(
-      `웹 개발 점수: ${webDevelopmentScore}, 알고리즘 점수: ${algorithmScore}`,
+    setResult(
+      `추천 스터디:\n${topStudies
+        .map(
+          (study, index) =>
+            `${index + 1}. ${study.name} (점수: ${study.score})`,
+        )
+        .join('\n')}`,
     );
+
+    // setAdditionalInfo(JSON.stringify(scores));
+    setShowResult(true);
   };
+
+  // const calculateResult = () => {
+  //   let webDevelopmentScore = 0;
+  //   let algorithmScore = 0;
+
+  //   // 각 질문에 대한 답변을 개별적으로 분석
+  //   Object.entries(answers).forEach(([questionIndex, answer]) => {
+  //     const questionNumber = parseInt(questionIndex);
+  //     const answerValue = parseInt(answer);
+
+  //     switch (questionNumber) {
+  //       case 0: // 새로운 기술 vs 기존 기술
+  //         answerValue === 0 ? webDevelopmentScore++ : algorithmScore++;
+  //         break;
+  //       case 1: // 강의형 vs 프로젝트형
+  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
+  //         break;
+  //       case 2: // 이론 vs 실습
+  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
+  //         break;
+  //       case 3: // 프론트엔드 vs 백엔드
+  //         webDevelopmentScore++; // 둘 다 웹 개발 관련이므로
+  //         break;
+  //       case 4: // 단기 집중 vs 장기 지속
+  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
+  //         break;
+  //       case 5: // 코딩 챌린지 vs 프로젝트 기반
+  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
+  //         break;
+  //       case 6: // 온라인 vs 오프라인
+  //         // 이 질문은 스터디 유형 결정에 큰 영향을 주지 않으므로 건너뜁니다
+  //         break;
+  //       case 7: // 구조화된 커리큘럼 vs 자유로운 학습
+  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
+  //         break;
+  //     }
+  //   });
+
+  //   // 결과 결정
+  //   if (webDevelopmentScore > algorithmScore) {
+  //     setResult(
+  //       "당신에게는 '웹 개발 종합 스터디'를 추천합니다! 웹 개발에 대한 관심과 프로젝트 기반 학습 선호도가 높습니다.",
+  //     );
+  //   } else if (algorithmScore > webDevelopmentScore) {
+  //     setResult(
+  //       "당신에게는 '알고리즘 마스터 스터디'를 추천합니다! 알고리즘과 코딩 챌린지에 대한 관심이 높습니다.",
+  //     );
+  //   } else {
+  //     setResult(
+  //       '당신은 웹 개발과 알고리즘 모두에 균형 잡힌 관심을 가지고 있습니다. 두 스터디 모두 고려해보는 것이 좋겠습니다.',
+  //     );
+  //   }
+
+  //   // 추가 정보 제공
+  //   setAdditionalInfo(
+  //     `웹 개발 점수: ${webDevelopmentScore}, 알고리즘 점수: ${algorithmScore}`,
+  //   );
+  // };
   const getCurrentQuestion = (): Question | undefined => {
     return currentQuestion >= 0 && currentQuestion < questions.length
       ? questions[currentQuestion]
@@ -609,7 +757,7 @@ export function StudyRecommendationModal({
         <Typography variant='bodyLarge' mt={1} mb={1}>
           {showResult
             ? '스터디 추천 결과'
-            : `Step ${currentQuestion + 1} of ${questions.length} : ${getCurrentQuestion()!.title} `}
+            : `${currentQuestion + 1} / ${questions.length} : ${getCurrentQuestion()!.title} `}
         </Typography>
       </DialogTitle>
       <DialogContent style={{ height: '360px' }}>
@@ -729,9 +877,11 @@ export function StudySideBox() {
       display={{ xs: 'none', md: 'flex' }}
       textAlign={'center'}
     >
-      <Typography>나에게 맞는 스터디는?</Typography>
+      <Typography>
+        포리프의 다양한 스터디 중 <br /> 어떤 스터디가 나에게 맞을까?
+      </Typography>
       <Button variant='contained' fullWidth size='large' onClick={handleOpen}>
-        스터디 추천받기
+        나에게 맞는 스터디 알아보기
       </Button>
       <StudyRecommendationModal open={open} onClose={handleClose} />
     </Stack>
