@@ -3,14 +3,13 @@ import { useState } from 'react';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { Box, Typography } from '@mui/material';
 import {
-  DataGrid,
   GridActionsCellItem,
   GridColDef,
   GridEventListener,
   GridRowId,
-  GridToolbar,
 } from '@mui/x-data-grid';
 
+import { Table } from '@packages/components/table/Table';
 import {
   Application,
   acceptStudies,
@@ -24,7 +23,6 @@ import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
-import NoResultsOverlay from '@components/common/table/NoResultOverlay';
 import AcceptDialog from '@components/study/AcceptDialog';
 
 export const Route = createFileRoute('/studies/accept')({
@@ -162,26 +160,10 @@ function StudyAcceptPage() {
           경우에 승인하여 주세요.
         </Typography>
         <Box sx={{ height: 480, width: '100%', my: 4 }}>
-          <DataGrid
+          <Table
             loading={isLoading}
             rows={applications?.first}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10]}
-            checkboxSelection
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-              },
-            }}
             onRowClick={(params, event, details) => {
               handlePrimaryRowClick(params, event, details);
               handleOpen();
@@ -195,30 +177,10 @@ function StudyAcceptPage() {
           경우에 승인하여 주세요.
         </Typography>
         <Box sx={{ height: 480, width: '100%', my: 4 }}>
-          <DataGrid
+          <Table
             loading={isLoading}
             rows={applications?.second}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10]}
-            checkboxSelection
-            slots={{ toolbar: GridToolbar, noResultsOverlay: NoResultsOverlay }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-              },
-              loadingOverlay: {
-                variant: 'skeleton',
-                noRowsVariant: 'skeleton',
-              },
-            }}
             onRowClick={(params, event, details) => {
               handleSecondaryRowClick(params, event, details);
               handleOpen();

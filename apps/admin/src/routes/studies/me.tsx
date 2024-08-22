@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
 import {
   RECRUIT_END_DATE,
@@ -31,6 +31,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import { Table } from '@packages/components/table/Table';
 import { Study } from '@packages/components/types/study';
 import { User } from '@packages/components/types/user';
 import { getMentees } from '@services/admin.service';
@@ -51,7 +52,6 @@ import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { Layout } from '@components/common/Layout';
 import { TabPanel } from '@components/common/TabPanel';
 import { Title } from '@components/common/Title';
-import NoResultsOverlay from '@components/common/table/NoResultOverlay';
 
 const columns: GridColDef<User>[] = [
   { field: 'id', headerName: '학번', flex: 1 },
@@ -521,31 +521,7 @@ function MyStudyPage() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DataGrid
-          loading={isLoading}
-          rows={mentees}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          disableRowSelectionOnClick
-          pageSizeOptions={[10]}
-          checkboxSelection
-          slots={{ toolbar: GridToolbar, noResultsOverlay: NoResultsOverlay }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-            loadingOverlay: {
-              variant: 'skeleton',
-              noRowsVariant: 'skeleton',
-            },
-          }}
-        />
+        <Table loading={isLoading} rows={mentees} columns={columns} />
       </TabPanel>
     </Layout>
   );

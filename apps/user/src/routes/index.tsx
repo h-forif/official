@@ -92,6 +92,9 @@ function Home() {
           variant={titleVariant}
           fontWeight={300}
           color='text.primary'
+          sx={{
+            wordBreak: 'keep-all',
+          }}
         >
           지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
           선순환에 동참해주세요.

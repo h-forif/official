@@ -4,14 +4,13 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { Box, Typography } from '@mui/material';
 import {
-  DataGrid,
   GridActionsCellItem,
   GridColDef,
   GridEventListener,
   GridRowId,
-  GridToolbar,
 } from '@mui/x-data-grid';
 
+import { Table } from '@packages/components/table/Table';
 import {
   MentorApplication,
   approveStudies,
@@ -154,33 +153,14 @@ function StudiesPage() {
           클릭해주세요.
         </Typography>
         <Box sx={{ height: 640, width: '100%', mt: 2 }}>
-          <DataGrid
+          <Table
             rows={rows}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
             onRowClick={(params, event, details) => {
               handleRowClick(params, event, details);
               handleClickOpen();
             }}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10]}
             checkboxSelection
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-              },
-              loadingOverlay: {
-                variant: 'skeleton',
-                noRowsVariant: 'skeleton',
-              },
-            }}
           />
         </Box>
       </Layout>

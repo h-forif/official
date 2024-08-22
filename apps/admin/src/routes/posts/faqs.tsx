@@ -17,7 +17,6 @@ import {
   useTheme,
 } from '@mui/material';
 import {
-  DataGrid,
   GridActionsCellItem,
   GridColDef,
   GridRowId,
@@ -30,8 +29,14 @@ import { Button, IconButton } from '@packages/components/Button';
 import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import { Table } from '@packages/components/table/Table';
 import { FAQ } from '@packages/components/types/post';
-import { addFaq, editFaq, getFaqs } from '@services/post.service';
+import {
+  addFaq,
+  deleteAnnouncement,
+  editFaq,
+  getFaqs,
+} from '@services/post.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -152,7 +157,7 @@ function FaqPage() {
     }
   };
 
-  function AddToolbar() {
+  function AddFooter() {
     return (
       <GridToolbarContainer
         sx={{
@@ -173,8 +178,7 @@ function FaqPage() {
       mainButtonText: '삭제',
       dialogIconType: DialogIconType.WARNING,
       mainButtonAction: async () => {
-        // TODO: Delete the faq
-        console.log('delete', id);
+        deleteAnnouncement(id);
       },
       subButtonText: '취소',
     });
@@ -229,23 +233,12 @@ function FaqPage() {
         <Typography variant='bodySmall'>
           태그는 <strong>[{tags.join(', ')}]</strong> 중에서 선택해주세요.
         </Typography>
-        <DataGrid
+        <Table
           rows={faqs}
           loading={isLoading}
           columns={columns}
+          footer={AddFooter}
           onRowClick={handleRowClick}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          disableRowSelectionOnClick
-          pageSizeOptions={[10]}
-          slots={{
-            footer: AddToolbar,
-          }}
           sx={{
             mt: 2,
           }}

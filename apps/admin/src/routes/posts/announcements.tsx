@@ -18,7 +18,6 @@ import {
   useTheme,
 } from '@mui/material';
 import {
-  DataGrid,
   GridActionsCellItem,
   GridColDef,
   GridRowId,
@@ -28,6 +27,7 @@ import {
 
 import { Button, IconButton } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
+import { Table } from '@packages/components/table/Table';
 import { Announcement } from '@packages/components/types/post';
 import { getAnnouncement, getAnnouncements } from '@services/post.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
@@ -123,7 +123,7 @@ function FaqPage() {
     setIsAdd(false);
   };
 
-  function AddToolbar() {
+  function AddFooter() {
     return (
       <GridToolbarContainer
         sx={{
@@ -201,25 +201,16 @@ function FaqPage() {
           현재 <strong>{user.name}</strong>님으로 로그인되어 있습니다. 작성자
           이름에 해당 이름이 자동으로 입력됩니다.
         </Typography>
-        <DataGrid
+        <Table
           rows={announcements}
           loading={isLoading}
           columns={columns}
           onRowClick={handleRowClick}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          disableRowSelectionOnClick
-          pageSizeOptions={[10]}
-          slots={{
-            footer: AddToolbar,
-          }}
           sx={{
             mt: 2,
+          }}
+          slots={{
+            footer: AddFooter,
           }}
         />
       </Layout>

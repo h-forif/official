@@ -1,13 +1,8 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Box, Typography } from '@mui/material';
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridRowId,
-  GridToolbar,
-} from '@mui/x-data-grid';
+import { GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid';
 
+import { Table } from '@packages/components/table/Table';
 import { Study } from '@packages/components/types/study';
 import { deleteStudy, getAllStudies } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
@@ -116,10 +111,11 @@ function StudiesPage() {
           클릭해주세요.
         </Typography>
         <Box sx={{ height: 640, width: '100%', mt: 2 }}>
-          <DataGrid
+          <Table
             loading={isLoading}
             rows={studies}
             columns={columns}
+            checkboxSelection
             initialState={{
               pagination: {
                 paginationModel: {
@@ -128,14 +124,6 @@ function StudiesPage() {
               },
               sorting: {
                 sortModel: [{ field: 'id', sort: 'desc' }],
-              },
-            }}
-            pageSizeOptions={[10]}
-            checkboxSelection
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
               },
             }}
           />

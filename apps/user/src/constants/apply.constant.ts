@@ -60,6 +60,10 @@ export const WEEKDAYS_OPTIONS: SelectOption[] = [
 
 export const TAG_OPTIONS: SelectOption[] = [
   {
+    value: '자율',
+    label: '자율',
+  },
+  {
     value: 'database',
     label: '데이터베이스',
   },

@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
+import { Table } from '@packages/components/table/Table';
 import { PaidUser, getUnpaidUsers } from '@services/pay.service';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -38,7 +39,7 @@ function SubscriptionPage() {
     <Box>
       <Title title='회비 내역' label='회비 내역을 알려주세요.' />
       <Layout>
-        <DataGrid
+        <Table
           columns={columns}
           rows={unPaidUsers}
           loading={isLoading}

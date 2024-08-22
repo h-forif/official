@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 
+import { Table } from '@packages/components/table/Table';
 import { User } from '@packages/components/types/user';
 import { getAllUsers } from '@services/admin.service';
 import { useQuery } from '@tanstack/react-query';
@@ -45,27 +46,7 @@ function MembersPage() {
             bgcolor: 'background.default',
           }}
         >
-          <DataGrid
-            rows={data}
-            loading={isLoading}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10]}
-            checkboxSelection
-            slots={{ toolbar: GridToolbar }}
-            slotProps={{
-              toolbar: {
-                showQuickFilter: true,
-              },
-            }}
-          />
+          <Table rows={data} loading={isLoading} columns={columns} />
         </Box>
       </Layout>
     </Box>

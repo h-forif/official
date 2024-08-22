@@ -37,7 +37,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
   return (
     <>
       <MUIAppBar
-        position='fixed'
+        position='static'
         sx={{
           boxShadow: scrollPosition === 0 ? 0 : '0 2px 4px 0 rgba(0,0,0,.2)',
           bgcolor: 'transparent',

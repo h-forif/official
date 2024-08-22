@@ -25,6 +25,17 @@ export async function addAnnouncement(announcement: Announcement) {
   return newAnnouncement;
 }
 
+export async function editAnnouncement(announcement: Announcement) {
+  const updatedAnnouncement: Announcement = await authApi
+    .patch(`/posts/announcements/${announcement.id}`, announcement)
+    .then((res) => res.data);
+  return updatedAnnouncement;
+}
+
+export async function deleteAnnouncement(id: GridRowId) {
+  await authApi.delete(`/posts/announcements/${id}`);
+}
+
 export async function getFaqs() {
   const faqs: FAQ[] = await api.get('/posts/faqs').then((res) => res.data);
   return faqs;

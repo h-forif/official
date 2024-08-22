@@ -42,6 +42,12 @@ export const Route = createFileRoute('/studies/$studyId')({
 //TODO: Replace with actual start date
 const STUDY_START_DATE = '2024-09-10';
 
+const getTag = (tag: string) => {
+  const tagOption = TAG_OPTIONS.find((option) => option.value === tag);
+  if (!tagOption) return '기타';
+  return tagOption.label;
+};
+
 function StudyComponent() {
   const study: Study = Route.useLoaderData();
   const currentTerm = getCurrentTerm();
@@ -136,9 +142,7 @@ function StudyComponent() {
         >
           {study.tag && (
             <Chip
-              label={
-                TAG_OPTIONS.find((option) => option.value === study.tag)?.label
-              }
+              label={getTag(study.tag)}
               color='primary'
               sx={{ width: 'fit-content' }}
             />
@@ -359,7 +363,11 @@ function StudySideBox({
       display={{ xs: 'none', md: 'flex' }}
     >
       {study.tag && (
-        <Chip label={study.tag} sx={{ width: 'fit-content' }} color='primary' />
+        <Chip
+          label={getTag(study.tag)}
+          sx={{ width: 'fit-content' }}
+          color='primary'
+        />
       )}
       <Typography variant='labelLarge'>{study.name}</Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
