@@ -2,15 +2,18 @@ import { ChangeEvent, Fragment, SyntheticEvent, useState } from 'react';
 
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import {
+  Avatar,
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   FormControlLabel,
   Grid,
+  Grow,
   LinearProgress,
   List,
   ListItem,
@@ -25,6 +28,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { Card, CardContent } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -557,22 +561,40 @@ export function StudyRecommendationModal({
   };
   // 스터디 정의
   const studies = [
-    { id: 'DataAnalysis', name: '김유진과 함께하는 데이터 분석 실전' },
-    { id: 'AI', name: 'GPT야 나를 믿니? 네~ 띰장님' },
-    { id: 'FrontEndWebProject', name: '프론트엔드 웹 프로젝트 with React' },
+    {
+      id: 'DataAnalysis',
+      name: '김유진과 함께하는 데이터 분석 실전',
+      info: '데이터 분석',
+    },
+    { id: 'AI', name: 'GPT야 나를 믿니? 네~ 띰장님', info: '데이터 분석' },
+    {
+      id: 'FrontEndWebProject',
+      name: '프론트엔드 웹 프로젝트 with React',
+      info: '데이터 분석',
+    },
     {
       id: 'ServiceArchitecture',
       name: '한스타그램을 설계해보자! (대형 서비스 설계)',
+      info: '데이터 분석',
     },
-    { id: 'NPMPackage', name: '나만의 NPM 패키지 만들기' },
-    { id: 'DataModeling', name: '제대로 배우는 데이터 모델링' },
-    { id: 'Algorithm', name: '백준과 서강준은 취향차이' },
-    { id: 'Python', name: '오 파이썬 진짜 쩐다 (아직 시작 안함 ㅎㅎ)' },
+    { id: 'NPMPackage', name: '나만의 NPM 패키지 만들기', info: '데이터 분석' },
+    {
+      id: 'DataModeling',
+      name: '제대로 배우는 데이터 모델링',
+      info: '데이터 분석',
+    },
+    { id: 'Algorithm', name: '백준과 서강준은 취향차이', info: '데이터 분석' },
+    {
+      id: 'Python',
+      name: '오 파이썬 진짜 쩐다 (아직 시작 안함 ㅎㅎ)',
+      info: '데이터 분석',
+    },
     {
       id: 'WebDevelopmentBasis',
       name: '당근마켓을 만들며 배워보는 웹 개발 기초',
+      info: '데이터 분석',
     },
-    { id: 'DataCheck', name: '외모췍? 데이터췍!' },
+    { id: 'DataCheck', name: '외모췍? 데이터췍!', info: '데이터 분석' },
   ];
 
   // 질문 및 답변에 따른 점수 정의
@@ -648,20 +670,17 @@ export function StudyRecommendationModal({
       }
     });
 
-    const topStudies = Object.entries(scores)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 3)
-      .map(([studyId, score]) => ({
-        name: studies.find((s) => s.id === studyId)?.name || studyId,
-        score,
-      }));
+    const topStudies = studies
+      .map((study) => ({
+        ...study,
+        score: scores[study.id] || 0,
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
 
     setResult(
       `추천 스터디:\n${topStudies
-        .map(
-          (study, index) =>
-            `${index + 1}. ${study.name} (점수: ${study.score})`,
-        )
+        .map((study) => `${study.name}[ 점수: ${study.score}] [${study.info}]`)
         .join('\n')}`,
     );
 
@@ -669,63 +688,6 @@ export function StudyRecommendationModal({
     setShowResult(true);
   };
 
-  // const calculateResult = () => {
-  //   let webDevelopmentScore = 0;
-  //   let algorithmScore = 0;
-
-  //   // 각 질문에 대한 답변을 개별적으로 분석
-  //   Object.entries(answers).forEach(([questionIndex, answer]) => {
-  //     const questionNumber = parseInt(questionIndex);
-  //     const answerValue = parseInt(answer);
-
-  //     switch (questionNumber) {
-  //       case 0: // 새로운 기술 vs 기존 기술
-  //         answerValue === 0 ? webDevelopmentScore++ : algorithmScore++;
-  //         break;
-  //       case 1: // 강의형 vs 프로젝트형
-  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-  //         break;
-  //       case 2: // 이론 vs 실습
-  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-  //         break;
-  //       case 3: // 프론트엔드 vs 백엔드
-  //         webDevelopmentScore++; // 둘 다 웹 개발 관련이므로
-  //         break;
-  //       case 4: // 단기 집중 vs 장기 지속
-  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-  //         break;
-  //       case 5: // 코딩 챌린지 vs 프로젝트 기반
-  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-  //         break;
-  //       case 6: // 온라인 vs 오프라인
-  //         // 이 질문은 스터디 유형 결정에 큰 영향을 주지 않으므로 건너뜁니다
-  //         break;
-  //       case 7: // 구조화된 커리큘럼 vs 자유로운 학습
-  //         answerValue === 0 ? algorithmScore++ : webDevelopmentScore++;
-  //         break;
-  //     }
-  //   });
-
-  //   // 결과 결정
-  //   if (webDevelopmentScore > algorithmScore) {
-  //     setResult(
-  //       "당신에게는 '웹 개발 종합 스터디'를 추천합니다! 웹 개발에 대한 관심과 프로젝트 기반 학습 선호도가 높습니다.",
-  //     );
-  //   } else if (algorithmScore > webDevelopmentScore) {
-  //     setResult(
-  //       "당신에게는 '알고리즘 마스터 스터디'를 추천합니다! 알고리즘과 코딩 챌린지에 대한 관심이 높습니다.",
-  //     );
-  //   } else {
-  //     setResult(
-  //       '당신은 웹 개발과 알고리즘 모두에 균형 잡힌 관심을 가지고 있습니다. 두 스터디 모두 고려해보는 것이 좋겠습니다.',
-  //     );
-  //   }
-
-  //   // 추가 정보 제공
-  //   setAdditionalInfo(
-  //     `웹 개발 점수: ${webDevelopmentScore}, 알고리즘 점수: ${algorithmScore}`,
-  //   );
-  // };
   const getCurrentQuestion = (): Question | undefined => {
     return currentQuestion >= 0 && currentQuestion < questions.length
       ? questions[currentQuestion]
@@ -738,10 +700,6 @@ export function StudyRecommendationModal({
     setShowResult(false);
   };
   const handleClose = () => {
-    // setCurrentQuestion(0);
-    // setAnswers({});
-    // setResult('');
-    // setShowResult(false);
     onClose();
   };
 
@@ -760,7 +718,7 @@ export function StudyRecommendationModal({
             : `${currentQuestion + 1} / ${questions.length} : ${getCurrentQuestion()!.title} `}
         </Typography>
       </DialogTitle>
-      <DialogContent style={{ height: '360px' }}>
+      <DialogContent style={{ height: '360px', backgroundColor: 'white' }}>
         {!showResult ? (
           <>
             <LinearProgress
@@ -809,20 +767,88 @@ export function StudyRecommendationModal({
             )}
           </>
         ) : (
-          <Box sx={{ mt: 4, mb: 2 }}>
-            <Typography>{result}</Typography>
-            <Typography variant='bodyMedium' sx={{ mt: 2 }}>
-              {additionalInfo}
+          <Box sx={{ mt: 2, mb: 2, backgroundColor: 'white' }}>
+            <Box sx={{ mt: 4, mb: 4 }}>
+              <Typography gutterBottom align='center'>
+                답변 결과를 바탕으로 어떤 스터디가 좋을지 분석해보았어요. <br />
+                이런 스터디는 어떤가요?
+              </Typography>
+            </Box>
+            {result
+              .split('\n')
+              .slice(1)
+              .map((study, index) => {
+                return (
+                  <Grow in={showResult} timeout={(index + 1) * 500} key={index}>
+                    <Card
+                      elevation={0}
+                      sx={{
+                        border: 1,
+                        borderColor: 'divider',
+                        borderRadius: 4,
+                        mb: 2,
+                        backgroundColor: index === 0 ? 'white' : 'inherit',
+                      }}
+                    >
+                      <CardContent
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                      >
+                        <Avatar
+                          sx={{
+                            bgcolor: index === 0 ? 'pink' : 'primary.main',
+                            mr: 2,
+                          }}
+                        >
+                          {index + 1}
+                        </Avatar>
+                        <Box width='62%'>
+                          <Typography variant='bodyMedium' component='div'>
+                            {study.split('[')[0]!.trim()}
+                          </Typography>
+                          <Typography
+                            variant='bodyMedium'
+                            color='text.secondary'
+                          >
+                            {`[${study.split('[')[2]}`}
+                          </Typography>
+                        </Box>
+                        <Box
+                          display='flex'
+                          justifyContent='flex-end'
+                          width='35%'
+                          mt={3}
+                        >
+                          <Button
+                            variant='outlined'
+                            onClick={handleClose}
+                            size='small'
+                          >
+                            스터디 보러가기
+                          </Button>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grow>
+                );
+              })}
+            <Divider sx={{ my: 2 }} />
+            <Typography
+              variant='bodyMedium'
+              color='text.secondary'
+              align='center'
+              sx={{ mt: 2 }}
+            >
+              더 많은 스터디를 보러가려면 아래의 버튼을 클릭해주세요!
             </Typography>
-            <Box display='flex' justifyContent='center' width='100%'>
-              <Button variant='outlined' onClick={handleClose} size='large'>
-                스터디 보러가기
+            <Box display='flex' justifyContent='center' width='100%' mt={3}>
+              <Button variant='contained' onClick={handleClose} size='large'>
+                24년 2학기 개설 스터디 목록 보러가기
               </Button>
             </Box>
           </Box>
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions style={{ backgroundColor: 'white' }}>
         <Button onClick={handleResetQuestion} size='large'>
           다시 검사하기
         </Button>
