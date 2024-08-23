@@ -50,7 +50,7 @@ function MyApplication() {
         <Box width={'100%'}>
           <Title
             title='스터디 지원서'
-            label={`이번 학기에 제출한 스터디 지원서를 확인할 수 있습니다. 지원서 수정은 스터디 신청 기간(${RECRUIT_START_DATE} - ${RECRUIT_END_DATE})에만 가능합니다.`}
+            label={`제출한 스터디 지원서를 확인할 수 있습니다. 지원서 수정은 스터디 신청 기간(${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}, ${currentTerm.year}년 ${currentTerm.semester}학기 기준)에만 가능합니다.`}
             pt={0}
           />
           <Layout>
@@ -76,8 +76,7 @@ function MyApplication() {
                       color={'text.secondary'}
                       mb={2}
                     >
-                      현재 학기({currentTerm.year} - {currentTerm.semester})
-                      기준
+                      {currentTerm.year} - {currentTerm.semester}
                     </Typography>
                     <Typography variant='titleMedium' color='primary' mb={2}>
                       아직 스터디 지원서를 제출하지 않았습니다.

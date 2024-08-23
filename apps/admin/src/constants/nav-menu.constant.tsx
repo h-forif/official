@@ -44,11 +44,11 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
     ],
   },
   {
-    title: '부원 관리',
+    title: '부원/회원 관리',
     icon: <GroupOutlinedIcon />,
     submenu: [
-      { title: '부원 목록', href: '/members' },
-      { title: '부원 관리', href: '/members/manage' },
+      { title: '부원 관리', href: '/members' },
+      { title: '회원 관리', href: '/subscriber' },
     ],
   },
   {

@@ -49,7 +49,7 @@ export default function JourneyImageList() {
       viewport={{ once: true, amount: 0.2 }} // Trigger only once when 20% in view
     >
       <ImageList
-        sx={{ width: '100%', height: '584px' }}
+        sx={{ width: '100%', height: isMobile ? 'fit-content' : '584px' }}
         variant={isMobile ? 'standard' : 'woven'}
         cols={3}
         gap={12}
@@ -69,7 +69,7 @@ export default function JourneyImageList() {
                 }}
               />
               <ImageListItemBar
-                sx={{ mt: 4 }}
+                sx={{ mt: 4, width: '100%' }}
                 title={
                   <Typography
                     variant='titleSmall'

@@ -56,8 +56,13 @@ function StudiesPage() {
     { field: 'id', headerName: '아이디', flex: 1 },
     { field: 'name', headerName: '스터디 이름', flex: 2 },
     { field: 'primary_mentor_name', headerName: '1순위 멘토', flex: 1 },
-    { field: 'act_year', headerName: '년도', flex: 1 },
-    { field: 'act_semester', headerName: '학기', flex: 1 },
+    {
+      field: 'year_semester',
+      headerName: '년도-학기',
+      flex: 1,
+      valueGetter: ({ params }: any) =>
+        `${params.row.act_year}-${params.row.act_semester}`,
+    },
     {
       field: 'actions',
       type: 'actions',

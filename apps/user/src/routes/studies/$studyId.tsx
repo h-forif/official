@@ -3,7 +3,7 @@ import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import { Chip, Divider, Tab, Tabs, Typography, useTheme } from '@mui/material';
-import { Box, Stack } from '@mui/system';
+import { Box, Stack, useMediaQuery } from '@mui/system';
 import {
   DateCalendar,
   LocalizationProvider,
@@ -17,6 +17,7 @@ import {
   RECRUIT_START_DATE,
   TAG_OPTIONS,
 } from '@constants/apply.constant';
+import { DIFFICULTY } from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import { Study } from '@packages/components/types/study';
 import { Link, createFileRoute } from '@tanstack/react-router';
@@ -50,9 +51,14 @@ const getTag = (tag: string) => {
 
 function StudyComponent() {
   const study: Study = Route.useLoaderData();
+  const difficulty =
+    (Object.keys(DIFFICULTY) as Array<keyof typeof DIFFICULTY>).find(
+      (key) => DIFFICULTY[key] === study.difficulty,
+    ) || '';
   const currentTerm = getCurrentTerm();
 
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const mode = theme.palette.mode;
   const [tab, setTab] = useState('#introduction');
   const [date, setDate] = useState<Dayjs | null>(dayjs(STUDY_START_DATE));
@@ -140,15 +146,25 @@ function StudyComponent() {
           p={6}
           gap={1}
         >
-          {study.tag && (
+          <Box>
+            {study.tag && (
+              <Chip
+                label={getTag(study.tag)}
+                color='primary'
+                sx={{ width: 'fit-content', mr: 1 }}
+              />
+            )}
             <Chip
-              label={getTag(study.tag)}
-              color='primary'
+              label={`${difficulty} 난이도`}
+              color='info'
               sx={{ width: 'fit-content' }}
             />
-          )}
+          </Box>
 
-          <Typography variant='displaySmall' mb={2}>
+          <Typography
+            variant={isMobile ? 'titleLarge' : 'headlineSmall'}
+            mb={2}
+          >
             {study.name}
           </Typography>
           <Typography variant='bodyMedium' mb={2} fontWeight={300}>
@@ -349,6 +365,11 @@ function StudySideBox({
   study: Study;
   isDisabled: boolean;
 }) {
+  const difficulty =
+    (Object.keys(DIFFICULTY) as Array<keyof typeof DIFFICULTY>).find(
+      (key) => DIFFICULTY[key] === study.difficulty,
+    ) || '';
+  console.log(difficulty);
   return (
     <Stack
       flexBasis={320}
@@ -362,13 +383,20 @@ function StudySideBox({
       top={64}
       display={{ xs: 'none', md: 'flex' }}
     >
-      {study.tag && (
+      <Box>
+        {study.tag && (
+          <Chip
+            label={getTag(study.tag)}
+            color='primary'
+            sx={{ width: 'fit-content', mr: 1 }}
+          />
+        )}
         <Chip
-          label={getTag(study.tag)}
+          label={`${difficulty} 난이도`}
+          color='info'
           sx={{ width: 'fit-content' }}
-          color='primary'
         />
-      )}
+      </Box>
       <Typography variant='labelLarge'>{study.name}</Typography>
       <Typography variant='labelSmall' color={'text.secondary'}>
         매주 {getWeekDayAsString(study.week_day)}
