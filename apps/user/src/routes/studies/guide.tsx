@@ -559,6 +559,11 @@ export function StudyRecommendationModal({
       setShowResult(true);
     }
   };
+  const handleBack = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
   // 스터디 정의
   const studies = [
     {
@@ -849,6 +854,14 @@ export function StudyRecommendationModal({
         )}
       </DialogContent>
       <DialogActions style={{ backgroundColor: 'white' }}>
+        <Button
+          onClick={handleBack}
+          size='large'
+          disabled={currentQuestion === 0 || showResult}
+        >
+          뒤로
+        </Button>
+
         <Button onClick={handleResetQuestion} size='large'>
           다시 검사하기
         </Button>
