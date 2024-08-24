@@ -96,7 +96,6 @@ function FaqPage() {
 
   const handleEdit = async () => {
     const formData = form.getValues();
-    console.log(formData);
 
     try {
       await editFaq(formData);

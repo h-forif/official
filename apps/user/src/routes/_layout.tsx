@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Box, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 
 import { PROFILE_NAV_MENUS } from '@constants/nav-menu.constant';
 import {
@@ -10,39 +10,46 @@ import {
   useLocation,
 } from '@tanstack/react-router';
 
+import useDeviceSize from '@hooks/useDeviceSize';
+
 export const Route = createFileRoute('/_layout')({
   component: ProfileLayout,
 });
 
 function ProfileLayout() {
-  const pathname = useLocation().pathname;
-  const theme = useTheme();
-  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
+  const { pathname } = useLocation();
+  const { isMobile } = useDeviceSize();
   const [value, setValue] = useState(pathname);
+
+  useEffect(() => {
+    if (pathname.startsWith('/profile')) {
+      setValue(pathname);
+    }
+  }, [pathname]);
 
   return (
     <Box
       sx={{
         flexGrow: 1,
         display: 'flex',
-        flexDirection: isPhone ? 'column' : 'row',
+        flexDirection: isMobile ? 'column' : 'row',
         height: '100%',
-        pt: isPhone ? 0 : 8,
+        pt: isMobile ? 0 : 8,
         width: '100%',
       }}
     >
       <Tabs
         value={value}
-        onChange={(event, newValue: string) => {
+        onChange={(_event, newValue: string) => {
           if (newValue.startsWith('/profile')) {
             setValue(newValue);
           }
         }}
-        orientation={isPhone ? 'horizontal' : 'vertical'}
+        orientation={isMobile ? 'horizontal' : 'vertical'}
         aria-label='Profile Vertical Tabs'
         role='navigation'
-        variant={isPhone ? 'scrollable' : 'standard'}
-        centered={isPhone ? false : true}
+        variant={isMobile ? 'scrollable' : 'standard'}
+        centered={isMobile ? false : true}
         sx={{
           '.MuiTab-root': {
             paddingX: 6,
@@ -68,7 +75,7 @@ function ProfileLayout() {
           flexGrow: 1,
           display: 'flex',
           width: '100%',
-          pt: isPhone ? 4 : 0,
+          pt: isMobile ? 4 : 0,
         }}
       >
         <Outlet />

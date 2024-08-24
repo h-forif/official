@@ -8,12 +8,12 @@ import {
 } from '@mui/material';
 import { Stack } from '@mui/system';
 
+import { Button } from '@packages/components/Button';
 import { UserProfile } from '@packages/components/types/user';
 import { createFileRoute } from '@tanstack/react-router';
 import { getUser } from 'src/services/user.service';
 
 import { Title } from '@components/Title';
-import { BizMsgSwitch } from '@components/profile/account/BizMsgSwitch';
 import { DepartDialog } from '@components/profile/account/DepartDialog';
 import { NameDialog } from '@components/profile/account/NameDialog';
 import { PhoneDialog } from '@components/profile/account/PhoneDialog';
@@ -65,6 +65,44 @@ function ProfileAccount() {
                 </Typography>
                 <Stack divider={<Divider />}>
                   <PictureDialog user={user} />
+                  <Button
+                    sx={{
+                      py: 2,
+                    }}
+                  >
+                    <Stack
+                      direction={'row'}
+                      alignItems={'center'}
+                      width={'100%'}
+                    >
+                      <Stack
+                        direction={'row'}
+                        alignItems={'center'}
+                        flexWrap={'wrap'}
+                        width={'100%'}
+                      >
+                        <Typography
+                          variant='labelSmall'
+                          sx={{ mr: 3 }}
+                          fontWeight={400}
+                          width={120}
+                          textAlign={'start'}
+                          color={'text.primary'}
+                        >
+                          학번
+                        </Typography>
+                        <Typography
+                          variant='labelLarge'
+                          fontWeight={400}
+                          textAlign={'start'}
+                          flexGrow={1}
+                          color={'text.primary'}
+                        >
+                          {user.id}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Button>
                   <NameDialog user={user} />
                   <DepartDialog user={user} />
                 </Stack>
@@ -112,7 +150,6 @@ function ProfileAccount() {
                   >
                     포리프 카카오톡 공식 채널
                   </Typography>
-                  <BizMsgSwitch />
                 </Stack>
               </CardContent>
             </Card>

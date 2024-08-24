@@ -41,55 +41,59 @@ export default function StudyCurriculum({
           {section === '' ? '휴강' : section}
         </Typography>
       </Stack>
-      <Stack>
-        {content.map((content, index) => (
-          <Stack key={index} direction={'row'} alignItems={'center'} px={2}>
-            <Stack
-              position={'relative'}
-              alignItems={'flex-start'}
-              justifyContent={'center'}
-              alignSelf={'stretch'}
-              mr={3}
-              sx={{
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  display: 'block',
-                  zIndex: 0,
-                  top: 0,
-                  bottom: 0,
-                  left: 7,
-                  width: '.1rem',
-                  height: '100%',
-                  bgcolor: 'divider',
-                },
-              }}
-            >
-              <Stack
-                width={16}
-                height={16}
-                display={'flex'}
-                alignItems={'center'}
-                justifyContent={'center'}
-                my={2}
-                zIndex={1}
-              >
-                <Box
-                  width={16}
-                  height={'auto'}
+      {index !== 14 && (
+        <Stack>
+          {content.map((content, index) => {
+            return (
+              <Stack key={index} direction={'row'} alignItems={'center'} px={2}>
+                <Stack
+                  position={'relative'}
+                  alignItems={'flex-start'}
+                  justifyContent={'center'}
+                  alignSelf={'stretch'}
+                  mr={3}
                   sx={{
-                    aspectRatio: 1,
-                    borderRadius: '50%',
-                    border: '2px solid #fff',
-                    bgcolor: 'lightgray',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      display: 'block',
+                      zIndex: 0,
+                      top: 0,
+                      bottom: 0,
+                      left: 7,
+                      width: '.1rem',
+                      height: '100%',
+                      bgcolor: 'divider',
+                    },
                   }}
-                ></Box>
+                >
+                  <Stack
+                    width={16}
+                    height={16}
+                    display={'flex'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    my={2}
+                    zIndex={1}
+                  >
+                    <Box
+                      width={16}
+                      height={'auto'}
+                      sx={{
+                        aspectRatio: 1,
+                        borderRadius: '50%',
+                        border: '2px solid #fff',
+                        bgcolor: 'lightgray',
+                      }}
+                    ></Box>
+                  </Stack>
+                </Stack>
+                <Typography variant='bodySmall'>{content}</Typography>
               </Stack>
-            </Stack>
-            <Typography variant='bodySmall'>{content}</Typography>
-          </Stack>
-        ))}
-      </Stack>
+            );
+          })}
+        </Stack>
+      )}
     </>
   );
 }

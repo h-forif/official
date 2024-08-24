@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import {
   Card,
   CardContent,
@@ -41,6 +43,10 @@ export const Route = createFileRoute('/_layout/profile/application')({
 });
 
 function MyApplication() {
+  useEffect(() => {
+    scrollTo(0, 0);
+  }, []);
+
   const currentTerm = getCurrentTerm();
   const { application, err } = Route.useLoaderData();
   const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
@@ -160,6 +166,9 @@ function MyApplication() {
       <Layout>
         <Grid container spacing={{ xs: 2, md: 4, xl: 6 }}>
           <Grid item xs={12}>
+            <ApplicationState application={application!} />
+          </Grid>
+          <Grid item xs={12}>
             <Card
               sx={{
                 minWidth: 275,
@@ -235,9 +244,6 @@ function MyApplication() {
                 </Link>
               </CardContent>
             </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <ApplicationState application={application!} />
           </Grid>
         </Grid>
       </Layout>

@@ -14,18 +14,18 @@ export const ApplyMemberSchema = z
   .superRefine((data, ctx) => {
     // 1순위 스터디가 자율스터디가 아닌 경우 1순위 소개글에 대한 검증 진행
     if (data.primary_study !== '0') {
-      if (!data.primary_intro || data.primary_intro.length < 50) {
+      if (!data.primary_intro || data.primary_intro.length < 100) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
-          minimum: 50,
-          message: '50자 이상 입력해주세요.',
+          minimum: 100,
+          message: '100자 이상 입력해주세요.',
           inclusive: true,
           type: 'string',
           path: ['primary_intro'],
         });
         return false;
       }
-      if (!data.primary_intro || data.primary_intro.length > 500) {
+      if (!data.primary_intro || data.primary_intro.length > 1000) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
           maximum: 1000,
@@ -55,22 +55,22 @@ export const ApplyMemberSchema = z
         });
         return false;
       }
-      if (!data.secondary_intro || data.secondary_intro.length < 50) {
+      if (!data.secondary_intro || data.secondary_intro.length < 100) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,
-          minimum: 50,
-          message: '50자 이상 입력해주세요.',
+          minimum: 100,
+          message: '100자 이상 입력해주세요.',
           inclusive: true,
           type: 'string',
           path: ['secondary_intro'],
         });
         return false;
       }
-      if (!data.secondary_intro || data.secondary_intro.length > 500) {
+      if (!data.secondary_intro || data.secondary_intro.length > 1000) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_big,
-          maximum: 500,
-          message: '500자 이하로 입력해주세요.',
+          maximum: 1000,
+          message: '1000자 이하로 입력해주세요.',
           inclusive: true,
           type: 'string',
           path: ['secondary_intro'],

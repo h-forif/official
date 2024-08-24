@@ -107,6 +107,10 @@ export const TAG_OPTIONS: SelectOption[] = [
     value: 'design',
     label: '디자인',
   },
+  {
+    value: 'algorithm',
+    label: '알고리즘',
+  },
 ];
 
 export const REVIEW_START_DATE = '2024-09-11T20:00:00'; //TODO: Change this to the actual date

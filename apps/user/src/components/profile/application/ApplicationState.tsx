@@ -2,10 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { Box, CardContent, Divider, Typography, styled } from '@mui/material';
 
-import Peeps1 from '@assets/images/avatar/peep-1.svg?react';
-import Peeps2 from '@assets/images/avatar/peep-2.svg?react';
-import Peeps3 from '@assets/images/avatar/peep-58.svg?react';
-import Peeps4 from '@assets/images/avatar/peep-75.svg?react';
 import { REVIEW_END_DATE, REVIEW_START_DATE } from '@constants/apply.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import dayjs from '@utils/dayjs';
@@ -52,7 +48,6 @@ export function ApplicationState({
       case 0:
         return (
           <CenteredBox flexDirection={'column'}>
-            <Peeps1 width={'100%'} height={'280px'} />
             <Typography variant='titleSmall' mt={2} textAlign={'center'}>
               현재 지원서 작성 중입니다.
             </Typography>
@@ -61,7 +56,6 @@ export function ApplicationState({
       case 1:
         return (
           <CenteredBox flexDirection={'column'}>
-            <Peeps2 width={'100%'} height={'280px'} />
             <Typography variant='bodySmall' mt={2} textAlign={'center'}>
               {priority === 'secondary' && application?.secondary_study === null
                 ? '2순위 스터디를 수강하지 않습니다.'
@@ -72,7 +66,6 @@ export function ApplicationState({
       case 2:
         return (
           <CenteredBox flexDirection={'column'}>
-            <Peeps3 width={'100%'} height={'280px'} />
             <Typography variant='bodySmall' mt={2} textAlign={'center'}>
               {priority === 'secondary' && application?.secondary_study === null
                 ? '2순위 스터디를 수강하지 않습니다.'
@@ -81,11 +74,7 @@ export function ApplicationState({
           </CenteredBox>
         );
       case 3:
-        return (
-          <CenteredBox flexDirection={'column'}>
-            <Peeps4 width={'100%'} height={'280px'} />
-          </CenteredBox>
-        );
+        return <CenteredBox flexDirection={'column'}></CenteredBox>;
     }
   }
 
@@ -93,7 +82,6 @@ export function ApplicationState({
     <Box
       sx={{
         minWidth: 275,
-        height: 512,
         backgroundColor: 'background.default',
         borderRadius: 3,
         boxShadow: 0,

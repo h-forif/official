@@ -59,12 +59,19 @@ export const Route = createFileRoute('/apply/member')({
 });
 
 function ApplyMember() {
+  const [isSaved, setIsSaved] = useState(false);
+  const navigate = useNavigate();
+  const { proceed, reset, status } = useBlocker({
+    condition: !isSaved,
+  });
+
   useEffect(() => {
     const checkApplication = async () => {
       try {
         const application = await getApplication();
         if (application) {
-          window.location.href = '/profile/application';
+          proceed();
+          navigate({ to: '/profile/application' });
         }
       } catch (err) {
         // 에러 무시
@@ -72,18 +79,16 @@ function ApplyMember() {
     };
 
     checkApplication();
-  }, []);
+  }, [navigate, proceed]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const loaderData = Route.useLoaderData();
-  const navigate = useNavigate();
   const router = useRouter();
   const { studies, userInfo } = loaderData;
 
-  const [isSaved, setIsSaved] = useState(false);
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
 
   const { id, name, department, phone_number } = userInfo!;
@@ -99,10 +104,6 @@ function ApplyMember() {
       apply_path: '',
       is_primary_study_only: false,
     },
-  });
-
-  const { proceed, reset, status } = useBlocker({
-    condition: !isSaved,
   });
 
   useEffect(() => {
@@ -282,6 +283,7 @@ function ApplyMember() {
                 multiline
                 maxRows={4}
                 disabled={primary_study === '0' || !isIncluded}
+                placeholder='최소 150자, 최대 1000자 이내로 작성해주세요.'
                 required
               />
               <Typography variant='titleSmall'>
@@ -334,6 +336,7 @@ function ApplyMember() {
                 }
                 required={!is_primary_study_only}
                 fullWidth
+                placeholder='최소 150자, 최대 1000자 이내로 작성해주세요.'
               />
               <Typography variant='titleSmall'>포리프를 접한 경로</Typography>
               <Controller

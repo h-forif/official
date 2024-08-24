@@ -12,7 +12,6 @@ import Image from '@packages/components/Image';
 import { Input } from '@packages/components/Input';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Layout } from '@packages/components/elements/Layout';
-import { FAQ } from '@packages/components/types/post';
 import { getFaqs } from '@services/post.service';
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -22,11 +21,6 @@ export const Route = createFileRoute('/faq/')({
   loader: () => getFaqs(),
   component: FAQPage,
 });
-
-function getRandomFaqs(faqs: FAQ[], count: number): FAQ[] {
-  const shuffled = [...faqs].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
 
 function FAQPage() {
   const faqs = Route.useLoaderData();
@@ -41,11 +35,6 @@ function FAQPage() {
       ),
     );
   }, [search, faqs]);
-
-  useEffect(() => {
-    const randomFaqs = getRandomFaqs(faqs, 3);
-    console.log('Random FAQs:', randomFaqs);
-  }, [faqs]);
 
   return (
     <Box>
