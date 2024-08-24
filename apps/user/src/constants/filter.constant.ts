@@ -2,6 +2,17 @@ import { SelectOption } from '@packages/components/Select';
 
 const POSSIBLE_YEARS = [2024, 2023, 2022, 2021, 2020, 2019, 2018];
 const SEMESTERS = [1, 2];
+
+export const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({
+  value: year.toString(),
+  label: year.toString(),
+}));
+
+export const SEMESTER_OPTIONS: SelectOption[] = SEMESTERS.map((semester) => ({
+  value: semester.toString(),
+  label: `${semester}학기`,
+}));
+
 const DIFFICULTY = {
   전체: 0,
   쉬움: 1,

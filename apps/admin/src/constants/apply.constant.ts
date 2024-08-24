@@ -54,6 +54,10 @@ export const TAG_OPTIONS: SelectOption[] = [
     value: 'design',
     label: '디자인',
   },
+  {
+    value: 'algorithm',
+    label: '알고리즘',
+  },
 ];
 
 export const WEEKDAYS_OPTIONS: SelectOption[] = [

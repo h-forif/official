@@ -20,6 +20,7 @@ import { Route as FaqIndexImport } from './routes/faq/index'
 import { Route as AnnouncementIndexImport } from './routes/announcement/index'
 import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
+import { Route as ClubTeamImport } from './routes/club/team'
 import { Route as ClubRuleImport } from './routes/club/rule'
 import { Route as ClubCalendarImport } from './routes/club/calendar'
 import { Route as ClubAboutImport } from './routes/club/about'
@@ -35,20 +36,13 @@ import { Route as LayoutProfileAccountImport } from './routes/_layout/profile/ac
 
 // Create Virtual Routes
 
-const TeamLazyImport = createFileRoute('/team')()
 const AboutLazyImport = createFileRoute('/about')()
 const HackathonIndexLazyImport = createFileRoute('/hackathon/')()
-const ClubTeamLazyImport = createFileRoute('/club/team')()
 const LayoutProfileCertificateLazyImport = createFileRoute(
   '/_layout/profile/certificate',
 )()
 
 // Create/Update Routes
-
-const TeamLazyRoute = TeamLazyImport.update({
-  path: '/team',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/team.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -87,11 +81,6 @@ const AnnouncementIndexRoute = AnnouncementIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ClubTeamLazyRoute = ClubTeamLazyImport.update({
-  path: '/club/team',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/club/team.lazy').then((d) => d.Route))
-
 const StudiesGuideRoute = StudiesGuideImport.update({
   path: '/studies/guide',
   getParentRoute: () => rootRoute,
@@ -99,6 +88,11 @@ const StudiesGuideRoute = StudiesGuideImport.update({
 
 const StudiesStudyIdRoute = StudiesStudyIdImport.update({
   path: '/studies/$studyId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClubTeamRoute = ClubTeamImport.update({
+  path: '/club/team',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -195,13 +189,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/team': {
-      id: '/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof TeamLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/announcement/$id': {
       id: '/announcement/$id'
       path: '/announcement/$id'
@@ -258,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClubRuleImport
       parentRoute: typeof rootRoute
     }
+    '/club/team': {
+      id: '/club/team'
+      path: '/club/team'
+      fullPath: '/club/team'
+      preLoaderRoute: typeof ClubTeamImport
+      parentRoute: typeof rootRoute
+    }
     '/studies/$studyId': {
       id: '/studies/$studyId'
       path: '/studies/$studyId'
@@ -270,13 +264,6 @@ declare module '@tanstack/react-router' {
       path: '/studies/guide'
       fullPath: '/studies/guide'
       preLoaderRoute: typeof StudiesGuideImport
-      parentRoute: typeof rootRoute
-    }
-    '/club/team': {
-      id: '/club/team'
-      path: '/club/team'
-      fullPath: '/club/team'
-      preLoaderRoute: typeof ClubTeamLazyImport
       parentRoute: typeof rootRoute
     }
     '/announcement/': {
@@ -357,7 +344,6 @@ export const routeTree = rootRoute.addChildren({
     LayoutProfileIndexRoute,
   }),
   AboutLazyRoute,
-  TeamLazyRoute,
   AnnouncementIdRoute,
   ApplyApplicationRoute,
   ApplyMemberRoute,
@@ -366,9 +352,9 @@ export const routeTree = rootRoute.addChildren({
   ClubAboutRoute,
   ClubCalendarRoute,
   ClubRuleRoute,
+  ClubTeamRoute,
   StudiesStudyIdRoute,
   StudiesGuideRoute,
-  ClubTeamLazyRoute,
   AnnouncementIndexRoute,
   FaqIndexRoute,
   StudiesIndexRoute,
@@ -386,7 +372,6 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/_layout",
         "/about",
-        "/team",
         "/announcement/$id",
         "/apply/application",
         "/apply/member",
@@ -395,9 +380,9 @@ export const routeTree = rootRoute.addChildren({
         "/club/about",
         "/club/calendar",
         "/club/rule",
+        "/club/team",
         "/studies/$studyId",
         "/studies/guide",
-        "/club/team",
         "/announcement/",
         "/faq/",
         "/studies/",
@@ -419,9 +404,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about": {
       "filePath": "about.lazy.tsx"
-    },
-    "/team": {
-      "filePath": "team.lazy.tsx"
     },
     "/announcement/$id": {
       "filePath": "announcement/$id.tsx"
@@ -447,14 +429,14 @@ export const routeTree = rootRoute.addChildren({
     "/club/rule": {
       "filePath": "club/rule.tsx"
     },
+    "/club/team": {
+      "filePath": "club/team.tsx"
+    },
     "/studies/$studyId": {
       "filePath": "studies/$studyId.tsx"
     },
     "/studies/guide": {
       "filePath": "studies/guide.tsx"
-    },
-    "/club/team": {
-      "filePath": "club/team.lazy.tsx"
     },
     "/announcement/": {
       "filePath": "announcement/index.tsx"

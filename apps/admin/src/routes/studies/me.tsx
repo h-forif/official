@@ -230,7 +230,8 @@ function MyStudyPage() {
           </Typography>
           <Typography variant='bodySmall' color={'text.secondary'} mb={2}>
             일부 정보는 부원 모집 기간({RECRUIT_START_DATE} - {RECRUIT_END_DATE}
-            ) 이후에는 수정이 불가능합니다.
+            ) 이후에는 수정이 불가능합니다. 수정 이후 아래 버튼을 클릭해주셔야
+            변경사항이 반영됩니다.
           </Typography>
           <Button variant='contained' onClick={handleEdit}>
             수정

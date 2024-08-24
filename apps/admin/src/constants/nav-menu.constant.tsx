@@ -36,15 +36,15 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
     ],
   },
   {
-    title: '회비',
+    title: '회계',
     icon: <MoneyIcon />,
     submenu: [
-      { title: '회비 내역', href: '/subscription' },
-      { title: '회비 관리', href: '/subscription/manage' },
+      { title: '회비 관리', href: '/subscription' },
+      { title: '회계 자료', href: '/subscription/file' },
     ],
   },
   {
-    title: '부원/회원 관리',
+    title: '부원/회원',
     icon: <GroupOutlinedIcon />,
     submenu: [
       { title: '부원 관리', href: '/members' },
@@ -52,7 +52,7 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
     ],
   },
   {
-    title: '게시물 관리',
+    title: '게시물',
     icon: <CampaignIcon />,
     submenu: [
       { title: '공지사항 관리', href: '/posts/announcements' },

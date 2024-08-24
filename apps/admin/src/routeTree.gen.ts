@@ -17,6 +17,7 @@ import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as MessageIndexImport } from './routes/message/index'
 import { Route as MembersIndexImport } from './routes/members/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as SubscriptionFileImport } from './routes/subscription/file'
 import { Route as StudiesMeImport } from './routes/studies/me'
 import { Route as StudiesApproveImport } from './routes/studies/approve'
 import { Route as StudiesAcceptImport } from './routes/studies/accept'
@@ -52,6 +53,11 @@ const MembersIndexRoute = MembersIndexImport.update({
 
 const DashboardIndexRoute = DashboardIndexImport.update({
   path: '/dashboard/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SubscriptionFileRoute = SubscriptionFileImport.update({
+  path: '/subscription/file',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -126,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesMeImport
       parentRoute: typeof rootRoute
     }
+    '/subscription/file': {
+      id: '/subscription/file'
+      path: '/subscription/file'
+      fullPath: '/subscription/file'
+      preLoaderRoute: typeof SubscriptionFileImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/dashboard'
@@ -173,6 +186,7 @@ export const routeTree = rootRoute.addChildren({
   StudiesAcceptRoute,
   StudiesApproveRoute,
   StudiesMeRoute,
+  SubscriptionFileRoute,
   DashboardIndexRoute,
   MembersIndexRoute,
   MessageIndexRoute,
@@ -194,6 +208,7 @@ export const routeTree = rootRoute.addChildren({
         "/studies/accept",
         "/studies/approve",
         "/studies/me",
+        "/subscription/file",
         "/dashboard/",
         "/members/",
         "/message/",
@@ -218,6 +233,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/me": {
       "filePath": "studies/me.tsx"
+    },
+    "/subscription/file": {
+      "filePath": "subscription/file.tsx"
     },
     "/dashboard/": {
       "filePath": "dashboard/index.tsx"

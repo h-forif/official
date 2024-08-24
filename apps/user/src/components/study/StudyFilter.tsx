@@ -4,23 +4,13 @@ import Stack from '@mui/system/Stack';
 import {
   DIFFICULTY,
   DIFFICULTY_TYPES,
-  POSSIBLE_YEARS,
-  SEMESTERS,
+  SEMESTER_OPTIONS,
+  YEAR_OPTIONS,
 } from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import { Select, SelectOption } from '@packages/components/Select';
 import { StudyProps } from '@routes/studies/index';
 import { Link, useNavigate } from '@tanstack/react-router';
-
-const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({
-  value: year.toString(),
-  label: year.toString(),
-}));
-
-const SEMESTER_OPTIONS: SelectOption[] = SEMESTERS.map((semester) => ({
-  value: semester.toString(),
-  label: `${semester}학기`,
-}));
 
 const DIFFICULTY_OPTIONS: SelectOption[] = Object.entries(DIFFICULTY).map(
   ([key, value]) => ({
