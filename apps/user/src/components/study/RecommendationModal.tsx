@@ -25,9 +25,10 @@ import { Box, Stack } from '@mui/system';
 import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Study } from '@packages/components/types/study';
 import { Question } from '@routes/studies/guide';
-import { getAllStudies } from '@services/study.service';
-import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
+
+const currentTerm = getCurrentTerm();
 
 interface StudyRecommendationModalProps {
   questions: any;
@@ -193,7 +194,7 @@ export function StudyRecommendationModal({
           alignItems: 'center',
           padding: '16px 24px',
         }}
-        color='white'
+        color='primary.contrastText'
       >
         <Box>
           <Typography variant='bodyLarge' mt={1} mb={1} width='100%'>
@@ -206,13 +207,17 @@ export function StudyRecommendationModal({
           <Button
             onClick={handleClose}
             size='large'
-            sx={{ color: 'white', minWidth: 'auto', padding: '4px 8px' }}
+            sx={{
+              color: 'primary.contrastText',
+              minWidth: 'auto',
+              padding: '4px 8px',
+            }}
           >
             <CloseIcon />
           </Button>
         </Box>
       </DialogTitle>
-      <DialogContent style={{ height: '360px', backgroundColor: 'white' }}>
+      <DialogContent style={{ height: '360px' }}>
         {!showResult ? (
           <>
             <LinearProgress
@@ -235,6 +240,7 @@ export function StudyRecommendationModal({
                     name='quiz-options'
                     value={answers[currentQuestion] || ''}
                     onChange={handleAnswerChange}
+                    color='primary.contrastText'
                   >
                     {getCurrentQuestion()!.options.map((option, index) => (
                       <Stack
@@ -261,13 +267,22 @@ export function StudyRecommendationModal({
             )}
           </>
         ) : (
-          <Box sx={{ mt: 2, mb: 2, backgroundColor: 'white' }}>
+          <Box sx={{ mt: 2, mb: 2 }}>
             <Box sx={{ mt: 4, mb: 4 }}>
-              <Typography variant='bodySmall' gutterBottom align='center'>
+              <Typography
+                variant='bodySmall'
+                gutterBottom
+                align='center'
+                sx={{ wordBreak: 'keep-all', mb: 3 }}
+              >
                 답변 결과를 바탕으로 어떤 스터디가 좋을지 분석해보았어요. <br />
                 이런 스터디는 어떤가요?
               </Typography>
-              <Typography variant='bodySmall' align='center'>
+              <Typography
+                variant='bodySmall'
+                align='center'
+                color='text.secondary'
+              >
                 오른쪽의 아이콘을 클릭하면 해당 스터디 페이지로 이동합니다.
               </Typography>
             </Box>
@@ -281,7 +296,7 @@ export function StudyRecommendationModal({
                       borderColor: 'divider',
                       borderRadius: 4,
                       mb: 2,
-                      backgroundColor: index === 0 ? 'white' : 'inherit',
+                      backgroundColor: 'inherit',
                     }}
                   >
                     <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
@@ -299,7 +314,7 @@ export function StudyRecommendationModal({
                       >
                         {index + 1}
                       </Avatar>
-                      <Box width='80%'>
+                      <Box width='85%'>
                         <Typography variant='bodyMedium' component='div'>
                           {study.name}
                         </Typography>
@@ -336,18 +351,24 @@ export function StudyRecommendationModal({
               더 많은 스터디를 보러가려면 아래의 버튼을 클릭해주세요!
             </Typography>
             <Box display='flex' justifyContent='center' width='100%' mt={3}>
-              <a href='/studies'>
+              <Link
+                to={'/studies'}
+                search={{
+                  year: Number(currentTerm.year),
+                  semester: Number(currentTerm.semester),
+                }}
+              >
                 <Button variant='contained' onClick={handleClose} size='large'>
                   24년 2학기 개설 스터디 목록 보러가기
                 </Button>
-              </a>
+              </Link>
             </Box>
           </Box>
         )}
       </DialogContent>
       <DialogActions
         style={{
-          backgroundColor: 'white',
+          backgroundColor: 'primary.contrastText',
           display: 'flex',
           justifyContent: 'space-between',
           padding: '16px 24px',
@@ -357,9 +378,9 @@ export function StudyRecommendationModal({
           <Button
             onClick={handleResetQuestion}
             size='small'
-            disabled={currentQuestion === 0 || showResult}
+            disabled={currentQuestion === 0}
           >
-            처음부터
+            다시하기
           </Button>
         </Box>
         <Box>
@@ -381,7 +402,9 @@ export function StudyRecommendationModal({
             </Button>
           ) : (
             <>
-              <Button onClick={handleClose}>닫기</Button>
+              <Button size='small' onClick={handleClose}>
+                닫기
+              </Button>
             </>
           )}
         </Box>

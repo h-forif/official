@@ -1,25 +1,13 @@
-import { ChangeEvent, Fragment, SyntheticEvent, useState } from 'react';
+import { Fragment, SyntheticEvent, useState } from 'react';
 
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import {
-  Avatar,
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  FormControl,
-  FormControlLabel,
   Grid,
-  Grow,
-  LinearProgress,
   List,
   ListItem,
   ListItemText,
-  Radio,
-  RadioGroup,
   Stack,
   Tab,
   Tabs,
@@ -28,12 +16,10 @@ import {
   useTheme,
 } from '@mui/material';
 import { Card, CardContent } from '@mui/material';
-import { red } from '@mui/material/colors';
 
 import { Study } from '@packages/components/types/study';
 import { getAllStudies } from '@services/study.service';
-import { useQuery } from '@tanstack/react-query';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
@@ -126,6 +112,7 @@ function FlippableCard({ card }: FlippableCardProps) {
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
+  const formattedTitle = card.title.replace(/ & /g, '&\u00A0');
 
   return (
     <Box
@@ -164,6 +151,7 @@ function FlippableCard({ card }: FlippableCardProps) {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              textAlign: 'center',
             }}
           >
             <Typography
@@ -171,9 +159,11 @@ function FlippableCard({ card }: FlippableCardProps) {
               sx={{
                 fontSize: isXs ? '0.88rem' : '1.25rem', // xs일 때 글자 크기 변경
                 fontWeight: 'bold',
+                wordBreak: 'keep-all', // 단어 단위로 줄바꿈
+                overflowWrap: 'break-word', // 필요시 단어 내에서 줄바꿈
               }}
             >
-              {card.title}
+              {formattedTitle}
             </Typography>
             <Typography
               color='text.secondary'
@@ -634,7 +624,7 @@ export function ScrollToTopButton({ studies }: { studies: Study[] }) {
           alignItems: 'center',
         }}
       >
-        <Typography
+        {/* <Typography
           fontSize={'8pt'}
           sx={{
             mb: 1,
@@ -642,7 +632,7 @@ export function ScrollToTopButton({ studies }: { studies: Study[] }) {
           }}
         >
           스터디 추천받기
-        </Typography>
+        </Typography> */}
         <Box
           component='button'
           borderRadius='50%'
@@ -662,7 +652,7 @@ export function ScrollToTopButton({ studies }: { studies: Study[] }) {
           }}
           onClick={handleOpen}
         >
-          <ReviewsIcon />
+          <ReviewsIcon color='primary' />
         </Box>
       </Box>
       <StudyRecommendationModal
