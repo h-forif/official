@@ -26,7 +26,6 @@ import Toast from '@components/common/Toast';
 import useInitializeAuth from '@hooks/useInitializeAuth';
 
 const GA4_MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;
-const CHANNELTALK_PLUGIN_KEY = import.meta.env.VITE_CHANNELTALK_PLUGIN_KEY;
 
 export const Route = createRootRoute({
   component: () => <RootComponent />,
@@ -57,7 +56,7 @@ function RootComponent() {
     ChannelService.loadScript();
 
     ChannelService.boot({
-      pluginKey: CHANNELTALK_PLUGIN_KEY,
+      pluginKey: '53ff20e8-552d-48fc-bfb9-d5e58cbd8e1a',
     });
 
     return () => {
