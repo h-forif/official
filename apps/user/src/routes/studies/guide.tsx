@@ -30,11 +30,24 @@ import {
 import { Card, CardContent } from '@mui/material';
 import { red } from '@mui/material/colors';
 
-import { createFileRoute } from '@tanstack/react-router';
+import { Study } from '@packages/components/types/study';
+import { getAllStudies } from '@services/study.service';
+import { useQuery } from '@tanstack/react-query';
+import { Link, createFileRoute } from '@tanstack/react-router';
+import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
+import { StudyRecommendationModal } from '@components/study/RecommendationModal';
 
 export const Route = createFileRoute('/studies/guide')({
+  loader: async () => {
+    const currentTerm = getCurrentTerm();
+    const studies = await getAllStudies({
+      year: Number(currentTerm.year),
+      semester: Number(currentTerm.semester),
+    });
+    return studies;
+  },
   component: StudyGuidePage,
 });
 
@@ -195,7 +208,7 @@ function FlippableCard({ card }: FlippableCardProps) {
             }}
           >
             <Typography
-              color='text.secondary'
+              // color='text.secondary'
               sx={{
                 whiteSpace: 'pre-wrap',
                 fontSize: isXs ? '0.8rem' : '1rem', // xs일 때 글자 크기 변경
@@ -221,7 +234,7 @@ function FlippableProgrammingCards() {
     </Grid>
   );
 }
-interface Question {
+export interface Question {
   id: number;
   title: string;
   text: string;
@@ -283,6 +296,7 @@ const questions: Question[] = [
 ];
 
 export default function StudyGuidePage() {
+  const studies = Route.useLoaderData();
   const [tab, setTab] = useState<string>('#introduction');
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
@@ -298,7 +312,15 @@ export default function StudyGuidePage() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+  const [open, setOpen] = useState<boolean>(false);
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <Box>
       <Box>
@@ -523,375 +545,33 @@ export default function StudyGuidePage() {
                   강의 방식, 난이도, 관심 분야를 고려하여 본인에게 맞는 스터디를
                   수강해보세요.
                 </Typography>
+                <Button
+                  variant='outlined'
+                  fullWidth
+                  size='large'
+                  onClick={handleOpen}
+                >
+                  나에게 맞는 스터디 알아보기
+                </Button>
+                <StudyRecommendationModal
+                  studies={studies}
+                  questions={questions}
+                  open={open}
+                  onClose={handleClose}
+                />
               </Stack>
             </Box>
           </Box>
-          <StudySideBox />
+
+          <StudySideBox studies={studies} />
         </Stack>
       </Box>
-      <ScrollToTopButton />
+      <ScrollToTopButton studies={studies} />
     </Box>
   );
 }
-interface StudyRecommendationModalProps {
-  open: boolean;
-  onClose: () => void;
-}
 
-export function StudyRecommendationModal({
-  open,
-  onClose,
-}: StudyRecommendationModalProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [result, setResult] = useState('');
-  const [showResult, setShowResult] = useState(false);
-  const [additionalInfo, setAdditionalInfo] = useState('');
-  const handleAnswerChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setAnswers({ ...answers, [currentQuestion]: event.target.value });
-  };
-
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      calculateResult();
-      setShowResult(true);
-    }
-  };
-  const handleBack = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
-  };
-  // 스터디 정의
-  const studies = [
-    {
-      id: 'DataAnalysis',
-      name: '김유진과 함께하는 데이터 분석 실전',
-      info: '데이터 분석',
-    },
-    { id: 'AI', name: 'GPT야 나를 믿니? 네~ 띰장님', info: '데이터 분석' },
-    {
-      id: 'FrontEndWebProject',
-      name: '프론트엔드 웹 프로젝트 with React',
-      info: '데이터 분석',
-    },
-    {
-      id: 'ServiceArchitecture',
-      name: '한스타그램을 설계해보자! (대형 서비스 설계)',
-      info: '데이터 분석',
-    },
-    { id: 'NPMPackage', name: '나만의 NPM 패키지 만들기', info: '데이터 분석' },
-    {
-      id: 'DataModeling',
-      name: '제대로 배우는 데이터 모델링',
-      info: '데이터 분석',
-    },
-    { id: 'Algorithm', name: '백준과 서강준은 취향차이', info: '데이터 분석' },
-    {
-      id: 'Python',
-      name: '오 파이썬 진짜 쩐다 (아직 시작 안함 ㅎㅎ)',
-      info: '데이터 분석',
-    },
-    {
-      id: 'WebDevelopmentBasis',
-      name: '당근마켓을 만들며 배워보는 웹 개발 기초',
-      info: '데이터 분석',
-    },
-    { id: 'DataCheck', name: '외모췍? 데이터췍!', info: '데이터 분석' },
-  ];
-
-  // 질문 및 답변에 따른 점수 정의
-  const questionScores = [
-    {
-      // FORIF vs 포리프
-      scores: [], // 이 질문은 점수에 영향을 주지 않음
-    },
-    {
-      // 관심 분야
-      scores: [
-        { WebDevelopmentBasis: 2, FrontEndWebProject: 2 },
-        { DataAnalysis: 1, Python: 1, DataCheck: 1 },
-        { DataAnalysis: 2, DataCheck: 2, DataModeling: 2 },
-        { Algorithm: 2 },
-        { AI: 2 },
-        {
-          ServiceArchitecture: 2,
-          NPMPackage: 2,
-          DataModeling: 2,
-          AI: 2,
-        },
-      ],
-    },
-    {
-      // 이론 vs 실습 vs 둘 다
-      scores: [
-        {},
-        {},
-        {}, // '둘 다'를 선택한 경우 점수 변화 없음
-      ],
-    },
-    {
-      // 프로그래밍 경험 수준
-      scores: [
-        { Python: 3 },
-        { DataAnalysis: 1, DataCheck: 1, Algorithm: 2, WebDevelopmentBasis: 2 },
-        { AI: 1, DataAnalysis: 1, NPMPackage: 1, DataModeling: 1 },
-        { AI: 3, ServiceArchitecture: 3, NPMPackage: 2 },
-      ],
-    },
-    {
-      // 강의형 vs 프로젝트형
-      scores: [
-        {
-          AI: 4,
-          ServiceArchitecture: 4,
-          DataModeling: 4,
-          Algorithm: 5,
-          Python: 5,
-          WebDevelopmentBasis: 5,
-          DataCheck: 5,
-        },
-        { FrontEndWebProject: 5, NPMPackage: 5 },
-      ],
-    },
-    {
-      // 마지막 질문 (포리프 어때요)
-      scores: [], // 이 질문은 점수에 영향을 주지 않음
-    },
-  ];
-
-  const calculateResult = () => {
-    const scores = Object.fromEntries(studies.map((study) => [study.id, 0]));
-
-    Object.entries(answers).forEach(([questionIndex, answer]) => {
-      const questionScoreData = questionScores[parseInt(questionIndex)];
-      const answerScores = questionScoreData!.scores[parseInt(answer)];
-      if (answerScores) {
-        Object.entries(answerScores).forEach(([study, score]) => {
-          scores[study] += score;
-        });
-      }
-    });
-
-    const topStudies = studies
-      .map((study) => ({
-        ...study,
-        score: scores[study.id] || 0,
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
-
-    setResult(
-      `추천 스터디:\n${topStudies
-        .map((study) => `${study.name}[ 점수: ${study.score}] [${study.info}]`)
-        .join('\n')}`,
-    );
-
-    // setAdditionalInfo(JSON.stringify(scores));
-    setShowResult(true);
-  };
-
-  const getCurrentQuestion = (): Question | undefined => {
-    return currentQuestion >= 0 && currentQuestion < questions.length
-      ? questions[currentQuestion]
-      : undefined;
-  };
-  const handleResetQuestion = () => {
-    setCurrentQuestion(0);
-    setAnswers({});
-    setResult('');
-    setShowResult(false);
-  };
-  const handleClose = () => {
-    onClose();
-  };
-
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      fullWidth
-      maxWidth='md'
-      keepMounted
-    >
-      <DialogTitle sx={{ backgroundColor: 'primary.main' }} color='white'>
-        <Typography variant='bodyLarge' mt={1} mb={1}>
-          {showResult
-            ? '스터디 추천 결과'
-            : `${currentQuestion + 1} / ${questions.length} : ${getCurrentQuestion()!.title} `}
-        </Typography>
-      </DialogTitle>
-      <DialogContent style={{ height: '360px', backgroundColor: 'white' }}>
-        {!showResult ? (
-          <>
-            <LinearProgress
-              variant='determinate'
-              value={(currentQuestion / questions.length) * 100}
-              sx={{ mb: 2, mt: 4 }}
-            />
-            {getCurrentQuestion() && (
-              <>
-                <Typography variant='bodyMedium' gutterBottom mt={4} mb={4}>
-                  {getCurrentQuestion()!.text}
-                </Typography>
-                <FormControl
-                  component='fieldset'
-                  sx={{
-                    width: '100%',
-                  }}
-                >
-                  <RadioGroup
-                    name='quiz-options'
-                    value={answers[currentQuestion] || ''}
-                    onChange={handleAnswerChange}
-                  >
-                    {getCurrentQuestion()!.options.map((option, index) => (
-                      <Stack
-                        key={index}
-                        border={1}
-                        borderColor='divider'
-                        p={2}
-                        gap={3}
-                        mb={1}
-                        sx={{
-                          width: '100%',
-                        }}
-                      >
-                        <FormControlLabel
-                          value={index.toString()}
-                          control={<Radio />}
-                          label={option}
-                        />
-                      </Stack>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </>
-            )}
-          </>
-        ) : (
-          <Box sx={{ mt: 2, mb: 2, backgroundColor: 'white' }}>
-            <Box sx={{ mt: 4, mb: 4 }}>
-              <Typography gutterBottom align='center'>
-                답변 결과를 바탕으로 어떤 스터디가 좋을지 분석해보았어요. <br />
-                이런 스터디는 어떤가요?
-              </Typography>
-            </Box>
-            {result
-              .split('\n')
-              .slice(1)
-              .map((study, index) => {
-                return (
-                  <Grow in={showResult} timeout={(index + 1) * 500} key={index}>
-                    <Card
-                      elevation={0}
-                      sx={{
-                        border: 1,
-                        borderColor: 'divider',
-                        borderRadius: 4,
-                        mb: 2,
-                        backgroundColor: index === 0 ? 'white' : 'inherit',
-                      }}
-                    >
-                      <CardContent
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                      >
-                        <Avatar
-                          sx={{
-                            bgcolor: index === 0 ? 'pink' : 'primary.main',
-                            mr: 2,
-                          }}
-                        >
-                          {index + 1}
-                        </Avatar>
-                        <Box width='62%'>
-                          <Typography variant='bodyMedium' component='div'>
-                            {study.split('[')[0]!.trim()}
-                          </Typography>
-                          <Typography
-                            variant='bodyMedium'
-                            color='text.secondary'
-                          >
-                            {`[${study.split('[')[2]}`}
-                          </Typography>
-                        </Box>
-                        <Box
-                          display='flex'
-                          justifyContent='flex-end'
-                          width='35%'
-                          mt={3}
-                        >
-                          <Button
-                            variant='outlined'
-                            onClick={handleClose}
-                            size='small'
-                          >
-                            스터디 보러가기
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grow>
-                );
-              })}
-            <Divider sx={{ my: 2 }} />
-            <Typography
-              variant='bodyMedium'
-              color='text.secondary'
-              align='center'
-              sx={{ mt: 2 }}
-            >
-              더 많은 스터디를 보러가려면 아래의 버튼을 클릭해주세요!
-            </Typography>
-            <Box display='flex' justifyContent='center' width='100%' mt={3}>
-              <Button variant='contained' onClick={handleClose} size='large'>
-                24년 2학기 개설 스터디 목록 보러가기
-              </Button>
-            </Box>
-          </Box>
-        )}
-      </DialogContent>
-      <DialogActions style={{ backgroundColor: 'white' }}>
-        <Button
-          onClick={handleBack}
-          size='large'
-          disabled={currentQuestion === 0 || showResult}
-        >
-          뒤로
-        </Button>
-
-        <Button onClick={handleResetQuestion} size='large'>
-          다시 검사하기
-        </Button>
-        {currentQuestion == questions.length - 1 ? null : (
-          <Button
-            onClick={handleClose}
-            size='large'
-            sx={{ color: 'primary.main' }}
-          >
-            닫기
-          </Button>
-        )}
-        {!showResult ? (
-          <Button
-            onClick={handleNext}
-            disabled={answers[currentQuestion] === undefined}
-            size='large'
-          >
-            {currentQuestion < questions.length - 1 ? '다음' : '결과 보기'}
-          </Button>
-        ) : (
-          <>
-            <Button onClick={handleClose}>닫기</Button>
-          </>
-        )}
-      </DialogActions>
-    </Dialog>
-  );
-}
-export function StudySideBox() {
+export function StudySideBox({ studies }: { studies: Study[] }) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
@@ -922,11 +602,16 @@ export function StudySideBox() {
       <Button variant='contained' fullWidth size='large' onClick={handleOpen}>
         나에게 맞는 스터디 알아보기
       </Button>
-      <StudyRecommendationModal open={open} onClose={handleClose} />
+      <StudyRecommendationModal
+        questions={questions}
+        studies={studies}
+        open={open}
+        onClose={handleClose}
+      />
     </Stack>
   );
 }
-export function ScrollToTopButton() {
+export function ScrollToTopButton({ studies }: { studies: Study[] }) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
@@ -943,8 +628,8 @@ export function ScrollToTopButton() {
         display={{ xs: 'flex', md: 'none' }}
         sx={{
           position: 'fixed',
-          right: 16,
-          bottom: 16,
+          left: 20,
+          bottom: 20,
           flexDirection: 'column',
           alignItems: 'center',
         }}
@@ -980,7 +665,12 @@ export function ScrollToTopButton() {
           <ReviewsIcon />
         </Box>
       </Box>
-      <StudyRecommendationModal open={open} onClose={handleClose} />
+      <StudyRecommendationModal
+        studies={studies}
+        questions={questions}
+        open={open}
+        onClose={handleClose}
+      />
     </>
   );
 }
