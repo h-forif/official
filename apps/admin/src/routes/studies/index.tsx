@@ -58,10 +58,11 @@ function StudiesPage() {
     { field: 'primary_mentor_name', headerName: '1순위 멘토', flex: 1 },
     {
       field: 'year_semester',
-      headerName: '년도-학기',
+      headerName: '활동 학기',
       flex: 1,
-      valueGetter: ({ params }: any) =>
-        `${params.row.act_year}-${params.row.act_semester}`,
+      valueGetter: (value, row) => {
+        return `${row.act_year}-${row.act_semester}`;
+      },
     },
     {
       field: 'actions',

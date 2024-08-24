@@ -47,8 +47,8 @@ export default function CautionList() {
                 <ModalTitle>자율 부원이란?</ModalTitle>
               </ModalHeader>
               <ModalDescription>
-                포리프에는 두 가지 유형의 스터디가 있습니다. 자율 스터디와 정규
-                스터디입니다. 자율 스터디는 다음과 같은 특징이 있습니다.
+                포리프에는 두 가지 유형의 부원이 있습니다. 정규 부원과 자율
+                부원입니다. 자율 부원은 다음과 같은 특징이 있습니다.
                 <Stack component={'ul'} gap={1}>
                   <li>
                     특정 정규 스터디에 소속되어 활동하지 않고, 학기 중에
@@ -56,22 +56,18 @@ export default function CautionList() {
                   </li>
                   <li>포리프의 행사 및 혜택에 모두 참여할 수 있습니다.</li>
                   <li>
-                    자율스터디 수강은 <strong>포리프 인증서</strong>가 발급되지
-                    않습니다.
-                  </li>
-                  <li>
-                    자율스터디는 출석체크 대상에 포함되지 않습니다. 또한, 정해진
-                    수업 회차나 일정이 없습니다.
-                  </li>
-                  <li>
-                    자율 스터디 부원은 정규 스터디 부원의 회비보다 5000원 감면된
-                    회비를 내야합니다.
+                    자율 부원은 정규 스터디 부원의 회비보다 5000원 감면된 회비를
+                    납부합니다.
                   </li>
                 </Stack>
               </ModalDescription>
             </ModalContent>
           </Modal>
           으로 신청해야 합니다.
+        </Typography>
+        <Typography component={'li'} variant='bodySmall'>
+          자율부원으로 신청하고 싶으시다면 아래 1순위(혹은 2순위) 스터디
+          선택란에서 <strong>'자율부원으로 신청'</strong>을 선택해주세요.
         </Typography>
         <Typography component={'li'} variant='bodySmall'>
           스터디는 한 학기에 하나만 신청 가능합니다. 다른 수업을 추가로 듣고

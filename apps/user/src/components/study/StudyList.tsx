@@ -48,12 +48,24 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
 
   const studies =
     difficulty === 0
-      ? data!
-      : data!.filter((study) => Number(study.difficulty) === difficulty);
+      ? data!.filter((study) => study.id !== 0)
+      : data!.filter(
+          (study) => Number(study.difficulty) === difficulty && study.id !== 0,
+        );
 
   return (
     <Box sx={{ px: { xs: 4, md: 8, xl: 12 }, pb: 4, margin: 'auto' }}>
       <Grid container spacing={{ xs: 2, xl: 4 }}>
+        <Grid item xl={3} md={4} sm={6} xs={12}>
+          <StudyCard
+            id={0}
+            image={'/cutie.svg'}
+            primaryMentorName={''}
+            secondaryMentorName={''}
+            difficulty={0}
+            title={'자율스터디'}
+          />
+        </Grid>
         {studies.map((study) => (
           <Grid key={study.id} item xl={3} md={4} sm={6} xs={12}>
             <StudyCard

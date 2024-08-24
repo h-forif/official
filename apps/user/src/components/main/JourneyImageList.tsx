@@ -46,7 +46,7 @@ export default function JourneyImageList() {
       variants={containerVariants}
       initial='hidden'
       whileInView='visible'
-      viewport={{ once: true, amount: 0.2 }} // Trigger only once when 20% in view
+      viewport={{ once: true, amount: 0.2 }}
     >
       <ImageList
         sx={{ width: '100%', height: isMobile ? 'fit-content' : '584px' }}
@@ -77,15 +77,6 @@ export default function JourneyImageList() {
                     textAlign={'left'}
                   >
                     {item.title}
-                  </Typography>
-                }
-                subtitle={
-                  <Typography
-                    variant='labelSmall'
-                    color='inherit'
-                    textAlign={'left'}
-                  >
-                    {item.desc}
                   </Typography>
                 }
                 position='below'

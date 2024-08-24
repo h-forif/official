@@ -112,7 +112,7 @@ function Home() {
               semester: Number(getCurrentTerm().semester),
             }}
           >
-            <Button variant='contained'>스터디 보러가기</Button>
+            <Button variant='outlined'>스터디 보러가기</Button>
           </Link>
           {userState === 'sign-in' && (
             <>

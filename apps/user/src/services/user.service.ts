@@ -1,4 +1,4 @@
-import { UserProfile } from '@packages/components/types/user';
+import { Team, UserProfile } from '@packages/components/types/user';
 import { SignUpSchema } from 'src/types/sign-up.schema';
 import { z } from 'zod';
 
@@ -47,4 +47,22 @@ export const getGoogleInfo = async (
     })
     .then((res) => res.data);
   return data;
+};
+
+export const getTeam = async ({
+  year,
+  semester,
+}: {
+  year: number;
+  semester: number;
+}) => {
+  const team: Team[] = await api
+    .get('/forif-team', {
+      params: {
+        year,
+        semester,
+      },
+    })
+    .then((res) => res.data);
+  return team;
 };

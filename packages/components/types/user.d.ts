@@ -14,3 +14,14 @@ export interface UserProfile
   current_study_id: number | null; // 현재 내가 듣고 있는 스터디
   passed_study_id: number[] | null;
 }
+
+export interface Team {
+  act_year: number;
+  act_semester: number;
+  user_title: string;
+  club_department: string;
+  intro_tag: string | null;
+  self_intro: string | null;
+  prof_img_url: string | null;
+  user: User;
+}

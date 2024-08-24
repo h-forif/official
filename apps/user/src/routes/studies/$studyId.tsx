@@ -165,29 +165,31 @@ function StudyComponent() {
             variant={isMobile ? 'titleLarge' : 'headlineSmall'}
             mb={2}
           >
-            {study.name}
+            {study.id === 0 ? '자율스터디' : study.name}
           </Typography>
           <Typography variant='bodyMedium' mb={2} fontWeight={300}>
             {study.one_liner}
           </Typography>
-          <Link
-            to={'/apply/member'}
-            disabled={isDisabled}
-            style={{
-              width: 'fit-content',
-            }}
-          >
-            <Button
-              sx={{
+          {study.id !== 0 && (
+            <Link
+              to={'/apply/member'}
+              disabled={isDisabled}
+              style={{
                 width: 'fit-content',
               }}
-              variant='contained'
-              size='large'
-              disabled={isDisabled}
             >
-              스터디 신청하기
-            </Button>
-          </Link>
+              <Button
+                sx={{
+                  width: 'fit-content',
+                }}
+                variant='contained'
+                size='large'
+                disabled={isDisabled}
+              >
+                스터디 신청하기
+              </Button>
+            </Link>
+          )}
         </Stack>
       </Box>
       <Box
@@ -411,16 +413,18 @@ function StudySideBox({
           ? `| ${study.secondary_mentor_name} 멘토`
           : ''}
       </Typography>
-      <Link to={'/apply/member'} disabled={isDisabled}>
-        <Button
-          variant='contained'
-          fullWidth
-          size='large'
-          disabled={isDisabled}
-        >
-          신청하기
-        </Button>
-      </Link>
+      {study.id !== 0 && (
+        <Link to={'/apply/member'} disabled={isDisabled}>
+          <Button
+            variant='contained'
+            fullWidth
+            size='large'
+            disabled={isDisabled}
+          >
+            신청하기
+          </Button>
+        </Link>
+      )}
       <Link
         to='/studies'
         onClick={() => window.scrollTo(0, 0)}
