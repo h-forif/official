@@ -231,7 +231,7 @@ export interface Question {
   options: string[];
 }
 
-const questions: Question[] = [
+const questions2: Question[] = [
   {
     id: 1,
     title: '관심 분야',
@@ -241,7 +241,7 @@ const questions: Question[] = [
   {
     id: 2,
     title: '관심 분야',
-    text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민입니다. 어떤 분야에 관심이 있나요?',
+    text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민이에요. 어떤 분야에 관심이 있나요?',
     options: [
       '나는 눈에 바로바로 보이는게 좋아 ! (Front-end)',
       '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해 ! (Back-end)',
@@ -260,18 +260,18 @@ const questions: Question[] = [
   {
     id: 4,
     title: '스터디 난이도',
-    text: '나는 프로그래밍을 어느 정도 알고있나요?',
+    text: '프로그래밍에 대해 얼마나 알고 있나요?',
     options: [
       '완전 처음 해본다! 기초 스터디를 수강하고 싶다.',
       '어느정도 기초 지식이 있다. (창컴/공창컴 이수)',
-      '나는 전공자다. (2학년 이상)',
+      '나는 2학년 이상의 전공자다.',
       '심도깊은 스터디에 참여하고 싶다.',
     ],
   },
   {
     id: 5,
     title: '스터디 방식',
-    text: '강의형과 프로젝트형 스터디 중 어떤 방식을 선호하시나요?',
+    text: '포리프의 스터디 진행 유형에는 두 가지가 있어요. 강의형과 프로젝트형 스터디 중 어떤 방식을 선호하나요?',
     options: [
       '대규모로 멘토가 강의식으로 진행하는 [강의형 진행 방식]',
       '소수의 사람들이 모여 결과물을 만들어내는 [프로젝트형 진행 방식]',
@@ -285,6 +285,63 @@ const questions: Question[] = [
   },
 ];
 
+const questions: Question[] = [
+  {
+    id: 1,
+    title: '관심 분야',
+    text: '2학기 개강을 맞아 새로운 동아리에 들어가려 해요. 어떤 동아리에 들어갈까요?',
+    options: ['FORIF', '포리프'],
+  },
+  {
+    id: 2,
+    title: '관심 분야',
+    text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민이에요. 어떤 분야에 관심이 있나요?',
+    options: [
+      '나는 눈에 바로바로 보이는게 좋아 ! (Front-end)',
+      '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해 ! (Back-end)',
+      '데이터를 다루어보자 !',
+      '알고리즘 공부를 해볼까?',
+      '요즘 AI가 핫하다며? GPT는 어때?',
+      '쉽게 배울수 없는 주제를 배워보고 싶어.',
+    ],
+  },
+  {
+    id: 3,
+    title: '학습 스타일',
+    text: '학습을 할 때 이론 학습과 실습 중 어느 것을 더 중요시하나요?',
+    options: ['이론 학습', '실습', '둘 다'],
+  },
+  {
+    id: 4,
+    title: '스터디 난이도',
+    text: '본인은 프로그래밍에 대해 어느 정도 알고 있다고 생각하며, 어떤 난이도의 스터디를 수강하고 싶나요?',
+    options: [
+      '완전 처음 해본다! 기초 스터디를 수강하고 싶어요.',
+      '어느정도 기초 지식이 있어요. (창컴/공창컴 이수) 기초적인 지식을 응용하는 스터디를 수강하고 싶어요.',
+      '저는 2학년 이상의 전공자입니다. 조금은 난이도가 있는 스터디를 원해요.',
+      '심도깊은 주제를 다루는 스터디에 참여하고 싶어요.',
+    ],
+  },
+  {
+    id: 5,
+    title: '스터디 방식',
+    text: '포리프의 스터디 진행 방식에는 두가지가 있어요. 강의형과 프로젝트형 스터디 중 어떤 방식을 선호하시나요?',
+    options: [
+      '대규모로 멘토가 강의식으로 진행하는 [강의형 진행 방식]이 좋아요.',
+      '소수의 사람들이 모여 결과물을 만들어내는 [프로젝트형 진행 방식]이 좋아요.',
+    ],
+  },
+  {
+    id: 6,
+    title: '스터디 결과물',
+    text: '스터디를 통해 어떤 부분을 얻어가고 싶나요?',
+    options: [
+      '프로그래밍의 기초적인 지식을 탄탄히 다지고 싶어요.',
+      '응용을 하는 법을 배우고 싶어요.',
+      '혼자 공부하기는 어려운 분야를 사람들과 함께 인사이트를 얻으며 공부하고 싶어요.',
+    ],
+  },
+];
 export default function StudyGuidePage() {
   const studies = Route.useLoaderData();
   const [tab, setTab] = useState<string>('#introduction');
@@ -348,7 +405,7 @@ export default function StudyGuidePage() {
           <Box flex={1} width={'100%'}>
             <Stack width={'100%'}>
               {/* 스터디 소개 섹션 */}
-              <Typography variant='bodyMedium' mt={4}>
+              <Typography variant='bodyMedium' mt={6}>
                 스터디 소개
               </Typography>
               <Typography variant='titleLarge' mb={2}>
@@ -356,14 +413,15 @@ export default function StudyGuidePage() {
               </Typography>
               <Typography>
                 프로그래밍은 다양한 분야로 나뉘며, 각 분야마다 특징적인 기술과
-                도구를 사용합니다. 다음은 주요 프로그래밍 분야들입니다
+                도구를 사용합니다. <br />
+                다음은 주요 프로그래밍 분야들입니다.
               </Typography>
               <Box sx={{ mt: 4 }}>
                 <FlippableProgrammingCards />
               </Box>{' '}
             </Stack>
             <Box id='ongoing' component={'section'}>
-              <Typography variant='bodyMedium' mt={4}>
+              <Typography variant='bodyMedium' mt={6}>
                 스터디 운영 방식
               </Typography>
               <Typography variant='titleLarge' mb={2}>
@@ -406,7 +464,7 @@ export default function StudyGuidePage() {
                     <ListItem>
                       <ListItemText
                         primary='개설 스터디'
-                        secondary='개설 스터디는 매 학기마다 달라집니다.'
+                        secondary='개설 스터디는 매 학기마다 다르며, 포리프는 매 학기 다양한 분야의 스터디가 개설되고 있습니다.'
                       />
                     </ListItem>
 
@@ -415,15 +473,22 @@ export default function StudyGuidePage() {
                         primary='진행 방식'
                         secondary={
                           <Fragment>
-                            <Typography component='span' display='block'>
-                              강의형과 프로젝트형으로 나누어집니다.
-                            </Typography>
-                            <Typography component='span' display='block'>
+                            강의형과 프로젝트형으로 나누어집니다. <br />
+                            <Typography
+                              sx={{ mt: 2 }}
+                              variant='labelSmall'
+                              component='span'
+                              display='block'
+                            >
                               - 강의형: 다인원을 대상으로 이루어지며, 멘토가
                               강의식으로 수업을 진행합니다. 일반적으로
                               기초스터디가 이에 해당합니다.
                             </Typography>
-                            <Typography component='span' display='block'>
+                            <Typography
+                              variant='labelSmall'
+                              component='span'
+                              display='block'
+                            >
                               - 프로젝트형: 소규모로 진행되며, 프로젝트 결과물을
                               만들어내는 것을 중심으로 진행됩니다. 기본적인
                               프로그래밍 능력이 요구됩니다.
@@ -447,8 +512,8 @@ export default function StudyGuidePage() {
                   <Typography>
                     자율 스터디는 정규 스터디와는 다르게 학기가 시작된 후
                     부원들의 수요에 따라 개설되는 스터디입니다. 일반적으로
-                    '멘토'는 존재하지 않으며, 함께 공부할 사람들을 모아 스터디를
-                    진행하는 것입니다.
+                    '멘토'는 존재하지 않으며, 함께 공부할 사람들이 모여 스터디를
+                    진행합니다.
                   </Typography>
                   <List>
                     <ListItem>
@@ -475,11 +540,19 @@ export default function StudyGuidePage() {
                               스터디 별 기준에 따라 최대 5만원 지급
                             </Typography>
 
-                            <Typography component='span' display='block'>
+                            <Typography
+                              variant='labelSmall'
+                              component='span'
+                              display='block'
+                            >
                               <br />* 자율스터디 수강은 포리프 인증서가 발급되지
                               않습니다.
                             </Typography>
-                            <Typography component='span' display='block'>
+                            <Typography
+                              variant='labelSmall'
+                              component='span'
+                              display='block'
+                            >
                               * 자율스터디는 출석체크 대상에 포함되지 않으며
                               정해진 회차나 일정이 없습니다.
                             </Typography>
@@ -489,10 +562,44 @@ export default function StudyGuidePage() {
                     </ListItem>
                   </List>
                 </Box>
+                <Box>
+                  <Typography variant='bodySmall' fontWeight='bold'>
+                    +) 자율부원은 무엇인가요?
+                  </Typography>
+                  <Typography></Typography>
+                </Box>
+              </Stack>
+              <Stack
+                component={'article'}
+                p={3}
+                borderRadius={4}
+                border={1}
+                borderColor={'divider'}
+                width={'100%'}
+                sx={{ mt: 2 }}
+                color='text.secondary'
+              >
+                위의 내용과 같이 포리프의 스터디는 크게 정규스터디와
+                자율스터디로 구성되어 있습니다. <br />
+                학기 초, 부원모집 시 지원자들은 '정규스터디'에 지원하거나
+                '자율부원'에 지원합니다.
+                <br />
+                정규스터디는 일반적으로 한 개의 스터디만 수강이 가능하지만,
+                자율스터디는 제한이 없습니다. <br />
+                <br />
+                따라서 정규스터디 1 + 자율스터디 2를 수강할 수도 있고,
+                정규스터디 1만 수강할 수도 있으며, 정규스터디 수강 없이
+                자율스터디만 수강할 수도 있습니다.
+                <br />
+                <br />
+                이때, 자율스터디만 수강하는 부원들을 '자율부원'이라 부릅니다.
+                <br />
+                지율부원은 스터디를 정규스터디 수강을 제외한 모든 포리프 행사
+                참여와 부원으로서의 혜택을 누릴 수 있습니다.
               </Stack>
             </Box>
             <Box id='procedure' component={'section'}>
-              <Typography variant='bodyMedium' mt={4}>
+              <Typography variant='bodyMedium' mt={6}>
                 스터디 진행 과정
               </Typography>
               <Typography variant='titleLarge' mb={2}>
@@ -500,15 +607,20 @@ export default function StudyGuidePage() {
               </Typography>
               <Stack gap={2}>
                 <Typography>
-                  15주 중 중간고사/기말고사 기간을 고려하여 8주 이상의 스터디가
-                  진행됩니다. <br /> 스터디가 종료된 이후에는 한 학기의 마지막
-                  행사인 해커톤이 개최됩니다.
+                  정규 스터디 기준 15주 중 중간고사/기말고사 기간을 고려하여 8주
+                  이상의 스터디가 진행됩니다.
+                  <br /> 스터디가 종료된 이후에는 한 학기의 마지막 행사인
+                  해커톤이 개최됩니다.
+                  <br />
+                  <br />
+                  이외에도 알고리즘 대회, 홈커밍 데이 등 학기별로 다양한 행사를
+                  개최중에 있습니다.
                 </Typography>
               </Stack>
             </Box>
             {/* 스터디 수료 섹션 */}
             <Box id='completion' component={'section'}>
-              <Typography variant='bodyMedium' mt={4}>
+              <Typography variant='bodyMedium' mt={6}>
                 스터디 수료
               </Typography>
               <Typography variant='titleLarge' mb={2}>
@@ -524,7 +636,7 @@ export default function StudyGuidePage() {
             </Box>
             {/* 스터디 추천 섹션 */}
             <Box id='recommendation' component={'section'}>
-              <Typography variant='bodyMedium' mt={4}>
+              <Typography variant='bodyMedium' mt={6}>
                 스터디 추천
               </Typography>
               <Typography variant='titleLarge' mb={2}>
@@ -532,14 +644,21 @@ export default function StudyGuidePage() {
               </Typography>
               <Stack gap={2}>
                 <Typography>
-                  강의 방식, 난이도, 관심 분야를 고려하여 본인에게 맞는 스터디를
-                  수강해보세요.
+                  포리프의 스터디를 듣고싶지만, 어떤 스터디를 들어야 할 지
+                  고민이 된다면,
+                  <br />
+                  저희가 스터디 선택을 도와드릴게요!
+                  <br />
+                  아래의 테스트를 진행하여 관심 분야를 알아보고,
+                  <br /> 강의 방식, 난이도, 관심 분야를 고려하여 본인에게 맞는
+                  스터디를 수강해보세요.
                 </Typography>
                 <Button
                   variant='outlined'
                   fullWidth
                   size='large'
                   onClick={handleOpen}
+                  sx={{ mt: 4, mb: 4 }}
                 >
                   나에게 맞는 스터디 알아보기
                 </Button>
