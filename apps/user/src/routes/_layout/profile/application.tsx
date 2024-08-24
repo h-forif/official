@@ -188,7 +188,10 @@ function MyApplication() {
                 </Typography>
                 <Stack gap={2} my={4}>
                   <Typography variant='bodyMedium'>
-                    1순위 스터디: {application!.primary_study.name}
+                    1순위:{' '}
+                    {application?.primary_study.name === '자율스터디'
+                      ? '자율부원으로 신청'
+                      : application!.primary_study.name}
                   </Typography>
                   <TextField
                     id='primary-study-application-textfield'
@@ -203,10 +206,12 @@ function MyApplication() {
                 </Stack>
                 <Stack gap={2} my={4}>
                   <Typography variant='bodyMedium'>
-                    2순위 스터디:{' '}
+                    2순위:{' '}
                     {application!.secondary_study === null
                       ? '미수강'
-                      : application!.secondary_study.name}
+                      : application!.secondary_study.name === '자율스터디'
+                        ? '자율부원으로 신청'
+                        : application!.secondary_study.name}
                   </Typography>
                   <TextField
                     id='primary-study-application-textfield'
