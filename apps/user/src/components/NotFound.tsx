@@ -22,8 +22,8 @@ export default function NotFoundPage({ onClick }: { onClick?: () => void }) {
         요청하신 페이지를 찾을 수 없거나 오류가 발생했습니다.
       </Typography>
       <Typography variant={isMobile ? 'bodyLarge' : 'titleLarge'}>
-        검색했지만 원하는 항목을 찾을 수 없습니다. 아래 버튼을 통해 다시
-        시도해주세요.
+        검색했지만 원하는 항목을 찾을 수 없습니다. 곧 추가하겠습니다. 아래
+        버튼을 통해 다시 시도해주세요.
       </Typography>
       <a href='/'>
         <Button size='large' variant='outlined' onClick={onClick}>

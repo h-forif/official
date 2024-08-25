@@ -1,11 +1,12 @@
 import CircleIcon from '@mui/icons-material/Circle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import { CardMedia, Rating, styled } from '@mui/material';
+import { CardMedia, Chip, Rating, styled } from '@mui/material';
 import MUICard from '@mui/material/Card';
 import MUICardActions from '@mui/material/CardActions';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
+import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { Link } from '@tanstack/react-router';
@@ -17,6 +18,7 @@ export interface StudyCardProps {
   primaryMentorName: string;
   secondaryMentorName?: string;
   difficulty: number;
+  tag: string;
 }
 
 export function StudyCard({
@@ -26,6 +28,7 @@ export function StudyCard({
   secondaryMentorName,
   title,
   difficulty,
+  tag,
 }: StudyCardProps) {
   const handleLinkClick = () => {
     window.scrollTo(0, 0);
@@ -56,7 +59,7 @@ export function StudyCard({
           sx={{
             textAlign: 'left',
             backgroundColor: 'background.default',
-            height: 120,
+            height: 160,
           }}
         >
           <Typography
@@ -75,6 +78,7 @@ export function StudyCard({
             {primaryMentorName || '미정'}{' '}
             {secondaryMentorName && `| ${secondaryMentorName}`}
           </Typography>
+          <Chip label={getTag(tag)} color='primary' />
         </MUICardContent>
         <MUICardActions
           sx={{
@@ -118,3 +122,9 @@ const StyledRating = styled(Rating)(({ theme }) => ({
     color: theme.palette.primary.light,
   },
 }));
+
+const getTag = (tag: string) => {
+  const tagOption = TAG_OPTIONS.find((option) => option.value === tag);
+  if (!tagOption) return '기타';
+  return tagOption.label;
+};

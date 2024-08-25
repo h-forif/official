@@ -64,6 +64,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
             secondaryMentorName={''}
             difficulty={0}
             title={'자율스터디'}
+            tag='자율'
           />
         </Grid>
         {studies.map((study) => (
@@ -75,6 +76,7 @@ export function StudyList({ year, semester, difficulty }: StudyProps) {
               secondaryMentorName={study.secondary_mentor_name}
               difficulty={study.difficulty}
               title={study.name}
+              tag={study.tag}
             />
           </Grid>
         ))}

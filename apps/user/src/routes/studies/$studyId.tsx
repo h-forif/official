@@ -156,7 +156,6 @@ function StudyComponent() {
           <Tab component='a' label='스터디 소개' value={'#introduction'} />
           <Tab component='a' label='커리큘럼' value={'#curriculum'} />
           <Tab component='a' label='시간 및 장소' value={'#place'} />
-          <Tab component='a' label='FAQ' value={'#faq'} />
         </Tabs>
         <Stack direction={'row'} gap={4} justifyContent={'space-between'}>
           <Box flex={1} width={'100%'}>

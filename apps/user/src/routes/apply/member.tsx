@@ -284,7 +284,7 @@ function ApplyMember() {
                 maxRows={4}
                 disabled={primary_study === '0' || !isIncluded}
                 placeholder='최소 150자, 최대 1000자 이내로 작성해주세요.'
-                required
+                required={primary_study !== '0'}
               />
               <Typography variant='titleSmall'>
                 2순위 스터디(혹은 자율부원으로) 신청

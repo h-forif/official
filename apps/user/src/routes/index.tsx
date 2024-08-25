@@ -173,7 +173,7 @@ function Home() {
                   <AddchartIcon fontSize='large' color='primary' />
                 </CenteredBox>
                 <Typography variant={'titleLarge'}>GROWTH</Typography>
-                <Typography variant={'bodySmall'}>
+                <Typography variant={'bodySmall'} height={48}>
                   멘토와 멘티가 함께 성장하는 기회
                 </Typography>
               </Box>
@@ -206,7 +206,7 @@ function Home() {
                   <ShareIcon fontSize='large' color='primary' />
                 </CenteredBox>
                 <Typography variant={'titleLarge'}>SHARING</Typography>
-                <Typography variant={'bodySmall'}>
+                <Typography variant={'bodySmall'} height={48}>
                   부원들과의 지식 공유
                 </Typography>
               </Box>
@@ -239,7 +239,7 @@ function Home() {
                   <CloudIcon fontSize='large' color='primary' />
                 </CenteredBox>
                 <Typography variant={'titleLarge'}>NETWORKING</Typography>
-                <Typography variant={'bodySmall'}>
+                <Typography variant={'bodySmall'} height={48}>
                   다양한 학과, 분야의 사람들과의 네트워킹
                 </Typography>
               </Box>
@@ -285,79 +285,77 @@ function Home() {
 
       <Box py={16} textAlign={'center'}>
         <Layout>
-          <Box px={{ md: 12, sm: 4 }}>
-            <Stack
-              direction={isMobile ? 'column' : 'row'}
-              justifyContent={'space-between'}
-              mb={4}
+          <Stack
+            direction={isMobile ? 'column' : 'row'}
+            justifyContent={'space-between'}
+            mb={4}
+          >
+            <Typography
+              variant={isMobile ? 'titleLarge' : 'headlineSmall'}
+              mb={2}
+              textAlign={isMobile ? 'center' : 'left'}
+              width={isMobile ? '100%' : '40%'}
+              sx={{ wordBreak: 'keep-all' }}
             >
-              <Typography
-                variant={isMobile ? 'titleLarge' : 'headlineSmall'}
-                mb={2}
-                textAlign={isMobile ? 'center' : 'left'}
-                width={isMobile ? '100%' : '40%'}
-                sx={{ wordBreak: 'keep-all' }}
-              >
-                일반적으로 자주 묻는 질문을 확인해보세요.
-              </Typography>
-              <Layout
-                display={'flex'}
-                flexDirection={'column'}
-                gap={2}
-                minHeight={320}
-                px={isMobile ? '0!important' : ''}
-              >
-                {faq.slice(0, 3).map((faq, index) => (
-                  <Accordion
-                    key={index}
-                    disableGutters
-                    elevation={0}
-                    sx={{
-                      '&.MuiAccordion-root': {
-                        backgroundColor: 'transparent',
-                      },
+              일반적으로 자주 묻는 질문을 확인해보세요.
+            </Typography>
+            <Layout
+              display={'flex'}
+              flexDirection={'column'}
+              gap={2}
+              minHeight={320}
+              px={isMobile ? '0!important' : ''}
+            >
+              {faq.slice(0, 3).map((faq, index) => (
+                <Accordion
+                  key={index}
+                  disableGutters
+                  elevation={0}
+                  sx={{
+                    '&.MuiAccordion-root': {
+                      backgroundColor: 'transparent',
+                    },
 
-                      '&:before': {
-                        display: 'none',
+                    '&:before': {
+                      display: 'none',
+                    },
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMore />}
+                    aria-controls={`panel${index}-content`}
+                    id={`panel${index}-header`}
+                    sx={{
+                      '&.MuiAccordionSummary-root': {
+                        padding: isMobile ? '0!important' : '',
                       },
                     }}
                   >
-                    <AccordionSummary
-                      expandIcon={<ExpandMore />}
-                      aria-controls={`panel${index}-content`}
-                      id={`panel${index}-header`}
-                      sx={{
-                        '&.MuiAccordionSummary-root': {
-                          padding: isMobile ? '0!important' : '',
-                        },
-                      }}
-                    >
-                      <Stack direction={'row'} alignItems={'center'} gap={1.5}>
-                        <Typography variant='labelLarge' fontWeight={'300'}>
-                          Q. {faq.title}
-                        </Typography>
-                        <Chip
-                          label={faq.tag}
-                          color='primary'
-                          variant='outlined'
-                        />
-                      </Stack>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography variant='bodyMedium' textAlign={'left'}>
-                        A. {faq.content}
+                    <Stack direction={'row'} alignItems={'center'} gap={1.5}>
+                      <Typography variant='labelLarge' fontWeight={'300'}>
+                        Q. {faq.title}
                       </Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-                <Link to='/faq'>
-                  <Button fullWidth variant='outlined' size='large'>
-                    더 많은 자주 묻는 질문 보러가기
-                  </Button>
-                </Link>
-              </Layout>
-            </Stack>
-          </Box>
+                      <Chip
+                        label={faq.tag}
+                        color='primary'
+                        variant='outlined'
+                      />
+                    </Stack>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography variant='bodyMedium' textAlign={'left'}>
+                      A. {faq.content}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+              <Link to='/faq'>
+                <Button fullWidth variant='outlined' size='large'>
+                  더 많은 자주 묻는 질문 보러가기
+                </Button>
+              </Link>
+            </Layout>
+          </Stack>
         </Layout>
       </Box>
     </main>

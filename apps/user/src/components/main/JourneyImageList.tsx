@@ -1,9 +1,4 @@
-import {
-  ImageListItemBar,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { ImageListItemBar, Typography } from '@mui/material';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
@@ -17,6 +12,8 @@ import {
 import { motion } from 'framer-motion';
 
 import OutwardBtn from '@components/button/outward-btn';
+
+import useDeviceSize from '@hooks/useDeviceSize';
 
 const containerVariants = {
   hidden: {},
@@ -39,23 +36,34 @@ const itemVariants = {
 };
 
 export default function JourneyImageList() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { isMobile } = useDeviceSize();
   return (
     <motion.div
       variants={containerVariants}
       initial='hidden'
       whileInView='visible'
       viewport={{ once: true, amount: 0.2 }}
+      style={{
+        overflowX: isMobile ? 'scroll' : 'unset',
+        display: isMobile ? 'flex' : 'block',
+        gap: isMobile ? '16px' : '0',
+      }}
     >
       <ImageList
-        sx={{ width: '100%', height: isMobile ? 'fit-content' : '584px' }}
+        sx={{
+          height: isMobile ? 'auto' : '584px',
+          flexWrap: isMobile ? 'nowrap' : 'wrap',
+          width: isMobile ? '100%' : 'auto',
+        }}
         variant={isMobile ? 'standard' : 'woven'}
-        cols={3}
-        gap={12}
+        cols={isMobile ? 1 : 3}
+        gap={isMobile ? 0 : 12}
       >
         {itemData.map((item) => (
-          <ImageListItem key={item.title}>
+          <ImageListItem
+            key={item.title}
+            sx={{ minWidth: isMobile ? '100%' : 'auto' }}
+          >
             <motion.div variants={itemVariants}>
               <img
                 src={item.img}
@@ -64,12 +72,12 @@ export default function JourneyImageList() {
                 style={{
                   borderRadius: '16px',
                   width: '100%',
-                  height: '360px',
+                  height: isMobile ? 'auto' : '360px',
                   objectFit: 'cover',
                 }}
               />
               <ImageListItemBar
-                sx={{ mt: 4, width: '100%' }}
+                sx={{ mt: isMobile ? 1 : 4 }}
                 title={
                   <Typography
                     variant='titleSmall'
