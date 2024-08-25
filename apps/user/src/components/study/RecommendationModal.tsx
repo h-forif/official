@@ -343,7 +343,7 @@ export function StudyRecommendationModal({
                         {index + 1}
                       </Avatar>
                       <Box width='85%'>
-                        <Typography variant='bodyMedium' component='div'>
+                        <Typography variant='bodyMedium'>
                           {study.name}
                         </Typography>
                         <Typography variant='bodySmall' color='text.secondary'>
