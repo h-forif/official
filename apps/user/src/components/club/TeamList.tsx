@@ -44,11 +44,20 @@ export function TeamList({ year, semester }: TeamSearch) {
   }
 
   const sortedTeamData = teamData?.sort((a, b) => {
-    if (a.user_title === '회장') return -1;
-    if (b.user_title === '회장') return 1;
-    if (a.user_title === '부회장') return -1;
-    if (b.user_title === '부회장') return 1;
-    return 0;
+    const titlePriority = (title: string) => {
+      switch (title) {
+        case '회장':
+          return 1;
+        case '부회장':
+          return 2;
+        case '팀장':
+          return 3;
+        default:
+          return 4;
+      }
+    };
+
+    return titlePriority(a.user_title) - titlePriority(b.user_title);
   });
 
   return (
