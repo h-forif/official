@@ -12,10 +12,6 @@ export const NAV_MENUS: NavMenu[] = [
       { title: '포리프', href: '/club/about' },
       { title: '포리프 팀', href: '/club/team' },
       {
-        title: '캘린더',
-        href: '/club/calendar',
-      },
-      {
         title: '회계 공시',
         href: '/club/finance',
       },

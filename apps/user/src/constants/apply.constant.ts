@@ -119,5 +119,5 @@ export const REVIEW_END_DATE = '2024-09-12T20:00:00'; //TODO: Change this to the
 export const MENTOR_RECRUIT_START_DATE = '2024-08-13';
 export const MENTOR_RECRUIT_END_DATE = '2024-08-16';
 
-export const RECRUIT_START_DATE = '2024-08-24';
+export const RECRUIT_START_DATE = '2024-08-26';
 export const RECRUIT_END_DATE = '2024-09-04';

@@ -1,4 +1,5 @@
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { useTheme } from '@mui/material';
 
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Link } from '@tanstack/react-router';
@@ -12,12 +13,13 @@ export default function OutwardBtn({
   height?: number;
   to: string;
 }) {
+  const mode = useTheme().palette.mode;
   return (
     <Link to={to}>
       <CenteredBox
         component={'button'}
         border={1}
-        borderColor={'divider'}
+        borderColor={mode === 'light' ? 'divider' : 'black'}
         width={width}
         height={height}
         borderRadius={'50%'}

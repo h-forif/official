@@ -33,6 +33,7 @@ function SubscriptionPage() {
     queryFn: () => getUnpaidUsers(),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     [],
   );

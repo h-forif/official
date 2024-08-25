@@ -86,7 +86,7 @@ function Home() {
           Upgrade your passion
         </Typography>
         <Typography variant={titleVariant}>
-          {RECRUIT_START_DATE} - {RECRUIT_END_DATE}
+          {RECRUIT_START_DATE} ~ {RECRUIT_END_DATE}
         </Typography>
         <Typography
           variant={titleVariant}
@@ -263,6 +263,7 @@ function Home() {
                 textAlign={'left'}
                 width={'30%'}
                 sx={{ wordBreak: 'keep-all' }}
+                color={'black'}
               >
                 포리프의 한 학기 여정에 함께해요
               </Typography>

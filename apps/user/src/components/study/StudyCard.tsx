@@ -28,13 +28,20 @@ export function StudyCard({
   difficulty,
 }: StudyCardProps) {
   const handleLinkClick = () => {
-    window.scrollTo(0, 0); // 페이지 이동 시 스크롤을 최상단으로 이동
+    window.scrollTo(0, 0);
   };
 
   return (
     <Link to={`/studies/${id}`} onClick={handleLinkClick}>
       <MUICard elevation={0} sx={{ border: 'none', borderRadius: 2 }}>
-        <CardMedia component={'picture'} sx={{ width: '100%', height: 240 }}>
+        <CardMedia
+          component={'picture'}
+          sx={{
+            width: '100%',
+            height: 240,
+            bgcolor: 'white',
+          }}
+        >
           <Image
             src={image!}
             height={'100%'}

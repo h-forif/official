@@ -73,7 +73,7 @@ export default function JourneyImageList() {
                 title={
                   <Typography
                     variant='titleSmall'
-                    color='inherit'
+                    color={'black'}
                     textAlign={'left'}
                   >
                     {item.title}
