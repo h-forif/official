@@ -16,14 +16,14 @@ export default function Component({ mode }: { mode: PaletteMode }) {
       sx={{
         width: '100%',
         bgcolor: 'background.paper',
-        py: { xs: 6, md: 12 },
+        py: { xs: 3, md: 6 },
       }}
     >
       <Box
         sx={{
           maxWidth: 'lg',
           mx: 'auto',
-          px: 4,
+          px: 8,
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           alignItems: 'center',
@@ -43,16 +43,16 @@ export default function Component({ mode }: { mode: PaletteMode }) {
               sx={{ display: 'flex', alignItems: 'center' }}
             >
               {mode === 'light' ? (
-                <LetterIcon width={120} height={120} />
+                <LetterIcon width={120} height={80} />
               ) : (
-                <DarkLetterIcon width={120} height={120} />
+                <DarkLetterIcon width={120} height={80} />
               )}
               <Typography component='span' sx={visuallyHidden}>
                 FORIF OFFICIAL
               </Typography>
             </Box>
           </Link>
-          <Typography variant='bodySmall' color='text.secondary'>
+          <Typography variant='bodySmall' color='text.primary'>
             &copy; 2024 FORIF OFFICIAL. All rights reserved.
           </Typography>
         </Stack>
@@ -60,8 +60,8 @@ export default function Component({ mode }: { mode: PaletteMode }) {
         <Stack
           component='nav'
           direction='row'
-          spacing={{ xs: 4, md: 6 }}
-          sx={{ justifyContent: 'center', flexWrap: 'wrap' }}
+          spacing={3}
+          sx={{ justifyContent: 'center' }}
         >
           <Link to='/'>
             <Typography

@@ -10,22 +10,34 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import Marquee from '@components/common/Marquee';
 
+import useDeviceSize from '@hooks/useDeviceSize';
+
 export const Route = createFileRoute('/club/about')({
   component: AboutPage,
 });
 
 const history = [
   {
+    year: 2025,
+    content: ['포리프 10주년 기념 행사'],
+  },
+  {
     year: 2024,
-    content: 'HSPC 한양X세종 프로그래밍 대회 개최',
+    content: [
+      '선배와의 만남',
+      'HSPC 한양X세종 알고리즘 대회 개최',
+      '제 2회 홈커밍데이',
+      '제 13·14회 해커톤',
+    ],
   },
   {
     year: 2023,
     content: [
-      'HSPC 한양X세종 프로그래밍 대회 개최',
+      '한 학기 부원 수 200명 돌파',
+      'HPEC 한양 알고리즘 대회 개최',
       'OOPARTS 연합 스터디',
       '제 1회 홈커밍데이',
-      '제10/11회 해커톤',
+      '제 11·12회 해커톤',
     ],
   },
   {
@@ -51,22 +63,27 @@ const history = [
 ];
 
 function AboutPage() {
+  const { isMobile, isTablet } = useDeviceSize();
   return (
     <Box>
       <BackgroundImage>
-        <Title variant='displayLarge' fontSize={'120px'} lineHeight={'140px'}>
+        <Title
+          variant='displayLarge'
+          fontSize={isMobile ? '80px' : '120px'}
+          lineHeight={'140px'}
+        >
           about_
           <br />
           <Typography
             component={'span'}
             variant='displayLarge'
-            fontSize={'120px'}
+            fontSize={isMobile ? '60px' : '120px'}
           >
             <Typography
               component={'span'}
               variant='displayLarge'
               color={'primary.main'}
-              fontSize={'120px'}
+              fontSize={isMobile ? '60px' : '120px'}
             >
               {'{'}
             </Typography>{' '}
@@ -75,7 +92,7 @@ function AboutPage() {
               component={'span'}
               variant='displayLarge'
               color={'primary.main'}
-              fontSize={'120px'}
+              fontSize={isMobile ? '60px' : '120px'}
             >
               {'}'}
             </Typography>
@@ -123,6 +140,7 @@ function AboutPage() {
           style={{
             position: 'absolute',
             top: '50%',
+            display: isTablet ? 'none' : 'block',
           }}
         />
         <Image
@@ -134,6 +152,7 @@ function AboutPage() {
             position: 'absolute',
             right: '20px',
             bottom: '20%',
+            display: isTablet ? 'none' : 'block',
           }}
         />
         <CenteredBox>
@@ -184,9 +203,14 @@ const HistoryLine = ({
 }) => {
   return (
     <Stack direction={'row'} alignItems={'center'} px={2}>
-      <Typography variant='bodySmall' width={'60px'}>
-        {year}
-      </Typography>
+      <Box
+        sx={{
+          minWidth: '48px', // Adjust this width as needed
+          flexShrink: 0,
+        }}
+      >
+        <Typography variant='bodySmall'>{year}</Typography>
+      </Box>
 
       <Stack
         position={'relative'}
@@ -257,12 +281,12 @@ const HistoryLine = ({
               aspectRatio: 1,
               borderRadius: '50%',
               border: '2px solid #fff',
-              bgcolor: 'black',
+              bgcolor: 'primary.main',
             }}
-          ></Box>
+          />
         </Stack>
       </Stack>
-      <Stack direction={'column'} gap={2} py={4}>
+      <Stack direction={'column'} gap={2} py={4} width={'100%'}>
         {typeof content === 'string' ? (
           <Typography variant='bodySmall'>{content}</Typography>
         ) : (
