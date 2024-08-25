@@ -11,9 +11,8 @@ import {
   Stack,
   Tab,
   Tabs,
-  Typography,
-  useMediaQuery,
-  useTheme,
+  Typography, // useMediaQuery,
+  // useTheme,
 } from '@mui/material';
 import { Card, CardContent } from '@mui/material';
 
@@ -24,6 +23,8 @@ import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
 import { StudyRecommendationModal } from '@components/study/RecommendationModal';
+
+import useDeviceSize from '@hooks/useDeviceSize';
 
 export const Route = createFileRoute('/studies/guide')({
   loader: async () => {
@@ -106,9 +107,9 @@ interface FlippableCardProps {
 
 function FlippableCard({ card }: FlippableCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.only('xs'));
-
+  // const theme = useTheme();
+  // const isXs = useMediaQuery(theme.breakpoints.only('xs'));
+  const { isMobile } = useDeviceSize();
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -119,7 +120,7 @@ function FlippableCard({ card }: FlippableCardProps) {
       onClick={handleClick}
       sx={{
         width: '100%',
-        height: isXs ? 200 : 300, // xs일 때 높이를 200px로 변경
+        height: isMobile ? 200 : 300,
         perspective: '1000px',
         cursor: 'pointer',
       }}
@@ -156,22 +157,16 @@ function FlippableCard({ card }: FlippableCardProps) {
           >
             <Typography
               component='div'
+              variant={isMobile ? 'titleSmall' : 'titleMedium'}
               sx={{
-                fontSize: isXs ? '0.88rem' : '1.25rem', // xs일 때 글자 크기 변경
                 fontWeight: 'bold',
-                wordBreak: 'keep-all', // 단어 단위로 줄바꿈
-                overflowWrap: 'break-word', // 필요시 단어 내에서 줄바꿈
+                wordBreak: 'keep-all',
+                overflowWrap: 'break-word',
               }}
             >
               {formattedTitle}
             </Typography>
-            <Typography
-              color='text.secondary'
-              mt={2}
-              sx={{
-                fontSize: isXs ? '0.6rem' : '1rem', // xs일 때 글자 크기 변경
-              }}
-            >
+            <Typography variant='labelSmall' color='text.secondary' mt={2}>
               클릭하여 자세히 보기
             </Typography>
           </CardContent>
@@ -198,10 +193,9 @@ function FlippableCard({ card }: FlippableCardProps) {
             }}
           >
             <Typography
-              // color='text.secondary'
+              variant='bodySmall'
               sx={{
                 whiteSpace: 'pre-wrap',
-                fontSize: isXs ? '0.8rem' : '1rem', // xs일 때 글자 크기 변경
               }}
             >
               {card.content}
@@ -230,60 +224,6 @@ export interface Question {
   text: string;
   options: string[];
 }
-
-const questions2: Question[] = [
-  {
-    id: 1,
-    title: '관심 분야',
-    text: '2학기 개강을 맞아 포리는 새로운 동아리에 들어가려 해요. 어떤 동아리에 들어갈까요?',
-    options: ['FORIF', '포리프'],
-  },
-  {
-    id: 2,
-    title: '관심 분야',
-    text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민이에요. 어떤 분야에 관심이 있나요?',
-    options: [
-      '나는 눈에 바로바로 보이는게 좋아 ! (Front-end)',
-      '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해 ! (Back-end)',
-      '데이터를 다루어보자 !',
-      '알고리즘 공부를 해볼까?',
-      '요즘 AI가 핫하다며? GPT는 어때?',
-      '쉽게 배울수 없는 주제를 배워보고 싶어.',
-    ],
-  },
-  {
-    id: 3,
-    title: '학습 스타일',
-    text: '이론 학습과 실습 중 어느 것을 더 중요시하나요?',
-    options: ['이론 학습', '실습', '둘 다'],
-  },
-  {
-    id: 4,
-    title: '스터디 난이도',
-    text: '프로그래밍에 대해 얼마나 알고 있나요?',
-    options: [
-      '완전 처음 해본다! 기초 스터디를 수강하고 싶다.',
-      '어느정도 기초 지식이 있다. (창컴/공창컴 이수)',
-      '나는 2학년 이상의 전공자다.',
-      '심도깊은 스터디에 참여하고 싶다.',
-    ],
-  },
-  {
-    id: 5,
-    title: '스터디 방식',
-    text: '포리프의 스터디 진행 유형에는 두 가지가 있어요. 강의형과 프로젝트형 스터디 중 어떤 방식을 선호하나요?',
-    options: [
-      '대규모로 멘토가 강의식으로 진행하는 [강의형 진행 방식]',
-      '소수의 사람들이 모여 결과물을 만들어내는 [프로젝트형 진행 방식]',
-    ],
-  },
-  {
-    id: 6,
-    title: '마지막 질문',
-    text: '포리프 어때요',
-    options: ['좋아요', '좋아요'],
-  },
-];
 
 const questions: Question[] = [
   {
@@ -345,7 +285,6 @@ const questions: Question[] = [
 export default function StudyGuidePage() {
   const studies = Route.useLoaderData();
   const [tab, setTab] = useState<string>('#introduction');
-
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {
     setTab(newValue);
     event.preventDefault();
@@ -445,24 +384,28 @@ export default function StudyGuidePage() {
                   <List>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='모집'
                         secondary='9월 초 부원 모집 기간'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='진행 횟수'
                         secondary='총 15주 중 중간고사 / 기말고사 기간을 고려하여 8주 이상의 스터디가 진행됩니다.'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='진행 일시'
                         secondary='주 1회, 멘토가 지정한 요일과 시간에 진행됩니다.'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='개설 스터디'
                         secondary='개설 스터디는 매 학기마다 다르며, 포리프는 매 학기 다양한 분야의 스터디가 개설되고 있습니다.'
                       />
@@ -470,13 +413,14 @@ export default function StudyGuidePage() {
 
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='진행 방식'
                         secondary={
                           <Fragment>
                             강의형과 프로젝트형으로 나누어집니다. <br />
                             <Typography
                               sx={{ mt: 2 }}
-                              variant='labelSmall'
+                              variant='bodySmall'
                               component='span'
                               display='block'
                             >
@@ -485,7 +429,7 @@ export default function StudyGuidePage() {
                               기초스터디가 이에 해당합니다.
                             </Typography>
                             <Typography
-                              variant='labelSmall'
+                              variant='bodySmall'
                               component='span'
                               display='block'
                             >
@@ -499,6 +443,7 @@ export default function StudyGuidePage() {
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='혜택'
                         secondary='일정 요건 충족 시 수료증이 발급됩니다.'
                       />
@@ -517,22 +462,29 @@ export default function StudyGuidePage() {
                   </Typography>
                   <List>
                     <ListItem>
-                      <ListItemText primary='모집' secondary='9월 중순' />
+                      <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
+                        primary='모집'
+                        secondary='9월 중순'
+                      />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='진행 횟수 및 일시'
                         secondary='스터디원들간의 조율로 진행 계획을 세웁니다.'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='개설 방법'
                         secondary='운영진측에 스터디 계획서를 제출하면 스터디 홍보가 진행됩니다.'
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
+                        secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='혜택'
                         secondary={
                           <Fragment>
@@ -577,7 +529,6 @@ export default function StudyGuidePage() {
                 borderColor={'divider'}
                 width={'100%'}
                 sx={{ mt: 2 }}
-                color='text.secondary'
               >
                 위의 내용과 같이 포리프의 스터디는 크게 정규스터디와
                 자율스터디로 구성되어 있습니다. <br />

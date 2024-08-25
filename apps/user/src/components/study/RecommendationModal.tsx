@@ -31,7 +31,7 @@ import { getCurrentTerm } from '@utils/getCurrentTerm';
 const currentTerm = getCurrentTerm();
 
 interface StudyRecommendationModalProps {
-  questions: any;
+  questions: Question[];
   studies: Study[];
   open: boolean;
   onClose: () => void;
@@ -57,7 +57,6 @@ export function StudyRecommendationModal({
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [result, setResult] = useState<TopStudy[]>();
   const [showResult, setShowResult] = useState(false);
-  const [additionalInfo, setAdditionalInfo] = useState('');
   const handleAnswerChange = (event: ChangeEvent<HTMLInputElement>) => {
     setAnswers({ ...answers, [currentQuestion]: event.target.value });
   };
@@ -76,20 +75,26 @@ export function StudyRecommendationModal({
     }
   };
 
-  // 질문 및 답변에 따른 점수 정의
   const questionScores = [
     {
-      // FORIF vs 포리프
-      scores: [], // 이 질문은 점수에 영향을 주지 않음
+      scores: [],
     },
     {
-      // 관심 분야
       scores: [
-        { '외모췍? 데이터췍!': 2, '프론트엔드 웹 프로젝트 with React': 2 },
-        { '와 파이썬 진짜 쩐다 (아직 시작 안함)': 1, '외모췍? 데이터췍!': 1 },
-        { '외모췍? 데이터췍!': 2, '제대로 배우는 데이터 모델링': 2 },
-        { '백준과 서강준은 취향차이': 2 },
-        { 'GPT야 나를 믿니? 네~ 띰장님': 2 },
+        {
+          '당근마켓 만들며 배우는 웹 개발 기초': 2,
+          '프론트엔드 웹 프로젝트 with React': 2,
+        },
+        {
+          '와 파이썬 진짜 쩐다 (아직 시작 안함)': 1,
+          '외모췍? 데이터췍!': 1,
+          '한스타그램을 설계해보자! (대형 서비스 설계)': 2,
+          '제대로 배우는 데이터 모델링': 2,
+          '당근마켓 만들며 배우는 웹 개발 기초': 2,
+        },
+        { '외모췍? 데이터췍!': 2, '제대로 배우는 데이터 모델링': 1 },
+        { '백준과 서강준은 취향차이': 3 },
+        { 'GPT야 나를 믿니? 네~ 띰장님': 3 },
         {
           '한스타그램을 설계해보자! (대형 서비스 설계)': 2,
           '나만의 NPM 패키지 만들기': 2,
@@ -99,21 +104,15 @@ export function StudyRecommendationModal({
       ],
     },
     {
-      // 이론 vs 실습 vs 둘 다
-      scores: [
-        {},
-        {},
-        {}, // '둘 다'를 선택한 경우 점수 변화 없음
-      ],
+      scores: [{}, {}, {}],
     },
     {
-      // 프로그래밍 경험 수준
       scores: [
         { '와 파이썬 진짜 쩐다 (아직 시작 안함)': 3 },
         {
           '외모췍? 데이터췍!': 1,
           '백준과 서강준은 취향차이': 2,
-          '당근마켓 만들며 배워보는 웹 개발 기초': 2,
+          '당근마켓 만들며 배우는 웹 개발 기초': 2,
         },
         {
           'GPT야 나를 믿니? 네~ 띰장님': 1,
@@ -128,7 +127,6 @@ export function StudyRecommendationModal({
       ],
     },
     {
-      // 강의형 vs 프로젝트형
       scores: [
         {
           'GPT야 나를 믿니? 네~ 띰장님': 4,
@@ -136,7 +134,7 @@ export function StudyRecommendationModal({
           '제대로 배우는 데이터 모델링': 4,
           '백준과 서강준은 취향차이': 5,
           '와 파이썬 진짜 쩐다 (아직 시작 안함)': 5,
-          '당근마켓 만들며 배워보는 웹 개발 기초': 5,
+          '당근마켓 만들며 배우는 웹 개발 기초': 5,
           '외모췍? 데이터췍!': 5,
         },
         {
@@ -146,14 +144,10 @@ export function StudyRecommendationModal({
       ],
     },
     {
-      // 마지막 질문 (포리프 결과물)
-      //   '프로그래밍의 기초적인 지식을 탄탄히 다지고 싶어요.',
-      //   '응용을 하는 법을 배우고 싶어요.',
-      //   '혼자 공부하기는 어려운 분야를 사람들과 함께 인사이트를 얻으며 공부하고 싶어요.',
       scores: [
         {
           '와 파이썬 진짜 쩐다 (아직 시작 안함)': 2,
-          '당근마켓 만들며 배워보는 웹 개발 기초': 2,
+          '당근마켓 만들며 배우는 웹 개발 기초': 2,
           '외모췍? 데이터췍!': 2,
           '제대로 배우는 데이터 모델링': 2,
           'GPT야 나를 믿니? 네~ 띰장님': 2,
@@ -198,7 +192,6 @@ export function StudyRecommendationModal({
 
     setResult(topStudies);
 
-    // setAdditionalInfo(JSON.stringify(scores));
     setShowResult(true);
   };
 
@@ -213,18 +206,9 @@ export function StudyRecommendationModal({
     setResult([]);
     setShowResult(false);
   };
-  const handleClose = () => {
-    onClose();
-  };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      fullWidth
-      maxWidth='md'
-      keepMounted
-    >
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='md' keepMounted>
       <DialogTitle
         sx={{
           backgroundColor: 'primary.main',
@@ -244,7 +228,7 @@ export function StudyRecommendationModal({
         </Box>
         <Box display='flex' justifyContent='flex-end'>
           <Button
-            onClick={handleClose}
+            onClick={onClose}
             size='large'
             sx={{
               color: 'primary.contrastText',
@@ -268,6 +252,12 @@ export function StudyRecommendationModal({
               <>
                 <Typography variant='bodyMedium' gutterBottom mt={4} mb={4}>
                   {getCurrentQuestion()!.text}
+                </Typography>
+                <Typography
+                  variant='labelSmall'
+                  sx={{ color: 'text.secondary' }}
+                >
+                  아래로 스크롤해보세요! 더 많은 옵션이 있습니다.
                 </Typography>
                 <FormControl
                   component='fieldset'
@@ -347,7 +337,6 @@ export function StudyRecommendationModal({
                               : index === 1
                                 ? 'primary.main'
                                 : 'primary.dark',
-                          // bgcolor: index === 0 ? 'pink' : 'primary.main',
                           mr: 2,
                         }}
                       >
@@ -365,7 +354,7 @@ export function StudyRecommendationModal({
                         <Link to={`/studies/${study.id}`}>
                           <Button
                             variant='text'
-                            onClick={handleClose}
+                            onClick={onClose}
                             size='small'
                             sx={{
                               minWidth: 'auto',
@@ -397,7 +386,7 @@ export function StudyRecommendationModal({
                   semester: Number(currentTerm.semester),
                 }}
               >
-                <Button variant='contained' onClick={handleClose} size='large'>
+                <Button variant='contained' onClick={onClose} size='large'>
                   24년 2학기 개설 스터디 목록 보러가기
                 </Button>
               </Link>
@@ -441,7 +430,7 @@ export function StudyRecommendationModal({
             </Button>
           ) : (
             <>
-              <Button size='small' onClick={handleClose}>
+              <Button size='small' onClick={onClose}>
                 닫기
               </Button>
             </>
