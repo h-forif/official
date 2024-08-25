@@ -18,6 +18,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as StudiesIndexImport } from './routes/studies/index'
 import { Route as FaqIndexImport } from './routes/faq/index'
 import { Route as AnnouncementIndexImport } from './routes/announcement/index'
+import { Route as StudiesRecommendationImport } from './routes/studies/recommendation'
 import { Route as StudiesGuideImport } from './routes/studies/guide'
 import { Route as StudiesStudyIdImport } from './routes/studies/$studyId'
 import { Route as ClubTeamImport } from './routes/club/team'
@@ -78,6 +79,11 @@ const FaqIndexRoute = FaqIndexImport.update({
 
 const AnnouncementIndexRoute = AnnouncementIndexImport.update({
   path: '/announcement/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const StudiesRecommendationRoute = StudiesRecommendationImport.update({
+  path: '/studies/recommendation',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -266,6 +272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudiesGuideImport
       parentRoute: typeof rootRoute
     }
+    '/studies/recommendation': {
+      id: '/studies/recommendation'
+      path: '/studies/recommendation'
+      fullPath: '/studies/recommendation'
+      preLoaderRoute: typeof StudiesRecommendationImport
+      parentRoute: typeof rootRoute
+    }
     '/announcement/': {
       id: '/announcement/'
       path: '/announcement'
@@ -355,6 +368,7 @@ export const routeTree = rootRoute.addChildren({
   ClubTeamRoute,
   StudiesStudyIdRoute,
   StudiesGuideRoute,
+  StudiesRecommendationRoute,
   AnnouncementIndexRoute,
   FaqIndexRoute,
   StudiesIndexRoute,
@@ -383,6 +397,7 @@ export const routeTree = rootRoute.addChildren({
         "/club/team",
         "/studies/$studyId",
         "/studies/guide",
+        "/studies/recommendation",
         "/announcement/",
         "/faq/",
         "/studies/",
@@ -437,6 +452,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/guide": {
       "filePath": "studies/guide.tsx"
+    },
+    "/studies/recommendation": {
+      "filePath": "studies/recommendation.tsx"
     },
     "/announcement/": {
       "filePath": "announcement/index.tsx"
