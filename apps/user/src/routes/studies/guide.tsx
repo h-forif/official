@@ -460,6 +460,7 @@ export default function StudyGuidePage() {
                     '멘토'는 존재하지 않으며, 함께 공부할 사람들이 모여 스터디를
                     진행합니다.
                   </Typography>
+
                   <List>
                     <ListItem>
                       <ListItemText
