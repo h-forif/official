@@ -35,6 +35,10 @@ export const NAV_MENUS: NavMenu[] = [
     title: '자주 묻는 질문',
     href: '/faq',
   },
+  {
+    title: '해커톤',
+    href: '/hackathon',
+  },
 ];
 
 export const AUTH_NAV_MENUS: NavMenu[] = [
