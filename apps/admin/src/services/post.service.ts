@@ -27,7 +27,10 @@ export async function addAnnouncement(announcement: Announcement) {
 
 export async function editAnnouncement(announcement: Announcement) {
   const updatedAnnouncement: Announcement = await authApi
-    .patch(`/posts/announcements/${announcement.id}`, announcement)
+    .patch(`/posts/announcements/${announcement.id}`, {
+      title: announcement.title,
+      content: announcement.content,
+    })
     .then((res) => res.data);
   return updatedAnnouncement;
 }

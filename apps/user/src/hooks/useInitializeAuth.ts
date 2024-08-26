@@ -21,6 +21,8 @@ const useInitializeAuth = () => {
         return;
       }
       if (refreshToken) {
+        console.log(refreshToken);
+
         try {
           const { access_token } = await api
             .post('/auth/token', { refresh_token: refreshToken })

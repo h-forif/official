@@ -72,6 +72,7 @@ function FaqPage() {
       title: '',
       content: '',
       created_by: user.name!,
+      id: 0,
     },
   });
 
@@ -83,6 +84,8 @@ function FaqPage() {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+  console.log(announcements);
+
   const handleRowClick = async (row: GridRowParams) => {
     try {
       const announcement: Announcement = await getAnnouncement(
@@ -92,6 +95,8 @@ function FaqPage() {
       form.setValue('title', announcement.title);
       form.setValue('content', announcement.content);
       form.setValue('created_by', announcement.created_by);
+      form.setValue('id', announcement.id);
+
       setOpen(true);
     } catch (e) {
       console.error(e);
@@ -104,8 +109,9 @@ function FaqPage() {
     }
   };
 
+  const formData = form.getValues();
   const handleEdit = async () => {
-    const formData = form.getValues();
+    console.log(formData);
 
     try {
       await editAnnouncement(formData);
@@ -183,6 +189,11 @@ function FaqPage() {
   };
 
   const columns: GridColDef<Announcement>[] = [
+    {
+      field: 'id',
+      headerName: '아이디',
+      flex: 1,
+    },
     {
       field: 'title',
       headerName: '제목',
