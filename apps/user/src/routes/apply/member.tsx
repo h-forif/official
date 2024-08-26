@@ -28,7 +28,7 @@ import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
 import axios from 'axios';
 import { getAllStudies } from 'src/services/study.service';
-import { getTeam, getUser } from 'src/services/user.service';
+import { getUser } from 'src/services/user.service';
 import { ApplyMemberSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -146,22 +146,6 @@ function ApplyMember() {
   );
 
   const onSubmit = async (formData: z.infer<typeof ApplyMemberSchema>) => {
-    const teams = await getTeam({
-      year: 2024,
-      semester: 2,
-    });
-    const teamNames = teams.map((team) => team.user.name);
-
-    if (!teamNames.includes(name)) {
-      openSingleButtonDialog({
-        dialogIconType: DialogIconType.WARNING,
-        title: '테스트 기간 신청',
-        message: '테스트 기간 중에는 신청할 수 없습니다.',
-        mainButtonText: '확인',
-      });
-      return;
-    }
-
     const application = refineApplyForm(formData);
 
     setIsSaved(true);
