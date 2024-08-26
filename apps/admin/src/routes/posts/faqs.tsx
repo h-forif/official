@@ -241,6 +241,14 @@ function FaqPage() {
           sx={{
             mt: 2,
           }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 30,
+              },
+            },
+          }}
+          pageSizeOptions={[30]}
         />
       </Layout>
       <Dialog

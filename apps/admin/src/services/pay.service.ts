@@ -14,3 +14,17 @@ export const getUnpaidUsers = async () => {
   );
   return res;
 };
+
+export const getPaidUsers = async () => {
+  const res: PaidUser[] = await authApi('/applications/paid-users').then(
+    (res) => res.data,
+  );
+  return res;
+};
+
+export const changePaidStatus = async (id: number[], status: 'Y' | 'N') => {
+  await authApi.patch('/applications/payment-status', {
+    applier_ids: id,
+    pay_yn: status,
+  });
+};

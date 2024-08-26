@@ -11,7 +11,13 @@ import {
 } from '@mui/x-data-grid';
 
 import { Table } from '@packages/components/table/Table';
-import { PaidUser, getUnpaidUsers } from '@services/pay.service';
+import {
+  PaidUser,
+  changePaidStatus,
+  getPaidUsers,
+  getUnpaidUsers,
+} from '@services/pay.service';
+import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
@@ -33,33 +39,76 @@ function SubscriptionPage() {
     queryFn: () => getUnpaidUsers(),
   });
 
+  const {
+    data: paidUsers,
+    isLoading: isPaidLoading,
+    error: paidError,
+  } = useQuery({
+    queryKey: ['paid-users'],
+    queryFn: () => getPaidUsers(),
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>(
     [],
   );
 
-  if (error) {
-    console.error(error);
+  const { openSingleButtonDialog } = useDialogStore();
+  if (error || paidError) {
+    console.error(error), console.error(paidError);
   }
 
-  const handlePaid = (id: GridRowId) => {
-    console.log('paid', id);
-    queryClient.invalidateQueries({
-      queryKey: ['unpaid-users'],
-    });
+  const handlePaid = async (id: GridRowId) => {
+    console.log('납부');
+    try {
+      await changePaidStatus([id as number], 'Y');
+      queryClient.invalidateQueries({
+        queryKey: ['unpaid-users'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['paid-users'],
+      });
+      openSingleButtonDialog({
+        title: '납부 완료',
+        message: '납부가 완료되었습니다.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.CONFIRM,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleUndo = (id: GridRowId) => {
-    console.log('undo', id);
-    queryClient.invalidateQueries({
-      queryKey: ['unpaid-users'],
-    });
+  const handleUndo = async (id: GridRowId) => {
+    try {
+      await changePaidStatus([id as number], 'N');
+      queryClient.invalidateQueries({
+        queryKey: ['unpaid-users'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['paid-users'],
+      });
+      openSingleButtonDialog({
+        title: '납부 취소 완료',
+        message: '납부 취소가 완료되었습니다.',
+        mainButtonText: '확인',
+        dialogIconType: DialogIconType.CONFIRM,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const columns: GridColDef<PaidUser>[] = [
     { field: 'user_id', headerName: '학번', flex: 2 },
     { field: 'name', headerName: '이름', flex: 1 },
-    { field: 'phone_number', headerName: '전화번호', flex: 2 },
+    {
+      field: 'phone_number',
+      headerName: '전화번호',
+      flex: 2,
+      valueFormatter: (params: string) =>
+        params.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+    },
     {
       field: 'actions',
       type: 'actions',
@@ -135,8 +184,8 @@ function SubscriptionPage() {
         </Typography>
         <Table
           columns={doneColumns}
-          rows={unPaidUsers}
-          loading={isLoading}
+          rows={paidUsers}
+          loading={isPaidLoading}
           getRowId={(row) => row.user_id}
           checkboxSelection
           onRowSelectionModelChange={(selectionModel) => {

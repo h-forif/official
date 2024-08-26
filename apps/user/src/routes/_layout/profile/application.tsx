@@ -51,6 +51,7 @@ function MyApplication() {
   const { application, err } = Route.useLoaderData();
   const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   if (err) {
+    console.log(err);
     if (axios.isAxiosError(err) && err.response?.status === 404) {
       return (
         <Box width={'100%'}>

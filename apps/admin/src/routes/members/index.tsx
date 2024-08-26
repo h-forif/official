@@ -18,7 +18,13 @@ const columns: GridColDef<User>[] = [
   { field: 'id', headerName: '학번', flex: 2 },
   { field: 'name', headerName: '이름', flex: 1 },
   { field: 'department', headerName: '학과', flex: 2 },
-  { field: 'phone_number', headerName: '전화번호', flex: 2 },
+  {
+    field: 'phone_number',
+    headerName: '전화번호',
+    flex: 2,
+    valueFormatter: (params: string) =>
+      params.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+  },
   { field: 'email', headerName: '이메일', flex: 2 },
 ];
 

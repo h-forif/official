@@ -30,6 +30,7 @@ export function Table({ rows, columns, footer, ...props }: TableProps) {
     <Box minHeight={320} bgcolor={'background.default'}>
       <DataGrid
         rows={rows}
+        autoHeight
         columns={columns}
         initialState={{
           pagination: {

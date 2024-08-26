@@ -212,6 +212,14 @@ function FaqPage() {
           slots={{
             footer: AddFooter,
           }}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 30,
+              },
+            },
+          }}
+          pageSizeOptions={[30]}
         />
       </Layout>
       <Dialog
