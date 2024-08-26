@@ -312,7 +312,7 @@ function ApplyMember() {
                 options={filteredSecondaryOptions}
                 label='2순위 스터디를 선택해주세요.'
                 minWidth={'100%'}
-                required={!is_primary_study_only}
+                required={!is_primary_study_only && primary_study !== '0'}
                 disabled={
                   is_primary_study_only ||
                   primary_study === '0' ||
@@ -334,7 +334,7 @@ function ApplyMember() {
                   is_primary_study_only ||
                   !isIncluded
                 }
-                required={!is_primary_study_only}
+                required={!is_primary_study_only && primary_study !== '0'}
                 fullWidth
                 placeholder='최소 150자, 최대 1000자 이내로 작성해주세요.'
               />
