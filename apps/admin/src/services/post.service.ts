@@ -58,3 +58,7 @@ export async function editFaq(faq: FAQ) {
     .then((res) => res.data);
   return updatedFaq;
 }
+
+export async function deleteFaq(id: GridRowId) {
+  await authApi.delete(`/posts/faqs/${id}`);
+}

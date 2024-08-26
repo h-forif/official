@@ -29,7 +29,12 @@ import { Button, IconButton } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { Table } from '@packages/components/table/Table';
 import { Announcement } from '@packages/components/types/post';
-import { getAnnouncement, getAnnouncements } from '@services/post.service';
+import {
+  deleteAnnouncement,
+  editAnnouncement,
+  getAnnouncement,
+  getAnnouncements,
+} from '@services/post.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { getUser } from '@stores/user.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -73,7 +78,8 @@ function FaqPage() {
   if (error) {
     console.error(error);
   }
-  const { openDualButtonDialog, openSingleButtonDialog } = useDialogStore();
+  const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
+    useDialogStore();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -98,18 +104,30 @@ function FaqPage() {
     }
   };
 
-  const handleEdit = () => {
-    // TODO: Update the announcement
-    queryClient.invalidateQueries({
-      queryKey: ['announcements'],
-    });
-    openSingleButtonDialog({
-      title: '수정 완료',
-      message: '해당 공지사항 수정을 완료했습니다.',
-      dialogIconType: DialogIconType.CONFIRM,
-      mainButtonText: '확인',
-    });
-    setOpen(false);
+  const handleEdit = async () => {
+    const formData = form.getValues();
+
+    try {
+      await editAnnouncement(formData);
+      queryClient.invalidateQueries({
+        queryKey: ['announcements'],
+      });
+      openSingleButtonDialog({
+        title: '수정 완료',
+        message: '해당 공지사항 수정을 완료했습니다.',
+        dialogIconType: DialogIconType.CONFIRM,
+        mainButtonText: '확인',
+      });
+      setOpen(false);
+    } catch (e) {
+      console.error(e);
+      openSingleButtonDialog({
+        title: '수정 실패',
+        message: '공지사항 수정에 실패했습니다. 다시 시도해주세요.',
+        dialogIconType: DialogIconType.WARNING,
+        mainButtonText: '확인',
+      });
+    }
   };
 
   const handleClose = () => {
@@ -144,8 +162,21 @@ function FaqPage() {
       mainButtonText: '삭제',
       dialogIconType: DialogIconType.WARNING,
       mainButtonAction: async () => {
-        // TODO: Delete the announcement
-        console.log('delete', id);
+        try {
+          await deleteAnnouncement(id);
+          queryClient.invalidateQueries({
+            queryKey: ['announcements'],
+          });
+          closeDialog();
+          openSingleButtonDialog({
+            title: '삭제 완료',
+            message: '해당 공지사항 삭제를 완료했습니다.',
+            dialogIconType: DialogIconType.CONFIRM,
+            mainButtonText: '확인',
+          });
+        } catch (e) {
+          console.error(e);
+        }
       },
       subButtonText: '취소',
     });

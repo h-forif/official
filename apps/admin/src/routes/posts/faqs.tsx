@@ -31,12 +31,7 @@ import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { Table } from '@packages/components/table/Table';
 import { FAQ } from '@packages/components/types/post';
-import {
-  addFaq,
-  deleteAnnouncement,
-  editFaq,
-  getFaqs,
-} from '@services/post.service';
+import { addFaq, deleteFaq, editFaq, getFaqs } from '@services/post.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -78,7 +73,8 @@ function FaqPage() {
   if (error) {
     console.error(error);
   }
-  const { openDualButtonDialog, openSingleButtonDialog } = useDialogStore();
+  const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
+    useDialogStore();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -177,7 +173,21 @@ function FaqPage() {
       mainButtonText: '삭제',
       dialogIconType: DialogIconType.WARNING,
       mainButtonAction: async () => {
-        deleteAnnouncement(id);
+        try {
+          await deleteFaq(id);
+          queryClient.invalidateQueries({
+            queryKey: ['faqs'],
+          });
+          closeDialog();
+          openSingleButtonDialog({
+            title: '삭제 완료',
+            message: '해당 자주 묻는 질문 삭제를 완료했습니다.',
+            dialogIconType: DialogIconType.CONFIRM,
+            mainButtonText: '확인',
+          });
+        } catch (e) {
+          console.error(e);
+        }
       },
       subButtonText: '취소',
     });
