@@ -63,6 +63,7 @@ const history = [
 ];
 
 function AboutPage() {
+  const primaryColor = '#1D40BA';
   const { isMobile, isTablet } = useDeviceSize();
   return (
     <Box>
@@ -82,7 +83,7 @@ function AboutPage() {
             <Typography
               component={'span'}
               variant='displayLarge'
-              color={'primary.main'}
+              color={primaryColor}
               fontSize={isMobile ? '60px' : '120px'}
             >
               {'{'}
@@ -91,7 +92,7 @@ function AboutPage() {
             <Typography
               component={'span'}
               variant='displayLarge'
-              color={'primary.main'}
+              color={primaryColor}
               fontSize={isMobile ? '60px' : '120px'}
             >
               {'}'}
@@ -103,28 +104,26 @@ function AboutPage() {
         display={'flex'}
         alignItems={'center'}
         height={'100vh'}
-        bgcolor={'primary.main'}
+        bgcolor={primaryColor}
         position={'relative'}
       >
         <Typography
           variant='displaySmall'
           color={'white'}
           fontWeight={'700'}
-          top={64}
+          top={32}
           position={'absolute'}
         >
           프로그래밍을 하고 싶은 누구나,
           <br />
           포리프와 함께.
         </Typography>
-        <Box>
-          <Marquee />
-        </Box>
+        <Marquee />
         <Typography
           variant='displaySmall'
           color={'white'}
           fontWeight={'700'}
-          bottom={64}
+          bottom={32}
           right={64}
           position={'absolute'}
         >
@@ -135,12 +134,11 @@ function AboutPage() {
         <Image
           src={Hackathon1}
           alt='해커톤 사진 1'
-          width={'360px'}
-          height={'auto'}
           style={{
             position: 'absolute',
             top: '50%',
             display: isTablet ? 'none' : 'block',
+            width: '16vw',
           }}
         />
         <Image
@@ -153,20 +151,16 @@ function AboutPage() {
             right: '20px',
             bottom: '20%',
             display: isTablet ? 'none' : 'block',
+            width: '16vw',
           }}
         />
         <CenteredBox>
-          <Typography
-            variant='displayMedium'
-            fontWeight={'700'}
-            mt={20}
-            mb={10}
-          >
+          <Typography variant='displaySmall' fontWeight={'700'} mt={20} mb={10}>
             강렬한{' '}
             <Typography
               component={'span'}
               fontWeight={'700'}
-              variant='displayMedium'
+              variant='displaySmall'
               color={'primary.main'}
             >
               FORIF
@@ -175,16 +169,24 @@ function AboutPage() {
           </Typography>
           <Stack>
             {history.map((item, idx) => (
-              <HistoryLine year={item.year} content={item.content} idx={idx} />
+              <HistoryLine
+                key={idx}
+                year={item.year}
+                content={item.content}
+                idx={idx}
+              />
             ))}
           </Stack>
-          <Typography
-            variant='displayMedium'
-            fontWeight={'700'}
-            mt={20}
-            mb={10}
-          >
-            지식의 선순환이 일어날 수 있도록.
+          <Typography variant='displaySmall' fontWeight={'700'} mt={20} mb={10}>
+            <Typography
+              component={'span'}
+              fontWeight={'700'}
+              variant='displaySmall'
+              color={'primary.main'}
+            >
+              지식의 선순환
+            </Typography>
+            이 일어날 수 있도록.
           </Typography>
         </CenteredBox>
       </Layout>
@@ -292,7 +294,9 @@ const HistoryLine = ({
         ) : (
           <Stack gap={1}>
             {content.map((label) => (
-              <Typography variant='bodySmall'>{label}</Typography>
+              <Typography key={label} variant='bodySmall'>
+                {label}
+              </Typography>
             ))}
           </Stack>
         )}

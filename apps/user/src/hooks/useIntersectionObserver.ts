@@ -1,4 +1,3 @@
-// hooks/useIntersectionObserver.ts
 import { RefObject, useEffect, useState } from 'react';
 
 interface UseIntersectionObserverProps {
@@ -15,13 +14,14 @@ export const useIntersectionObserver = ({
   targetRef,
 }: UseIntersectionObserverProps): boolean => {
   const [isIntersecting, setIsIntersecting] = useState(false);
+  console.log(isIntersecting);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.length > 0) {
-          setIsIntersecting(entries[0]!.isIntersecting);
-        }
+        entries.forEach((entry) => {
+          setIsIntersecting(entry.isIntersecting);
+        });
       },
       { root, rootMargin, threshold },
     );

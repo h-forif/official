@@ -50,6 +50,7 @@
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "timezone": "link:dayjs/plugin/timezone",
+    "usehooks-ts": "^3.1.0",
     "utc": "link:dayjs/plugin/utc",
     "vite-tsconfig-paths": "^4.3.2",
     "zod": "^3.23.8",

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
@@ -22,6 +22,7 @@ import 'dayjs/locale/ko';
 import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
 import { getStudyInfo } from 'src/services/study.service';
+import { useIntersectionObserver } from 'usehooks-ts';
 
 import StudyCurriculum from '@components/study/StudyCurriculum';
 
@@ -49,7 +50,33 @@ function StudyComponent() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const mode = theme.palette.mode;
+
   const [tab, setTab] = useState('#introduction');
+
+  const { isIntersecting: isIntroIn, ref: introRef } = useIntersectionObserver({
+    threshold: 0,
+  });
+
+  const { isIntersecting: isCurriIn, ref: curriRef } = useIntersectionObserver({
+    threshold: 0,
+  });
+
+  const { isIntersecting: isPlaceIn, ref: placeRef } = useIntersectionObserver({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    if (isIntroIn) {
+      setTab('#introduction');
+    }
+    if (isCurriIn) {
+      setTab('#curriculum');
+    }
+    if (isPlaceIn) {
+      setTab('#place');
+    }
+  }, [isCurriIn, isIntroIn, isPlaceIn]);
+
   const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   const isDisabled =
     currentTerm.year !== study.act_year.toString() ||
@@ -133,6 +160,7 @@ function StudyComponent() {
       </Box>
       <Box
         id='introduction'
+        ref={introRef}
         component={'section'}
         sx={{
           px: { xs: 4, md: 8, xl: 12 },
@@ -199,7 +227,7 @@ function StudyComponent() {
                 />
               </Stack>
             </Stack>
-            <Box id='curriculum' component={'section'}>
+            <Box id='curriculum' ref={curriRef} component={'section'}>
               <Typography
                 variant='titleLarge'
                 pt={4}
@@ -224,7 +252,7 @@ function StudyComponent() {
                 )}
               </Stack>
             </Box>
-            <Box id='place' component={'section'}>
+            <Box id='place' ref={placeRef} component={'section'}>
               <Typography variant='bodyMedium' pt={4}>
                 시간
               </Typography>

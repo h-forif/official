@@ -88,7 +88,7 @@ const MarqueeBox = styled(Box)(() => ({
   position: 'relative',
   width: '100vw',
   maxWidth: '100%',
-  height: '320px',
+  height: '240px',
   overflow: 'hidden',
 }));
 
@@ -102,7 +102,7 @@ const FlowBox = ({
   const BoxType = type === 'narrow' ? NarrowBox : WideBox;
   return (
     <BoxType>
-      <Typography variant='titleLarge' color={'primary.main'}>
+      <Typography variant='titleLarge' color={'#1D40BA'}>
         {children}
       </Typography>
     </BoxType>
