@@ -22,7 +22,7 @@ export interface Application {
 
 export async function getApplications(studyId: StudyId) {
   const applications: MemberApplications = await authApi
-    .get(`/applications?studyId=${studyId.id}`)
+    .get(`/applications/${studyId.id}`)
     .then((res) => res.data);
   return applications;
 }
