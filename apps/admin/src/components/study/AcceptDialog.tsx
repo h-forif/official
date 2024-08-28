@@ -33,13 +33,13 @@ const Transition = forwardRef(function Transition(
 
 export default function AcceptDialog({
   studyId,
-  id,
+  user_id,
   application,
   open,
   handleClose,
 }: {
   studyId: number;
-  id: number | undefined;
+  user_id: number | undefined;
   application: Application | null;
   open: boolean;
   handleClose: () => void;
@@ -47,7 +47,7 @@ export default function AcceptDialog({
   const { openSingleButtonDialog, openDualButtonDialog, closeDialog } =
     useDialogStore();
 
-  const handleAccept = async (id: GridRowId) => {
+  const handleAccept = async (user_id: GridRowId) => {
     openDualButtonDialog({
       title: '멘티 승인',
       message: '해당 멘티를 승인할까요? 이 결정은 취소할 수 없습니다.',
@@ -55,16 +55,16 @@ export default function AcceptDialog({
       dialogIconType: DialogIconType.CONFIRM,
       mainButtonAction: async () => {
         try {
-          await acceptStudies([Number(id)], studyId);
+          await acceptStudies([Number(user_id)], studyId);
           closeDialog();
           openSingleButtonDialog({
             title: `해당 멘티가 승인되었습니다.`,
-            message: `해당 멘티(${application?.id} ${application?.name})가 승인되었습니다. "내 스터디 관리"에서 해당 멘티가 성공적으로 추가되었는지 확인해주세요.`,
+            message: `해당 멘티(${application?.user_id} ${application?.name})가 승인되었습니다. "내 스터디 관리"에서 해당 멘티가 성공적으로 추가되었는지 확인해주세요.`,
             mainButtonText: '확인',
             dialogIconType: DialogIconType.CONFIRM,
           });
         } catch (e) {
-          console.error(`Failed to approve member with ID ${id}:`, e);
+          console.error(`Failed to approve member with ID ${user_id}:`, e);
         }
       },
       subButtonText: '취소',
@@ -102,9 +102,13 @@ export default function AcceptDialog({
             variant='titleMedium'
             component='div'
           >
-            {application.id} {application.name}
+            {application.user_id} {application.name}
           </Typography>
-          <Button autoFocus color='inherit' onClick={() => handleAccept(id!)}>
+          <Button
+            autoFocus
+            color='inherit'
+            onClick={() => handleAccept(user_id!)}
+          >
             승낙
           </Button>
         </Toolbar>
@@ -128,7 +132,7 @@ export default function AcceptDialog({
               <Typography variant='bodySmall' mb={2}>
                 학번
               </Typography>
-              <Typography variant='bodyLarge'>{application.id}</Typography>
+              <Typography variant='bodyLarge'>{application.user_id}</Typography>
             </BorderBox>
           </Grid>
           <Grid item xs={12}>

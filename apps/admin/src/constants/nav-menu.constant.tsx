@@ -32,6 +32,7 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
       { title: '스터디 목록', href: '/studies' },
       { title: '스터디 승인', href: '/studies/approve' },
       { title: '내 스터디 관리', href: '/studies/me' },
+      { title: '스터디 신청서 관리', href: '/studies/applications' },
       { title: '수강 승인', href: '/studies/accept' },
     ],
   },

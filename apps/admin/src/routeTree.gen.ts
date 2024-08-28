@@ -20,6 +20,7 @@ import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as SubscriptionFileImport } from './routes/subscription/file'
 import { Route as StudiesMeImport } from './routes/studies/me'
 import { Route as StudiesApproveImport } from './routes/studies/approve'
+import { Route as StudiesApplicationsImport } from './routes/studies/applications'
 import { Route as StudiesAcceptImport } from './routes/studies/accept'
 import { Route as PostsFaqsImport } from './routes/posts/faqs'
 import { Route as PostsAnnouncementsImport } from './routes/posts/announcements'
@@ -71,6 +72,11 @@ const StudiesApproveRoute = StudiesApproveImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const StudiesApplicationsRoute = StudiesApplicationsImport.update({
+  path: '/studies/applications',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const StudiesAcceptRoute = StudiesAcceptImport.update({
   path: '/studies/accept',
   getParentRoute: () => rootRoute,
@@ -116,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/studies/accept'
       fullPath: '/studies/accept'
       preLoaderRoute: typeof StudiesAcceptImport
+      parentRoute: typeof rootRoute
+    }
+    '/studies/applications': {
+      id: '/studies/applications'
+      path: '/studies/applications'
+      fullPath: '/studies/applications'
+      preLoaderRoute: typeof StudiesApplicationsImport
       parentRoute: typeof rootRoute
     }
     '/studies/approve': {
@@ -184,6 +197,7 @@ export const routeTree = rootRoute.addChildren({
   PostsAnnouncementsRoute,
   PostsFaqsRoute,
   StudiesAcceptRoute,
+  StudiesApplicationsRoute,
   StudiesApproveRoute,
   StudiesMeRoute,
   SubscriptionFileRoute,
@@ -206,6 +220,7 @@ export const routeTree = rootRoute.addChildren({
         "/posts/announcements",
         "/posts/faqs",
         "/studies/accept",
+        "/studies/applications",
         "/studies/approve",
         "/studies/me",
         "/subscription/file",
@@ -227,6 +242,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/studies/accept": {
       "filePath": "studies/accept.tsx"
+    },
+    "/studies/applications": {
+      "filePath": "studies/applications.tsx"
     },
     "/studies/approve": {
       "filePath": "studies/approve.tsx"

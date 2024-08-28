@@ -13,16 +13,37 @@ export interface MemberApplications {
   second: Application[];
 }
 export interface Application {
-  id: number;
+  user_id: number;
   name: string;
+  primary_study_name: string;
   phone_number: string;
   intro: string;
   apply_path: string;
 }
 
+export interface AllApplication {
+  applier_id: number;
+  primary_study: number;
+  secondary_study: number | null;
+  primary_intro: string;
+  secondary_intro: null;
+  apply_path: string;
+  pay_yn: string;
+  apply_date: string;
+  primary_status: string;
+  secondary_status: string | null;
+}
+
 export async function getApplications(studyId: StudyId) {
   const applications: MemberApplications = await authApi
     .get(`/applications/${studyId.id}`)
+    .then((res) => res.data);
+  return applications;
+}
+
+export async function getAllApplications() {
+  const applications: AllApplication[] = await authApi
+    .get(`/applications`)
     .then((res) => res.data);
   return applications;
 }

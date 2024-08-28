@@ -86,7 +86,7 @@ function StudyAcceptPage() {
           });
           openSingleButtonDialog({
             title: `해당 멘티가 승인되었습니다.`,
-            message: `해당 멘티(${application?.id} ${application?.name})가 승인되었습니다. "내 스터디 관리"에서 해당 멘티가 성공적으로 추가되었는지 확인해주세요.`,
+            message: `해당 멘티(${application?.user_id} ${application?.name})가 승인되었습니다. "내 스터디 관리"에서 해당 멘티가 성공적으로 추가되었는지 확인해주세요.`,
             mainButtonText: '확인',
             dialogIconType: DialogIconType.CONFIRM,
           });
@@ -100,20 +100,20 @@ function StudyAcceptPage() {
 
   const handlePrimaryRowClick: GridEventListener<'rowClick'> = (params) => {
     const application = applications!.first.find(
-      (application) => application.id === params.id,
+      (application) => application.user_id === params.id,
     );
     setApplication(application!);
   };
 
   const handleSecondaryRowClick: GridEventListener<'rowClick'> = (params) => {
     const application = applications!.second.find(
-      (application) => application.id === params.id,
+      (application) => application.user_id === params.id,
     );
     setApplication(application!);
   };
 
   const columns: GridColDef<Application>[] = [
-    { field: 'id', headerName: '학번', flex: 1 },
+    { field: 'user_id', headerName: '학번', flex: 1 },
     { field: 'name', headerName: '이름', flex: 1 },
     {
       field: 'intro',
@@ -168,6 +168,7 @@ function StudyAcceptPage() {
               handlePrimaryRowClick(params, event, details);
               handleOpen();
             }}
+            getRowId={(row) => row.user_id}
           />
         </Box>
         <Typography variant='titleSmall'>2순위 스터디 신청 목록</Typography>
@@ -185,6 +186,7 @@ function StudyAcceptPage() {
               handleSecondaryRowClick(params, event, details);
               handleOpen();
             }}
+            getRowId={(row) => row.user_id}
           />
         </Box>
       </Layout>
@@ -192,8 +194,8 @@ function StudyAcceptPage() {
         handleClose={handleClose}
         open={open}
         application={application}
-        key={application?.id}
-        id={application?.id}
+        key={application?.user_id}
+        user_id={application?.user_id}
         studyId={currentId!.id}
       />
     </Box>
