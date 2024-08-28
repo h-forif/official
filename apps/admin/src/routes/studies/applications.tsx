@@ -35,8 +35,6 @@ function ApplicationsPage() {
     queryFn: () => getAllApplications(),
   });
 
-  console.log(applications);
-
   return (
     <Box>
       <Title

@@ -3,8 +3,9 @@ import { authApi } from './axios-instance';
 export interface PaidUser {
   user_id: number;
   name: string;
-  primary_study_id: number;
-  secondary_study_id: number;
+  study_id: number;
+  study_type: '정규 스터디' | '자율 스터디';
+  priority: '1순위' | '2순위';
   phone_number: string;
 }
 

@@ -23,7 +23,6 @@ export const authApi = axios.create({
 authApi.interceptors.request.use(async (config) => {
   const refreshToken = refreshTokenStore.getState().refreshToken;
   const accessToken = accessTokenStore.getState().accessToken;
-  console.log(refreshToken);
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
