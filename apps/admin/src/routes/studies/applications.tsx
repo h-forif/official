@@ -2,9 +2,10 @@ import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 
 import { Table } from '@packages/components/table/Table';
-import { AllApplication, getAllApplications } from '@services/admin.service';
+import { Application, getAllApplications } from '@services/admin.service';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import dayjs from 'dayjs';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
@@ -13,12 +14,19 @@ export const Route = createFileRoute('/studies/applications')({
   component: ApplicationsPage,
 });
 
-const columns: GridColDef<AllApplication>[] = [
-  { field: 'applier_id', headerName: '학번', width: 90 },
-  { field: 'study_id', headerName: '스터디 ID', width: 150 },
-  { field: 'status', headerName: '상태', width: 150 },
-  { field: 'created_at', headerName: '생성일', width: 150 },
-  { field: 'updated_at', headerName: '수정일', width: 150 },
+const columns: GridColDef<Application>[] = [
+  { field: 'user_id', headerName: '학번', flex: 2 },
+  { field: 'name', headerName: '이름', flex: 1 },
+  { field: 'department', headerName: '학과', flex: 2 },
+  { field: 'primary_study_name', headerName: '1순위 스터디', flex: 2 },
+  { field: 'secondary_study_name', headerName: '2순위 스터디', flex: 2 },
+  { field: 'phone_number', headerName: '전화번호', flex: 2 },
+  {
+    field: 'apply_date',
+    headerName: '최종 제출 일자',
+    flex: 2,
+    valueFormatter: (params) => dayjs(params).format('YYYY-MM-DD HH시 mm분'),
+  },
 ];
 
 function ApplicationsPage() {
@@ -40,7 +48,7 @@ function ApplicationsPage() {
           loading={isLoading}
           columns={columns}
           rows={applications}
-          getRowId={(row: AllApplication) => row.applier_id}
+          getRowId={(row: Application) => row.user_id}
         />
       </Layout>
     </Box>

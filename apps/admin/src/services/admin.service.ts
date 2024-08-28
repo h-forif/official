@@ -16,6 +16,7 @@ export interface Application {
   user_id: number;
   name: string;
   primary_study_name: string;
+  secondary_study_name?: string;
   phone_number: string;
   intro: string;
   apply_path: string;
