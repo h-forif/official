@@ -96,7 +96,7 @@ jobs:
       - name: 린트
         run: pnpm run lint
 
-      - name: 타입 체크 - User
+      - name: 타입 체크
         run: pnpm run type-check
 
       - name: 빌드 - User
