@@ -9,6 +9,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { signIn } from '@services/auth.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import axios from 'axios';
 import { motion, useDragControls } from 'framer-motion';
 
 export const Route = createFileRoute('/')({
@@ -26,17 +27,32 @@ function Home() {
 
   const handleSignIn = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      const res = await signIn(tokenResponse.access_token);
-      if (res.error) {
-        openSingleButtonDialog({
-          title: res.error,
-          message: '멘토나 운영진이라면 SW팀 혹은 회장단에게 문의해주세요.',
-          dialogIconType: DialogIconType.WARNING,
-          mainButtonText: '확인',
-        });
-        return;
+      try {
+        const res = await signIn(tokenResponse.access_token);
+        console.log(res);
+
+        if (res.error) {
+          openSingleButtonDialog({
+            title: res.error,
+            message: '멘토나 운영진이라면 SW팀 혹은 회장단에게 문의해주세요.',
+            dialogIconType: DialogIconType.WARNING,
+            mainButtonText: '확인',
+          });
+          return;
+        }
+        navigate({ to: '/dashboard' });
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          openSingleButtonDialog({
+            title: '등록되지 않은 계정입니다.',
+            message:
+              '홈페이지에 가입하지 않았거나, 한양대학교 이메일 계정이 아닌지 확인해주세요.',
+            dialogIconType: DialogIconType.WARNING,
+            mainButtonText: '확인',
+          });
+          return;
+        }
       }
-      navigate({ to: '/dashboard' });
     },
   });
 

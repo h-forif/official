@@ -25,6 +25,12 @@ const signIn = async (g_access_token: string | null | undefined) => {
       error: '허용되지 않은 계정입니다.',
     };
   }
+  if (!user.email?.endsWith('hanyang.ac.kr')) {
+    return {
+      data: null,
+      error: '한양대학교 이메일 계정이 아닙니다.',
+    };
+  }
   setUser(user);
   setAccessToken(access_token);
   setRefreshToken(refresh_token);
