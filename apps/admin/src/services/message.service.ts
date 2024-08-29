@@ -4,7 +4,7 @@ import { authApi } from './axios-instance';
 
 export interface MessageBody {
   receivers: string[];
-  studyName: string;
+  studyName?: string;
   responseSchedule: Dayjs;
   dateTime: Dayjs;
   location: string;
@@ -21,7 +21,7 @@ export interface MessageBody {
  * @param location OT 장소
  * @param url 구글 폼 URL
  */
-export async function sendPassedRegularStudyMessage({
+export async function sendMessage({
   receivers,
   studyName,
   responseSchedule,
@@ -30,13 +30,25 @@ export async function sendPassedRegularStudyMessage({
   url,
   templateCode,
 }: MessageBody) {
-  await authApi.post('/alim-talk', {
-    receivers: receivers,
-    templateCode: templateCode,
-    studyName: studyName,
-    responseSchedule: responseSchedule.format('YYYY-MM-DD HH:mm'),
-    dateTime: dateTime.format('YYYY-MM-DD HH:mm'),
-    location: location,
-    url: url,
-  });
+  // 자율스터디 합격 혹은 정규 스터디 불합격
+  if (studyName === undefined) {
+    await authApi.post('/alim-talk', {
+      receivers: receivers,
+      templateCode: templateCode,
+      responseSchedule: responseSchedule.format('YYYY-MM-DD HH:mm'),
+      dateTime: dateTime.format('YYYY-MM-DD HH:mm'),
+      location: location,
+      url: url,
+    });
+  } else {
+    await authApi.post('/alim-talk', {
+      receivers: receivers,
+      templateCode: templateCode,
+      studyName: studyName,
+      responseSchedule: responseSchedule.format('YYYY-MM-DD HH:mm'),
+      dateTime: dateTime.format('YYYY-MM-DD HH:mm'),
+      location: location,
+      url: url,
+    });
+  }
 }

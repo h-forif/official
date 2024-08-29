@@ -15,7 +15,7 @@ export const PASS_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
   },
   {
     value: AUTONOMOUS_STUDY_PASS_TEMPLATE_CODE,
-    label: '자율스터디 합격 템플릿',
+    label: '자율부원 합격 템플릿',
   },
 ];
 
@@ -26,7 +26,7 @@ export const FAIL_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
   },
 ];
 
-export const URGENT_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
+export const ETC_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
   {
     value: URGENT_TEMPLATE_CODE,
     label: '미등록 부원 대상 재촉 템플릿',

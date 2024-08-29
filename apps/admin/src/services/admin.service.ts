@@ -22,13 +22,9 @@ export interface Application {
   apply_path: string;
 }
 
-export interface AllApplication {
-  applier_id: number;
-  primary_study: number;
-  secondary_study: number | null;
+export interface AllApplication extends Omit<Application, 'intro'> {
   primary_intro: string;
   secondary_intro: null;
-  apply_path: string;
   pay_yn: string;
   apply_date: string;
   primary_status: string;
@@ -41,6 +37,18 @@ export async function getApplications(studyId: StudyId) {
     .then((res) => res.data);
   return applications;
 }
+
+export const getStudyNames = (applications: AllApplication[]) => {
+  const studyNames = Array.from(
+    new Set(
+      applications.flatMap((app) =>
+        [app.primary_study_name, app.secondary_study_name].filter(Boolean),
+      ),
+    ),
+  );
+
+  return studyNames;
+};
 
 export async function getAllApplications() {
   const applications: AllApplication[] = await authApi

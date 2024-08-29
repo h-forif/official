@@ -177,7 +177,9 @@ function SubscriptionPage() {
             my: 2,
           }}
         />
-        <Typography variant='titleSmall'>회비 납부 목록</Typography>
+        <Typography variant='titleSmall' mt={2}>
+          회비 납부 목록
+        </Typography>
         <Typography variant='bodySmall'>
           스터디를 수강하는 부원들 중 회비를 납부한 부원 목록입니다. 납부를
           완료하지 않았다면 오른쪽의 미납부 버튼을 눌러주세요.
