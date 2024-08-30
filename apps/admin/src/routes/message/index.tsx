@@ -3,6 +3,11 @@ import { Controller, useForm } from 'react-hook-form';
 
 import {
   Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   List,
   ListItem,
@@ -19,12 +24,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { REVIEW_END_DATE } from '@constants/apply.constant';
 import {
+  ALL_MESSAGE_TEMPLATE_OPTIONS,
   ETC_MESSAGE_TEMPLATE_OPTIONS,
   FAIL_MESSAGE_TEMPLATE_OPTIONS,
   PASS_MESSAGE_TEMPLATE_OPTIONS,
 } from '@constants/message.constant';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
+import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import {
@@ -32,7 +39,12 @@ import {
   getAllApplications,
   getStudyNames,
 } from '@services/admin.service';
-import { MessageBody, sendMessage } from '@services/message.service';
+import {
+  MessageBody,
+  TemplateList,
+  getMessageTemplates,
+  sendMessage,
+} from '@services/message.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -60,6 +72,33 @@ function a11yProps(index: number) {
 }
 
 function MessagePage() {
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(
+    ALL_MESSAGE_TEMPLATE_OPTIONS[0]!.value,
+  );
+  const [isPreviewDialogOpen, setIsPreviewDialogOpen] = useState(false);
+  const { data: templateList } = useQuery({
+    queryKey: ['alim-talk-template-list'],
+    queryFn: () => getMessageTemplates(),
+  });
+  const [selectedTemplateContent, setSelectedTemplateContent] =
+    useState<TemplateList>();
+  const [selectedPreviewTemplate, setSelectedPreviewTemplate] = useState({
+    content: '',
+    extra: '',
+    buttonName: '',
+    link: '',
+  });
+
+  useEffect(() => {
+    if (templateList) {
+      const template = templateList.templateList.find(
+        (template) => template.templateId === selectedTemplate,
+      );
+      setSelectedTemplateContent(template);
+    }
+  }, [templateList, selectedTemplate]);
+
   const form = useForm<MessageBody>({
     defaultValues: {
       dateTime: dayjs('2024-09-06T18:00:00'),
@@ -71,6 +110,32 @@ function MessagePage() {
   });
 
   const templateCode = form.watch('templateCode');
+  useEffect(() => {
+    const formData = form.getValues();
+    const selectedTemplate = templateList?.templateList.find(
+      (template) => template.templateId === templateCode,
+    );
+    if (selectedTemplate) {
+      const filledTemplate = {
+        content: selectedTemplate.content
+          .replace(
+            /#{응답일정}/g,
+            formData.responseSchedule.format('YYYY-MM-DD HH:mm'),
+          )
+          .replace(/#{일시}/g, formData.dateTime.format('YYYY-MM-DD HH:mm'))
+          .replace(/#{장소}/g, formData.location),
+        extra: selectedTemplate.extra,
+        buttonName: selectedTemplate!.buttons[0]!.buttonName,
+        link: formData.url,
+      };
+      setSelectedPreviewTemplate({
+        content: filledTemplate.content,
+        extra: filledTemplate.extra,
+        buttonName: filledTemplate.buttonName,
+        link: filledTemplate.link,
+      });
+    }
+  }, [form, templateCode, templateList]);
 
   const [tabValue, setTabValue] = useState(0);
   const [studyNames, setStudyNames] = useState<(string | undefined)[]>([]);
@@ -86,7 +151,7 @@ function MessagePage() {
   useEffect(() => {
     if (!isLoading && applications) {
       const studyNames = getStudyNames(applications);
-      setStudyNames(studyNames); // Store the unique study names in state
+      setStudyNames(studyNames);
     }
   }, [applications, isLoading]);
 
@@ -133,7 +198,7 @@ function MessagePage() {
     openDualButtonDialog({
       dialogIconType: DialogIconType.CONFIRM,
       title: '문자 발송',
-      message: `${isRegularStudy ? '정규 스터디 합격 부원' : '자율부원'}(총 ${isRegularStudy ? regularApplications?.length : autoApplications?.length}명)에게 문자를 발송해 말아?`,
+      message: `${isRegularStudy ? '정규 스터디 합격 부원' : '자율부원'}(총 ${isRegularStudy ? regularApplications?.length : autoApplications?.length}명)에게 문자를 발송할까요?`,
       mainButtonText: '발송',
       mainButtonAction: async () => {
         // 문자 발송 로직
@@ -284,9 +349,18 @@ function MessagePage() {
 
   const handleSendToEtc = () => {};
 
+  const handleTemplateDialogOpen = () => {
+    setIsTemplateDialogOpen(true);
+  };
+
   return (
     <Layout>
       <Title title='문자 발송 서비스' label='문자 발송 서비스 관리' />
+      <Box display={'flex'} alignItems={'end'} justifyContent={'end'}>
+        <Button onClick={handleTemplateDialogOpen}>
+          알림톡 템플릿 목록 보기
+        </Button>
+      </Box>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={tabValue}
@@ -391,6 +465,17 @@ function MessagePage() {
                   bgcolor: 'background.default',
                 }}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant='outlined'
+                color='primary'
+                size='large'
+                onClick={() => setIsPreviewDialogOpen(true)}
+                fullWidth
+              >
+                발송 내용 미리보기
+              </Button>
             </Grid>
             <Grid item xs={12}>
               <Button
@@ -508,6 +593,17 @@ function MessagePage() {
             </Grid>
             <Grid item xs={12}>
               <Button
+                variant='outlined'
+                color='primary'
+                size='large'
+                onClick={() => setIsPreviewDialogOpen(true)}
+                fullWidth
+              >
+                발송 내용 미리보기
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
                 variant='contained'
                 color='primary'
                 size='large'
@@ -528,7 +624,10 @@ function MessagePage() {
       {/* 그 외 부원 대상 */}
       <TabPanel value={tabValue} index={2}>
         <Box>
-          <Typography variant='titleMedium'>그 외 사유로 문자 발송</Typography>
+          <Typography variant='titleMedium'>
+            그 외 사유로 문자 발송(This time, we decide to call api directly
+            using spreadsheet.)
+          </Typography>
           <Grid container spacing={2} mt={2}>
             <Grid item xs={12}>
               <Controller
@@ -579,6 +678,17 @@ function MessagePage() {
             </Grid>
             <Grid item xs={12}>
               <Button
+                variant='outlined'
+                color='primary'
+                size='large'
+                onClick={() => setIsPreviewDialogOpen(true)}
+                fullWidth
+              >
+                발송 내용 미리보기
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
                 variant='contained'
                 color='primary'
                 size='large'
@@ -596,6 +706,74 @@ function MessagePage() {
           />
         </Box>
       </TabPanel>
+      {/* 알림톡 템플릿 목록 보기 */}
+      <Dialog
+        open={isTemplateDialogOpen}
+        onClose={() => setIsTemplateDialogOpen(false)}
+        aria-labelledby='template-list-dialog-title'
+        aria-describedby='template-list-dialog-description'
+      >
+        <DialogTitle id='template-list-dialog-title'>
+          알림톡 템플릿 목록
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            id='template-list-dialog-description'
+            sx={{
+              mb: 2,
+            }}
+          >
+            템플릿은 카카오톡 채널을 통해 전송되는 메시지의 형식을 정의합니다.
+            템플릿은 전송되기까지 평균 1~3일의 검수 기간이 소요되므로 미리
+            등록해두시는 것이 좋습니다.
+          </DialogContentText>
+          <Select
+            options={ALL_MESSAGE_TEMPLATE_OPTIONS}
+            val={selectedTemplate}
+            placeholder='템플릿을 선택해주세요.'
+            setVal={(v) => setSelectedTemplate(v)}
+          />
+          <Typography variant='bodySmall' mt={2} whiteSpace={'pre-wrap'}>
+            {selectedTemplateContent?.content}
+          </Typography>
+          <Typography variant='bodySmall' mt={2} whiteSpace={'pre-wrap'}>
+            {selectedTemplateContent?.extra}
+          </Typography>
+          <Button fullWidth sx={{ mt: 2 }} variant='contained'>
+            {selectedTemplateContent?.buttons[0]?.buttonName}
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsTemplateDialogOpen(false)}>닫기</Button>
+        </DialogActions>
+      </Dialog>
+      {/* 발송 내용 미리 보기 */}
+      <Dialog
+        open={isPreviewDialogOpen}
+        onClose={() => setIsPreviewDialogOpen(false)}
+        aria-labelledby='template-preview-dialog-title'
+        aria-describedby='template-preview-dialog-description'
+      >
+        <DialogTitle id='template-preview-dialog-title'>
+          발송 내용 미리 보기
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant='bodySmall' mt={2} whiteSpace={'pre-wrap'}>
+            {selectedPreviewTemplate.content}
+          </Typography>
+          <Typography variant='bodySmall' mt={2} whiteSpace={'pre-wrap'}>
+            {selectedPreviewTemplate.extra}
+          </Typography>
+          <a href={`https://${selectedPreviewTemplate.link}`} target='_blank'>
+            <Button variant='contained' sx={{ mt: 2 }} fullWidth>
+              {selectedPreviewTemplate.buttonName}
+            </Button>
+          </a>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsPreviewDialogOpen(false)}>닫기</Button>
+        </DialogActions>
+      </Dialog>
     </Layout>
   );
 }
@@ -658,7 +836,7 @@ function UserList({ applications, isLoading, templateCode }: UserListProps) {
   return (
     <Box mt={4}>
       <Typography variant='titleMedium' mb={1}>
-        문자 발송 대상자 목록
+        문자 발송 대상자 목록(총 {searchedApplications?.length}명)
       </Typography>
       <Input
         search

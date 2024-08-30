@@ -52,3 +52,59 @@ export async function sendMessage({
     });
   }
 }
+
+export interface AlimTalkTemplate {
+  templateList: TemplateList[];
+  limit: number;
+  startKey: string;
+}
+
+export interface TemplateList {
+  name: string;
+  assignType: string;
+  accountId: string;
+  securityFlag: boolean;
+  categoryCode: string;
+  isHidden: boolean;
+  content: string;
+  buttons: Button[];
+  messageType: string;
+  emphasizeType: string;
+  extra: string;
+  variables: Variable[];
+  templateId: string;
+  dateCreated: string;
+  dateUpdated: string;
+  status: string;
+  comments: Comment[];
+  channelId: string;
+  commentable: boolean;
+  code: string;
+}
+
+export interface Button {
+  buttonType: string;
+  buttonName: string;
+  linkMo: string;
+  linkPc: string;
+  linkAnd?: string;
+  linkIos?: string;
+}
+
+export interface Variable {
+  name: string;
+}
+
+export interface Comment {
+  memberId: string;
+  isAdmin: boolean;
+  content: string;
+  dateCreated: string;
+}
+
+export async function getMessageTemplates() {
+  const data: AlimTalkTemplate = await authApi
+    .get('/alim-talk/templates')
+    .then((res) => res.data);
+  return data;
+}

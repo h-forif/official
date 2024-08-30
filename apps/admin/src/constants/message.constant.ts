@@ -32,3 +32,9 @@ export const ETC_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
     label: '미등록 부원 대상 재촉 템플릿',
   },
 ];
+
+export const ALL_MESSAGE_TEMPLATE_OPTIONS: SelectOption[] = [
+  ...PASS_MESSAGE_TEMPLATE_OPTIONS,
+  ...FAIL_MESSAGE_TEMPLATE_OPTIONS,
+  ...ETC_MESSAGE_TEMPLATE_OPTIONS,
+];
