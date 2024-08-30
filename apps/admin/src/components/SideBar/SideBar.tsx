@@ -15,9 +15,8 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  useTheme,
 } from '@mui/material';
-import { Box, Stack, useMediaQuery } from '@mui/system';
+import { Box, Stack } from '@mui/system';
 
 import { AUTH_LEVEL } from '@constants/auth.constant';
 import { clearUser, getUser } from '@stores/user.store';
@@ -29,8 +28,6 @@ const drawerWidth = 240;
 
 export default function SideBar() {
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
   const user = getUser();
   const { menus } = useNavMenu();
   const navigate = useNavigate();
@@ -68,7 +65,7 @@ export default function SideBar() {
             backgroundColor: 'background.default',
           },
         }}
-        variant={isMobile ? 'temporary' : 'permanent'}
+        variant={'permanent'}
         anchor='left'
       >
         <Toolbar>

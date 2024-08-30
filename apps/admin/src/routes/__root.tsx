@@ -8,10 +8,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Outlet, createRootRoute, redirect } from '@tanstack/react-router';
 
 import TopBar from '@components/AppBar';
+import MobileSideBar from '@components/SideBar/MobileSideBar';
 import SideBar from '@components/SideBar/SideBar';
 import { AlertDialog } from '@components/common/Dialog';
 
 import { isAuthenticated } from '@hooks/isAuthenticated';
+import useDeviceSize from '@hooks/useDeviceSize';
 
 export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
@@ -31,6 +33,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   const queryClient = new QueryClient();
+  const { isMobile } = useDeviceSize();
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_OAUTH_CLIENT_ID;
 
   return (
@@ -39,7 +42,7 @@ function RootComponent() {
         <ThemeProvider theme={lightTheme}>
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <SideBar />
+            {isMobile ? <MobileSideBar /> : <SideBar />}
             <Stack direction={'column'} width={'100%'}>
               <TopBar />
               <Box
