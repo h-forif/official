@@ -369,14 +369,24 @@ export function StudyRecommendationModal({
                 </Grow>
               );
             })}
+            <Box textAlign={'right'}>
+              <Typography
+                variant='labelSmall'
+                color='text.secondary'
+                fontWeight={'light'}
+              >
+                ※ 본 결과는 문항별 선택지의 가중치를 바탕으로 분석되었습니다.
+              </Typography>
+            </Box>
+
             <Divider sx={{ my: 2 }} />
             <Typography
-              variant='bodyMedium'
+              variant='bodySmall'
               color='text.secondary'
               align='center'
               sx={{ mt: 2 }}
             >
-              더 많은 스터디를 보러가려면 아래의 버튼을 클릭해주세요!
+              더 많은 스터디가 궁금하다면 아래의 버튼을 클릭해주세요!
             </Typography>
             <Box display='flex' justifyContent='center' width='100%' mt={3}>
               <Link

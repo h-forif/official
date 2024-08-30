@@ -255,9 +255,9 @@ const questions: Question[] = [
     title: '관심 분야',
     text: '포리프에는 아주 다양한 스터디가 열려 어떤 스터디를 선택해야 할 지 고민이에요. 어떤 분야에 관심이 있나요?',
     options: [
-      '나는 눈에 바로바로 보이는게 좋아 ! (Front-end)',
-      '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해 ! (Back-end)',
-      '데이터를 다루어보자 !',
+      '나는 눈에 바로바로 보이는게 좋아! (Front-end)',
+      '눈에 바로 보이지는 않지만, 서버에서 데이터를 처리하고 저장하는 것이 궁금해! (Back-end)',
+      '데이터를 다루어보자!',
       '알고리즘 공부를 해볼까?',
       '요즘 AI가 핫하다며? GPT는 어때?',
       '쉽게 배울수 없는 주제를 배워보고 싶어.',
@@ -275,7 +275,7 @@ const questions: Question[] = [
     text: '본인은 프로그래밍에 대해 어느 정도 알고 있다고 생각하며, 어떤 난이도의 스터디를 수강하고 싶나요?',
     options: [
       '완전 처음 해본다! 기초 스터디를 수강하고 싶어요.',
-      '어느정도 기초 지식이 있어요. (창컴/공창컴 이수) 기초적인 지식을 응용하는 스터디를 수강하고 싶어요.',
+      '어느정도 기초 지식이 있어요.(창컴/공창컴 이수) 기초적인 지식을 응용하는 스터디를 수강하고 싶어요.',
       '저는 2학년 이상의 전공자입니다. 조금은 난이도가 있는 스터디를 원해요.',
       '심도깊은 주제를 다루는 스터디에 참여하고 싶어요.',
     ],
@@ -404,7 +404,7 @@ export default function StudyGuidePage() {
                       <ListItemText
                         secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='모집'
-                        secondary='9월 초 부원 모집 기간'
+                        secondary='3월 / 9월 초 부원 모집 기간'
                       />
                     </ListItem>
                     <ListItem>
@@ -438,18 +438,21 @@ export default function StudyGuidePage() {
                             강의형과 프로젝트형으로 나누어집니다. <br />
                             <Typography
                               sx={{ mt: 2 }}
-                              variant='bodySmall'
+                              variant='labelSmall'
                               component='span'
                               display='block'
+                              fontWeight='light'
                             >
                               - 강의형: 다인원을 대상으로 이루어지며, 멘토가
                               강의식으로 수업을 진행합니다. 일반적으로
                               기초스터디가 이에 해당합니다.
                             </Typography>
                             <Typography
-                              variant='bodySmall'
+                              variant='labelSmall'
                               component='span'
                               display='block'
+                              fontWeight='light'
+                              sx={{ mt: 1 }}
                             >
                               - 프로젝트형: 소규모로 진행되며, 프로젝트 결과물을
                               만들어내는 것을 중심으로 진행됩니다. 기본적인
@@ -484,7 +487,7 @@ export default function StudyGuidePage() {
                       <ListItemText
                         secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='모집'
-                        secondary='9월 중순'
+                        secondary='3월 / 9월 중순'
                       />
                     </ListItem>
                     <ListItem>
@@ -506,28 +509,27 @@ export default function StudyGuidePage() {
                         secondaryTypographyProps={{ color: 'text.primary' }}
                         primary='혜택'
                         secondary={
-                          <Fragment>
-                            <Typography component='span' display='block'>
-                              스터디 별 기준에 따라 최대 5만원 지급
-                            </Typography>
-
-                            <Typography
-                              variant='labelSmall'
-                              component='span'
-                              display='block'
-                            >
-                              <br />* 자율스터디 수강은 포리프 인증서가 발급되지
-                              않습니다.
-                            </Typography>
-                            <Typography
-                              variant='labelSmall'
-                              component='span'
-                              display='block'
-                            >
-                              * 자율스터디는 출석체크 대상에 포함되지 않으며
-                              정해진 회차나 일정이 없습니다.
-                            </Typography>
-                          </Fragment>
+                          <>
+                            스터디 별 기준에 따라 최대 5만원 지급
+                            <Fragment>
+                              <Typography
+                                variant='labelSmall'
+                                component='span'
+                                display='block'
+                              >
+                                <br />* 자율스터디 수강은 포리프 인증서가
+                                발급되지 않습니다.
+                              </Typography>
+                              <Typography
+                                variant='labelSmall'
+                                component='span'
+                                display='block'
+                              >
+                                * 자율스터디는 출석체크 대상에 포함되지 않으며
+                                정해진 회차나 일정이 없습니다.
+                              </Typography>
+                            </Fragment>
+                          </>
                         }
                       />
                     </ListItem>
@@ -594,7 +596,7 @@ export default function StudyGuidePage() {
               </Typography>
               <Stack gap={2}>
                 <Typography>
-                  스터디 총 수업 중 3 / 4 이상을 참석하고 해커톤을 참여했을 시
+                  스터디 총 수업 중 3 / 4 이상을 참석하고 해커톤에 참여했을 시
                   스터디 이수 조건을 충족합니다.
                   <br />
                   스터디를 이수하면 해커톤이 끝난 뒤 수료증이 지급됩니다.
@@ -616,7 +618,7 @@ export default function StudyGuidePage() {
                   <br />
                   저희가 스터디 선택을 도와드릴게요!
                   <br />
-                  아래의 테스트를 진행하여 관심 분야를 알아보고,
+                  아래의 테스트를 진행하여 관심 분야를 알아보고
                   <br /> 강의 방식, 난이도, 관심 분야를 고려하여 본인에게 맞는
                   스터디를 수강해보세요.
                 </Typography>
