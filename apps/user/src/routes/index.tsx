@@ -74,7 +74,7 @@ function Home() {
           textAlign: 'center',
           maxWidth: '780px',
           margin: 'auto',
-          minHeight: '100vh',
+          minHeight: isMobile ? '80vh' : '100vh',
           position: 'relative',
         }}
       >

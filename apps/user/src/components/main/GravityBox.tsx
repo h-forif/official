@@ -115,6 +115,16 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
         },
       },
     });
+    let scrollTimeout: number | undefined;
+    function handleScroll() {
+      render.canvas.style.pointerEvents = 'none';
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        render.canvas.style.pointerEvents = 'auto';
+      }, 200);
+    }
+
+    render.canvas.addEventListener('wheel', handleScroll);
 
     Composite.add(world, mouseConstraint);
 
