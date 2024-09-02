@@ -12,7 +12,6 @@ import { clearUser, getUserState } from '@stores/user.store';
 import { Link } from '@tanstack/react-router';
 
 import { useNavMenu } from '@hooks/useNavMenu';
-import useScrollPosition from '@hooks/useScrollPosition';
 import { useSignIn } from '@hooks/useSignIn';
 
 import { AppBarProps } from '../../types/app-bar.type';
@@ -20,7 +19,6 @@ import { DesktopNav } from './DesktopNav';
 import MobileNav from './MobileNav';
 
 export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
-  const scrollPosition = useScrollPosition();
   const { activeMenu, handleMouseEnter, handleMouseLeave, handleClick } =
     useNavMenu();
 
@@ -39,7 +37,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
       <MUIAppBar
         position='static'
         sx={{
-          boxShadow: scrollPosition === 0 ? 0 : '0 2px 4px 0 rgba(0,0,0,.2)',
+          boxShadow: 0,
           bgcolor: 'transparent',
           backgroundImage: 'none',
           width: '100%',

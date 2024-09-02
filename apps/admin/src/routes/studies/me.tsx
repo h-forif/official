@@ -18,7 +18,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
 
 import {
   RECRUIT_END_DATE,
@@ -31,9 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
-import { Table } from '@packages/components/table/Table';
 import { Study } from '@packages/components/types/study';
-import { User } from '@packages/components/types/user';
 import { getMentees } from '@services/admin.service';
 import { editStudy, getMyStudyId, getStudyInfo } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
@@ -52,21 +49,7 @@ import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { Layout } from '@components/common/Layout';
 import { TabPanel } from '@components/common/TabPanel';
 import { Title } from '@components/common/Title';
-
-const columns: GridColDef<User>[] = [
-  { field: 'id', headerName: '학번', flex: 1 },
-  { field: 'name', headerName: '이름', flex: 1 },
-  {
-    field: 'department',
-    headerName: '학과',
-    flex: 1,
-  },
-  {
-    field: 'phone_number',
-    headerName: '전화번호',
-    flex: 2,
-  },
-];
+import { AttendanceTab } from '@components/study/AttendanceTab';
 
 export const Route = createFileRoute('/studies/me')({
   loader: async () => {
@@ -205,10 +188,7 @@ function MyStudyPage() {
 
   return (
     <Layout width={'100%'}>
-      <Title
-        title='내 스터디 관리'
-        label='아래 스터디 정보에서 부족하거나 수정해야할 부분이 있는지 확인해주세요.'
-      />
+      <Title title='내 스터디 관리' label='스터디 정보 및 멘티 관리 페이지' />
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={value}
@@ -522,7 +502,7 @@ function MyStudyPage() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Table loading={isLoading} rows={mentees} columns={columns} />
+        <AttendanceTab mentees={mentees} isLoading={isLoading} />
       </TabPanel>
     </Layout>
   );

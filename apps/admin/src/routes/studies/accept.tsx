@@ -159,10 +159,11 @@ function StudyAcceptPage() {
           1순위 신청 부원을 모두 승인하고도 멘토 님이 생각한 인원보다 부족한
           경우에 승인하여 주세요.
         </Typography>
-        <Box sx={{ height: 480, width: '100%', my: 4 }}>
+        <Box sx={{ width: '100%', my: 4 }}>
           <Table
             loading={isLoading}
             rows={applications?.first}
+            autoHeight
             columns={columns}
             onRowClick={(params, event, details) => {
               handlePrimaryRowClick(params, event, details);
@@ -177,11 +178,12 @@ function StudyAcceptPage() {
           1순위 신청 부원을 모두 승인하고도 멘토 님이 생각한 인원보다 부족한
           경우에 승인하여 주세요.
         </Typography>
-        <Box sx={{ height: 480, width: '100%', my: 4 }}>
+        <Box sx={{ width: '100%', my: 4 }}>
           <Table
             loading={isLoading}
             rows={applications?.second}
             columns={columns}
+            autoHeight
             onRowClick={(params, event, details) => {
               handleSecondaryRowClick(params, event, details);
               handleOpen();
