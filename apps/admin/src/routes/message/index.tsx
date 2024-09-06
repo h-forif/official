@@ -34,11 +34,7 @@ import { Input } from '@packages/components/Input';
 import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
-import {
-  AllApplication,
-  getAllApplications,
-  getStudyNames,
-} from '@services/admin.service';
+import { AllApplication, getAllApplications } from '@services/admin.service';
 import {
   MessageBody,
   TemplateList,
@@ -138,7 +134,6 @@ function MessagePage() {
   }, [form, templateCode, templateList]);
 
   const [tabValue, setTabValue] = useState(0);
-  const [studyNames, setStudyNames] = useState<(string | undefined)[]>([]);
   const [isRegularStudy, setIsRegularStudy] = useState(true);
   dayjs.locale('ko');
   const { openDualButtonDialog, openSingleButtonDialog, closeDialog } =
@@ -147,13 +142,6 @@ function MessagePage() {
     queryKey: ['all-applications'],
     queryFn: () => getAllApplications(),
   });
-
-  useEffect(() => {
-    if (!isLoading && applications) {
-      const studyNames = getStudyNames(applications);
-      setStudyNames(studyNames);
-    }
-  }, [applications, isLoading]);
 
   useEffect(() => {
     if (templateCode === PASS_MESSAGE_TEMPLATE_OPTIONS[0]!.value) {
@@ -189,12 +177,8 @@ function MessagePage() {
   const handleSendToPass = () => {
     const { dateTime, location, responseSchedule, templateCode, url } =
       form.getValues();
-    const regularApplications = applications?.filter((val) =>
-      onlyRegularApplications(val),
-    );
-    const autoApplications = applications?.filter((val) =>
-      onlyAutoApplications(val),
-    );
+    const regularApplications = applications?.filter(onlyRegularApplications);
+    const autoApplications = applications?.filter(onlyAutoApplications);
     openDualButtonDialog({
       dialogIconType: DialogIconType.CONFIRM,
       title: '문자 발송',
@@ -204,44 +188,34 @@ function MessagePage() {
         // 문자 발송 로직
         if (templateCode === PASS_MESSAGE_TEMPLATE_OPTIONS[0]!.value) {
           // 정규 스터디 합격자에게 문자 발송
-          for (const name of studyNames) {
-            if (name === '자율스터디') continue;
-            const users = regularApplications?.filter(
-              (val) => val.primary_study_name === name,
-            );
-            const phoneNumbers = users?.map((user) => user.phone_number);
-            if (phoneNumbers?.length === 0) continue;
-            try {
-              await sendMessage({
-                receivers: phoneNumbers!,
-                studyName: name!,
-                responseSchedule: responseSchedule,
-                dateTime: dateTime,
-                location: location,
-                url: url,
-                templateCode: templateCode,
-              });
-              closeDialog();
-              openSingleButtonDialog({
-                dialogIconType: DialogIconType.CONFIRM,
-                title: '문자 발송 성공',
-                message: `정규 스터디 ${name} 합격자에게 문자 전송을 성공했습니다.`,
-                mainButtonText: '확인',
-              });
-            } catch (e) {
-              console.error(
-                `Failed to send message to regular study ${name} to ${phoneNumbers}`,
-                e,
-              );
-              closeDialog();
-              openSingleButtonDialog({
-                dialogIconType: DialogIconType.WARNING,
-                title: '문자 발송 실패',
-                message: `정규 스터디 합격자에게 문자 전송을 실패했습니다. ${e}`,
-                mainButtonText: '확인',
-              });
-            }
-          }
+          const messagePromises = regularApplications!.map(
+            async (application) => {
+              // 조건에 맞는 사용자에게 메시지 발송
+              const phoneNumber = application.phone_number;
+              const studyName =
+                application.primary_status === '승낙'
+                  ? application.primary_study_name
+                  : application.secondary_study_name;
+
+              if (phoneNumber && studyName) {
+                try {
+                  await sendMessage({
+                    receivers: [phoneNumber],
+                    studyName: studyName,
+                    responseSchedule: responseSchedule,
+                    dateTime: dateTime,
+                    location: location,
+                    url: url,
+                    templateCode: templateCode,
+                  });
+                } catch (e) {
+                  console.error(`Failed to send message to ${studyName}`, e);
+                }
+              }
+            },
+          );
+
+          await Promise.all(messagePromises);
         }
         if (templateCode === PASS_MESSAGE_TEMPLATE_OPTIONS[1]!.value) {
           // 자율 스터디 합격자에게 문자 발송
