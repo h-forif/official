@@ -1,6 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs';
 // ISO week 기능을 제공하는 플러그인 import
-import isoWeek from 'dayjs/plugin/isoWeek';
 
 /**
  * Converts a day number to a string.
@@ -31,22 +29,3 @@ export const formatStudyTimeToKorean = (time: string | null): string => {
   const formattedHour = hour > 12 ? hour - 12 : hour;
   return `${period} ${formattedHour}시 ${minute > 0 ? `${minute}분` : ''}`;
 };
-
-dayjs.extend(isoWeek);
-
-export function getWeekOfMonth(date: Dayjs) {
-  const startOfMonth = dayjs(date).startOf('month');
-  const startOfMonthWeek = startOfMonth.isoWeek();
-  const currentWeek = dayjs(date).isoWeek();
-
-  // 첫째 주를 무시하고 둘째 주부터 계산
-  const weekDifference = currentWeek - startOfMonthWeek;
-
-  // 9월 첫째 주가 9월 1일부터 시작하는 경우 조정
-  if (startOfMonth.isoWeekday() !== 1) {
-    return weekDifference;
-  }
-
-  // 주차를 1부터 시작하도록 조정
-  return weekDifference >= 1 ? weekDifference : 1;
-}

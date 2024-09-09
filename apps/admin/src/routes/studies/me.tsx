@@ -502,7 +502,11 @@ function MyStudyPage() {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AttendanceTab mentees={mentees} isLoading={isLoading} />
+        <AttendanceTab
+          mentees={mentees}
+          isLoading={isLoading}
+          studyId={study.id}
+        />
       </TabPanel>
     </Layout>
   );

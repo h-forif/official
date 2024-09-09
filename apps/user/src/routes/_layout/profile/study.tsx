@@ -23,6 +23,7 @@ import {
 } from '@packages/components/Modal';
 import { Study } from '@packages/components/types/study';
 import { UserProfile } from '@packages/components/types/user';
+import { getAttendance } from '@services/attendance.service';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import formatMarkdown from '@utils/formatMarkdown';
@@ -48,6 +49,11 @@ function MyStudy() {
   const currentStudy = useQuery<Study, AxiosError>({
     queryKey: ['currentStudy'],
     queryFn: () => getStudyInfo(user.current_study_id?.toString() || '0'),
+  });
+
+  const attendances = useQuery({
+    queryKey: ['attendance', user.id],
+    queryFn: () => getAttendance(user.id!),
   });
 
   const passedStudies = useQueries({
@@ -220,28 +226,29 @@ function MyStudy() {
                     overflow: 'auto',
                   }}
                 >
-                  {/* {Array.from({ length: 8 }).map((_, index) => {
-                    const day = date.add(index, 'week').format('YYYY.MM.DD');
-                    return (
-                      <Stack
-                        key={day}
-                        direction={'row'}
-                        alignItems={'center'}
-                        justifyContent={'space-between'}
-                        py={2}
+                  {attendances.data?.map((attendance) => (
+                    <Stack
+                      key={attendance.study_date}
+                      direction={'row'}
+                      alignItems={'center'}
+                      justifyContent={'space-between'}
+                      py={2}
+                    >
+                      <Typography variant='bodySmall'>
+                        ({attendance.week_num}주차)
+                      </Typography>
+                      <Typography
+                        variant='labelSmall'
+                        color={
+                          attendance.attendance_status === '출석'
+                            ? 'primary'
+                            : 'error'
+                        }
                       >
-                        <Typography variant='bodySmall'>
-                          {index + 1}주차({day})
-                        </Typography>
-                        <Typography
-                          variant='labelSmall'
-                          color={index % 2 === 0 ? 'primary' : 'error'}
-                        >
-                          {index % 2 === 0 ? '출석' : '결석'}
-                        </Typography>
-                      </Stack>
-                    );
-                  })} */}
+                        {attendance.attendance_status}
+                      </Typography>
+                    </Stack>
+                  ))}
                 </Stack>
               </CardContent>
             </Card>
