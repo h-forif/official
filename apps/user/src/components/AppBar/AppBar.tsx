@@ -63,6 +63,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                 display: 'flex',
                 alignItems: 'center',
               }}
+              aria-label='Go to Home'
             >
               {mode === 'light' ? (
                 <LetterIcon width={100} height={'64'} />
@@ -100,6 +101,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                   variant='text'
                   size='small'
                   onClick={handleSignIn}
+                  role='button'
                 >
                   한양대학교 로그인
                 </Button>
@@ -108,6 +110,7 @@ export default function AppBar({ mode, toggleColorMode }: AppBarProps) {
                   variant='contained'
                   size='small'
                   onClick={handleSignIn}
+                  role='button'
                 >
                   회원가입
                 </Button>

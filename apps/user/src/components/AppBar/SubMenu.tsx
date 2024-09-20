@@ -51,19 +51,25 @@ export default function SubMenu({ items }: SubMenuProps) {
                 year: Number(currentTerm.year),
                 semester: Number(currentTerm.semester),
               }}
+              role='navigation'
+              aria-label='Go to studies page'
             >
               <Typography variant='titleLarge' color='text.primary'>
                 {subItem.title}
               </Typography>
             </Link>
           ) : (
-            <Link to={subItem.href}>
+            <Link
+              to={subItem.href}
+              role='navigation'
+              aria-label={`Go to ${subItem.title} page`}
+            >
               <Typography variant='titleLarge' color='text.primary'>
                 {subItem.title}
               </Typography>
             </Link>
           )}
-          <Link to={subItem.href}></Link>
+          <Link role='navigation' to={subItem.href}></Link>
         </SubMenuWrapper>
       ))}
     </motion.div>

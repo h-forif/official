@@ -124,7 +124,7 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
       }, 200);
     }
 
-    render.canvas.addEventListener('wheel', handleScroll);
+    render.canvas.addEventListener('wheel', handleScroll, { passive: true });
 
     Composite.add(world, mouseConstraint);
 

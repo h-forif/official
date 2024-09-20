@@ -183,7 +183,7 @@ function ApplyMember() {
         'location',
       ]);
     } else if (activeStep === 2) {
-      isValid = await form.trigger(['explanation']);
+      isValid = await form.trigger(['explanation', 'tag']);
     }
     if (isValid) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);

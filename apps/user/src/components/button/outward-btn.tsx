@@ -8,16 +8,19 @@ export default function OutwardBtn({
   width = 48,
   height = 48,
   to,
+  label,
 }: {
   width?: number;
   height?: number;
   to: string;
+  label?: string;
 }) {
   const mode = useTheme().palette.mode;
   return (
     <Link to={to}>
       <CenteredBox
         component={'button'}
+        aria-label={label}
         border={1}
         borderColor={mode === 'light' ? 'divider' : 'black'}
         width={width}

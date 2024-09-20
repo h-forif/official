@@ -85,19 +85,8 @@ function Home() {
         >
           Upgrade your passion
         </Typography>
-        <Typography variant={titleVariant}>
-          {RECRUIT_START_DATE} ~ {RECRUIT_END_DATE}
-        </Typography>
-        <Typography
-          variant={titleVariant}
-          fontWeight={300}
-          color='text.primary'
-          sx={{
-            wordBreak: 'keep-all',
-          }}
-        >
-          지식 공유의 선순환을 행하고, 이를 토대로 함께 성장하고자 합니다. 지금
-          선순환에 동참해주세요.
+        <Typography variant={titleVariant} fontWeight={400}>
+          SEASON 2 : {RECRUIT_START_DATE} ~ {RECRUIT_END_DATE}
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
           {userState === 'sign-out' && (

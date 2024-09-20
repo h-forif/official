@@ -6,12 +6,17 @@ import styled from '@mui/system/styled';
 
 interface NavItemProps {
   children: React.ReactNode;
+  label: string;
 }
 
-export default function NavItem({ children }: NavItemProps) {
+export default function NavItem({ children, label }: NavItemProps) {
   return (
     <NavItemWrapper sx={{ my: 2 }}>
-      <MenuItem sx={{ py: 1, px: 2, borderRadius: 1 }}>
+      <MenuItem
+        sx={{ py: 1, px: 2, borderRadius: 1 }}
+        role='navigation'
+        aria-label={label}
+      >
         <Typography
           component={'span'}
           variant='bodySmall'

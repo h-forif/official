@@ -59,11 +59,11 @@ export function DesktopNav({
                   semester: Number(currentTerm.semester),
                 }}
               >
-                <NavItem>{menu.title}</NavItem>
+                <NavItem label={`Go to studies page`}>{menu.title}</NavItem>
               </Link>
             ) : (
               <Link to={menu.href}>
-                <NavItem>{menu.title}</NavItem>
+                <NavItem label={`Go to ${menu.title}`}>{menu.title}</NavItem>
               </Link>
             )}
             <AnimatePresence>

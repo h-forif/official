@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import Markdown from 'react-markdown';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
@@ -7,10 +9,9 @@ import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Input } from '@packages/components/Input';
 import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
-import MDEditor from '@uiw/react-md-editor';
 import dayjs from '@utils/dayjs';
-import formatMarkdown from '@utils/formatMarkdown';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -159,13 +160,31 @@ export function StudySubmit({
               border: 1,
               borderRadius: 1,
               borderColor: 'divider',
+              p: 2,
             }}
             data-color-mode={mode}
           >
-            <MDEditor.Markdown
-              source={formatMarkdown(explanation)}
-              rehypePlugins={[rehypeSanitize]}
-              style={{ whiteSpace: 'pre-wrap', padding: 24 }}
+            <Markdown
+              children={explanation}
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkGfm]}
+              components={{
+                code(props) {
+                  const { children, className, ...rest } = props;
+                  const match = /language-(\w+)/.exec(className || '');
+                  return match ? (
+                    <SyntaxHighlighter
+                      PreTag={'div'}
+                      children={String(children).replace(/\n$/, '')}
+                      language={match[1]}
+                    />
+                  ) : (
+                    <code {...rest} className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
             />
           </Box>
         </Stack>

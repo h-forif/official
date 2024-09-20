@@ -1,13 +1,16 @@
 import { UseFormReturn } from 'react-hook-form';
+import Markdown from 'react-markdown';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useTheme } from '@mui/system';
 
 import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Layout } from '@packages/components/elements/Layout';
+import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
-import MDEditor from '@uiw/react-md-editor';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
 import { z } from 'zod';
 
@@ -37,26 +40,53 @@ export function StudyExplanation({
           control={form.control}
           name='tag'
           label='자신의 스터디에 가장 잘 어울리는 분야를 선택해주세요.'
+          required
         />
-        <MDEditor
-          value={explanation}
-          onChange={(e) => form.setValue('explanation', e!)}
-          style={{
-            width: '100%',
-            minHeight: '512px',
-            marginTop: '16px',
-            marginBottom: '16px',
-          }}
-          previewOptions={{
-            rehypePlugins: [[rehypeSanitize]],
-          }}
-          textareaProps={{
-            placeholder: '설명은 50자 이상 작성해주세요.',
-          }}
-        />
-        <Typography variant='labelMedium' color={'error'}>
-          {form.formState.errors.explanation?.message}
+        <Typography variant='titleSmall' mt={2} mb={1}>
+          스터디 설명을 작성해주세요.
         </Typography>
+        <Stack direction={'row'} gap={2}>
+          <FormInput
+            control={form.control}
+            name='explanation'
+            multiline
+            minRows={18}
+            fullWidth
+          />
+          <Box
+            border={1}
+            borderColor={'divider'}
+            p={2}
+            sx={{
+              flexGrow: 1,
+              flexBasis: '50%',
+              minWidth: '60%',
+            }}
+          >
+            <Markdown
+              children={explanation}
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkGfm]}
+              components={{
+                code(props) {
+                  const { children, className, ...rest } = props;
+                  const match = /language-(\w+)/.exec(className || '');
+                  return match ? (
+                    <SyntaxHighlighter
+                      PreTag={'div'}
+                      children={String(children).replace(/\n$/, '')}
+                      language={match[1]}
+                    />
+                  ) : (
+                    <code {...rest} className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            />
+          </Box>
+        </Stack>
       </Layout>
     </Box>
   );

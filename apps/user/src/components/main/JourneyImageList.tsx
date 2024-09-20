@@ -67,7 +67,7 @@ export default function JourneyImageList() {
             <motion.div variants={itemVariants}>
               <img
                 src={item.img}
-                alt={item.title}
+                alt={item.alt}
                 loading='lazy'
                 style={{
                   borderRadius: '16px',
@@ -93,6 +93,7 @@ export default function JourneyImageList() {
                     width={isMobile ? 24 : 48}
                     height={isMobile ? 24 : 48}
                     to={item.link}
+                    label={`${item.title}에 대해 더 자세히 알아보세요.`}
                   />
                 }
                 actionPosition='right'
@@ -108,19 +109,22 @@ export default function JourneyImageList() {
 const itemData = [
   {
     img: OT,
-    title: `멘토 · 부원 모집`,
+    title: `멘토·부원 모집`,
+    alt: '멘토와 부원을 모집한 후 OT를 진행합니다.',
     desc: `${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}`,
     link: '/apply/member',
   },
   {
     img: Study2,
     title: '스터디 진행',
+    alt: '스터디를 진행하는 모습을 담은 사진입니다.',
     desc: `한 학기 동안 이루어지는 지식의 나눔`,
     link: '/studies',
   },
   {
     img: Hackathon2,
     title: '해커톤',
+    alt: '해커톤을 진행하는 모습을 담은 사진입니다.',
     desc: `한 해의 마무리를 장식하는 해커톤`,
     link: '/',
   },
