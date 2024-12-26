@@ -85,13 +85,8 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       
-      - name: 의존 패키지 설치 - User
-        if: env.user_changed == 'true'
-        run: pnpm install --filter user
-
-      - name: 의존 패키지 설치 - Admin
-        if: env.admin_changed == 'true'
-        run: pnpm install --filter admin
+      - name: 의존 패키지 설치
+        run: pnpm install
 
       - name: 린트
         run: pnpm run lint

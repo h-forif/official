@@ -24,6 +24,7 @@ import { Route as StudiesApplicationsImport } from './routes/studies/application
 import { Route as StudiesAcceptImport } from './routes/studies/accept'
 import { Route as PostsFaqsImport } from './routes/posts/faqs'
 import { Route as PostsAnnouncementsImport } from './routes/posts/announcements'
+import { Route as MembersAttendanceImport } from './routes/members/attendance'
 
 // Create/Update Routes
 
@@ -92,6 +93,11 @@ const PostsAnnouncementsRoute = PostsAnnouncementsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const MembersAttendanceRoute = MembersAttendanceImport.update({
+  path: '/members/attendance',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -101,6 +107,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/members/attendance': {
+      id: '/members/attendance'
+      path: '/members/attendance'
+      fullPath: '/members/attendance'
+      preLoaderRoute: typeof MembersAttendanceImport
       parentRoute: typeof rootRoute
     }
     '/posts/announcements': {
@@ -194,6 +207,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  MembersAttendanceRoute,
   PostsAnnouncementsRoute,
   PostsFaqsRoute,
   StudiesAcceptRoute,
@@ -217,6 +231,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/members/attendance",
         "/posts/announcements",
         "/posts/faqs",
         "/studies/accept",
@@ -233,6 +248,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/members/attendance": {
+      "filePath": "members/attendance.tsx"
     },
     "/posts/announcements": {
       "filePath": "posts/announcements.tsx"

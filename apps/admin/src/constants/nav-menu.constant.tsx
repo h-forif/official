@@ -50,6 +50,7 @@ export const ADMIN_NAV_MENUS: NavMenu[] = [
     submenu: [
       { title: '부원 관리', href: '/members' },
       { title: '회원 관리', href: '/subscriber' },
+      { title: '전체 출석 관리', href: '/members/attendance' },
     ],
   },
   {
