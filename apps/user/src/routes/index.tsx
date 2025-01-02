@@ -64,7 +64,6 @@ function Home() {
 
   return (
     <main>
-      {/* <ParallaxContainer /> */}
       <CenteredBox
         sx={{
           paddingX: 3,
