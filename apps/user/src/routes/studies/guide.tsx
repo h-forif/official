@@ -4,6 +4,8 @@ import ReviewsIcon from '@mui/icons-material/Reviews';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Grid,
   List,
   ListItem,
@@ -12,14 +14,12 @@ import {
   Tab,
   Tabs,
   Typography, // useMediaQuery,
-  // useTheme,
 } from '@mui/material';
-import { Card, CardContent } from '@mui/material';
 
 import { Study } from '@packages/components/types/study';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { getAllStudies } from '@services/study.service';
 import { createFileRoute } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
 import { StudyRecommendationModal } from '@components/study/RecommendationModal';
@@ -28,10 +28,9 @@ import useDeviceSize from '@hooks/useDeviceSize';
 
 export const Route = createFileRoute('/studies/guide')({
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     const studies = await getAllStudies({
-      year: Number(currentTerm.year),
-      semester: Number(currentTerm.semester),
+      year: CURRENT_YEAR,
+      semester: CURRENT_SEMESTER,
     });
     return studies;
   },

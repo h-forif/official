@@ -23,11 +23,11 @@ import {
 } from '@packages/components/Modal';
 import { Study } from '@packages/components/types/study';
 import { UserProfile } from '@packages/components/types/user';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { getAttendance } from '@services/attendance.service';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import formatMarkdown from '@utils/formatMarkdown';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import { AxiosError } from 'axios';
 import rehypeRaw from 'rehype-raw';
@@ -44,8 +44,6 @@ export const Route = createFileRoute('/_layout/profile/study')({
 
 function MyStudy() {
   const user: UserProfile = Route.useLoaderData();
-
-  const currentTerm = getCurrentTerm();
   const currentStudy = useQuery<Study, AxiosError>({
     queryKey: ['currentStudy'],
     queryFn: () => getStudyInfo(user.current_study_id?.toString() || '0'),
@@ -96,7 +94,7 @@ function MyStudy() {
                     현재 수강 중인 스터디
                   </Typography>
                   <Typography variant='bodySmall' color={'text.secondary'}>
-                    현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
+                    현재 학기({CURRENT_YEAR} - {CURRENT_SEMESTER}) 기준
                   </Typography>
                   {user.current_study_id === null ? (
                     <Typography variant='titleMedium' my={4}>

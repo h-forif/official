@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 
 import { Box, Stack, Typography } from '@mui/material';
 
-import { APPLY_PATH_OPTIONS } from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
@@ -10,6 +9,11 @@ import { SelectOption } from '@packages/components/Select';
 import { FormCheckbox } from '@packages/components/form/FormCheckbox';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import {
+  APPLY_PATH_OPTIONS,
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+} from '@packages/constants';
 import { getApplication, updateApplication } from '@services/apply.service';
 import { getAllStudies } from '@services/study.service';
 import { getUser } from '@services/user.service';
@@ -21,7 +25,6 @@ import {
   useRouter,
 } from '@tanstack/react-router';
 import dayjs from '@utils/dayjs';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
 import axios from 'axios';
@@ -44,13 +47,12 @@ export const Route = createFileRoute('/apply/application')({
     }
   },
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     const [application, userInfo, studies] = await Promise.all([
       getApplication(),
       getUser(),
       getAllStudies({
-        year: Number(currentTerm.year),
-        semester: Number(currentTerm.semester),
+        year: CURRENT_YEAR,
+        semester: CURRENT_SEMESTER,
       }),
     ]);
     return { application, userInfo, studies };

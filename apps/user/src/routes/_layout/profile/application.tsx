@@ -10,15 +10,16 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 
-import {
-  RECRUIT_END_DATE,
-  RECRUIT_START_DATE,
-} from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import { Layout } from '@packages/components/elements/Layout';
+import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@packages/constants';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import dayjs from '@utils/dayjs';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import axios from 'axios';
 import { getApplication } from 'src/services/apply.service';
 
@@ -47,7 +48,6 @@ function MyApplication() {
     scrollTo(0, 0);
   }, []);
 
-  const currentTerm = getCurrentTerm();
   const { application, err } = Route.useLoaderData();
   const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   if (err) {
@@ -57,7 +57,7 @@ function MyApplication() {
         <Box width={'100%'}>
           <Title
             title='스터디 지원서'
-            label={`제출한 스터디 지원서를 확인할 수 있습니다. 지원서 수정은 스터디 신청 기간(${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}, ${currentTerm.year}년 ${currentTerm.semester}학기 기준)에만 가능합니다.`}
+            label={`제출한 스터디 지원서를 확인할 수 있습니다. 지원서 수정은 스터디 신청 기간(${RECRUIT_START_DATE} - ${RECRUIT_END_DATE}, ${CURRENT_YEAR}년 ${CURRENT_SEMESTER}학기 기준)에만 가능합니다.`}
             pt={0}
           />
           <Layout>
@@ -83,7 +83,7 @@ function MyApplication() {
                       color={'text.secondary'}
                       mb={2}
                     >
-                      {currentTerm.year} - {currentTerm.semester}
+                      {CURRENT_YEAR} - {CURRENT_SEMESTER}
                     </Typography>
                     <Typography variant='titleMedium' color='primary' mb={2}>
                       아직 스터디 지원서를 제출하지 않았습니다.
@@ -92,8 +92,8 @@ function MyApplication() {
                       <Link
                         to='/studies'
                         search={{
-                          year: Number(currentTerm.year),
-                          semester: Number(currentTerm.semester),
+                          year: CURRENT_YEAR,
+                          semester: CURRENT_SEMESTER,
                         }}
                       >
                         <Button variant='outlined'>스터디 목록 보기</Button>
@@ -142,7 +142,7 @@ function MyApplication() {
                     color={'text.secondary'}
                     mb={2}
                   >
-                    현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
+                    현재 학기({CURRENT_YEAR} - {CURRENT_SEMESTER}) 기준
                   </Typography>
                   <Typography variant='titleMedium' color='error'>
                     스터디 지원서를 불러오는 중 오류가 발생했습니다. 다시 시도해
@@ -186,7 +186,7 @@ function MyApplication() {
                   제출한 스터디 지원서
                 </Typography>
                 <Typography variant='bodySmall' color={'text.secondary'} mb={2}>
-                  현재 학기({currentTerm.year} - {currentTerm.semester}) 기준
+                  현재 학기({CURRENT_YEAR} - {CURRENT_SEMESTER}) 기준
                 </Typography>
                 <Typography variant='bodyMedium'>
                   <strong>

@@ -2,11 +2,11 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { Box, FormHelperText, Stack, Typography } from '@mui/material';
 
-import { WEEKDAYS_OPTIONS } from '@constants/apply.constant';
 import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { TimeRangeField } from '@packages/components/form/TimeRangeField';
+import { WEEKDAYS_OPTIONS } from '@packages/constants';
 import { getAppliedStudies } from '@services/apply.service';
 import { useQuery } from '@tanstack/react-query';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';

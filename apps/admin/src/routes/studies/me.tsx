@@ -19,18 +19,20 @@ import {
   Typography,
 } from '@mui/material';
 
-import {
-  RECRUIT_END_DATE,
-  RECRUIT_START_DATE,
-  TAG_OPTIONS,
-  WEEKDAYS_OPTIONS,
-} from '@constants/apply.constant';
 import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
 import { Study } from '@packages/components/types/study';
+import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+  TAG_OPTIONS,
+  WEEKDAYS_OPTIONS,
+} from '@packages/constants';
 import { getMentees } from '@services/admin.service';
 import { editStudy, getMyStudyId, getStudyInfo } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
@@ -41,7 +43,6 @@ import {
   redirect,
   useRouter,
 } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
@@ -53,14 +54,13 @@ import { AttendanceTab } from '@components/study/AttendanceTab';
 
 export const Route = createFileRoute('/studies/me')({
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     try {
       const ids = await getMyStudyId();
 
       const currentId = ids.find(
         (studyId) =>
-          studyId.act_year.toString() === currentTerm.year &&
-          studyId.act_semester.toString() === currentTerm.semester,
+          studyId.act_year === CURRENT_YEAR &&
+          studyId.act_semester === CURRENT_SEMESTER,
       );
       const study = await getStudyInfo(currentId!.id.toString());
       return { currentId, study };

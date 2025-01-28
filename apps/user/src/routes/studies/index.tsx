@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import Box from '@mui/system/Box';
 
 import { DIFFICULTY, DIFFICULTY_TYPES } from '@constants/filter.constant';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { createFileRoute } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
 import { StudyFilter } from '@components/study/StudyFilter';
@@ -19,13 +19,11 @@ export interface StudyProps extends StudySearch {
   difficulty: number;
 }
 
-const currentTerm = getCurrentTerm();
-
 export const Route = createFileRoute('/studies/')({
   validateSearch: (search: Record<string, unknown>): StudySearch => {
     return {
-      year: Number(search?.year ?? currentTerm.year),
-      semester: Number(search?.semester ?? currentTerm.semester),
+      year: Number(search?.year ?? CURRENT_YEAR),
+      semester: Number(search?.semester ?? CURRENT_SEMESTER),
     };
   },
   component: StudiesPage,

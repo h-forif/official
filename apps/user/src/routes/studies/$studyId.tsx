@@ -5,18 +5,19 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { Chip, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { Box, Stack, useMediaQuery } from '@mui/system';
 
-import {
-  RECRUIT_END_DATE,
-  RECRUIT_START_DATE,
-  TAG_OPTIONS,
-} from '@constants/apply.constant';
 import { DIFFICULTY } from '@constants/filter.constant';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
 import { Study } from '@packages/components/types/study';
+import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+  TAG_OPTIONS,
+} from '@packages/constants';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import formatMarkdown from '@utils/formatMarkdown';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { formatStudyTimeToKorean, getWeekDayAsString } from '@utils/time';
 import 'dayjs/locale/ko';
 import rehypeSanitize from 'rehype-sanitize';
@@ -45,7 +46,6 @@ function StudyComponent() {
     (Object.keys(DIFFICULTY) as Array<keyof typeof DIFFICULTY>).find(
       (key) => DIFFICULTY[key] === study.difficulty,
     ) || '';
-  const currentTerm = getCurrentTerm();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -79,8 +79,8 @@ function StudyComponent() {
 
   const { isIncluded } = usePeriod(RECRUIT_START_DATE, RECRUIT_END_DATE);
   const isDisabled =
-    currentTerm.year !== study.act_year.toString() ||
-    currentTerm.semester !== study.act_semester.toString() ||
+    CURRENT_YEAR !== study.act_year ||
+    CURRENT_SEMESTER !== study.act_semester ||
     !isIncluded;
 
   const handleTabClick = (event: SyntheticEvent, newValue: string) => {

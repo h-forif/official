@@ -3,11 +3,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Box, Stack, Typography } from '@mui/material';
 
-import {
-  APPLY_PATH_OPTIONS,
-  RECRUIT_END_DATE,
-  RECRUIT_START_DATE,
-} from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { Input } from '@packages/components/Input';
@@ -15,6 +10,13 @@ import { Select, SelectOption } from '@packages/components/Select';
 import { FormCheckbox } from '@packages/components/form/FormCheckbox';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import {
+  APPLY_PATH_OPTIONS,
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  RECRUIT_END_DATE,
+  RECRUIT_START_DATE,
+} from '@packages/constants';
 import { applyMember, getApplication } from '@services/apply.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import {
@@ -23,7 +25,6 @@ import {
   useNavigate,
   useRouter,
 } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { refineApplyForm } from '@utils/refine';
 import axios from 'axios';
@@ -42,12 +43,11 @@ const STORAGE_KEY = 'applyMemberForm';
 
 export const Route = createFileRoute('/apply/member')({
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     const [userInfo, studies] = await Promise.all([
       getUser(),
       getAllStudies({
-        year: Number(currentTerm.year),
-        semester: Number(currentTerm.semester),
+        year: CURRENT_YEAR,
+        semester: CURRENT_SEMESTER,
       }),
     ]);
     return { userInfo, studies };

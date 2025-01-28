@@ -1,9 +1,8 @@
-const getCurrentTerm = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1;
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 
-  const semester = month >= 2 && month <= 7 ? 1 : 2;
+const getCurrentTerm = () => {
+  const year = CURRENT_YEAR;
+  const semester = CURRENT_SEMESTER;
 
   return {
     year: year.toString(),

@@ -6,9 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { AccordionDetails, Box, Chip, Stack, Typography } from '@mui/material';
 
-import Peeps1 from '@assets/images/avatar/peep-1.svg';
 import { Accordion, AccordionSummary } from '@packages/components/Accordion';
-import Image from '@packages/components/Image';
 import { Input } from '@packages/components/Input';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
 import { Layout } from '@packages/components/elements/Layout';
@@ -77,7 +75,7 @@ function FAQPage() {
           color: 'primary.contrastText',
         }}
       >
-        <Typography variant='titleLarge' mb={6} px={{ xs: 4 }}>
+        <Typography variant='titleMedium' mb={6} px={{ xs: 4 }}>
           아직 질문이 해결되지 않았다면 아래 다양한 채널로 언제든 문의해주세요.
         </Typography>
         <Stack
@@ -86,14 +84,8 @@ function FAQPage() {
           alignItems={'center'}
           width={'100%'}
         >
-          <Image
-            src={Peeps1}
-            alt='문의사항 캐릭터'
-            width={196}
-            height={'auto'}
-          />
           <Stack
-            direction={'column'}
+            direction={'row'}
             justifyContent={'start'}
             alignItems={'start'}
             fontSize={52}

@@ -24,8 +24,8 @@ import {
 import { Button } from '@packages/components/Button';
 import ToggleColorMode from '@packages/components/ToggleColorMode';
 import { User } from '@packages/components/types/user';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { Link } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { useMobileNav } from '@hooks/useMobileNav';
 
@@ -46,7 +46,6 @@ export default function MobileNav({
 }: MobileNavProps) {
   const { open, toggleDrawer } = useMobileNav();
   const [selectedNavMenus, setSelectedNavMenus] = useState<NavMenu[]>([]);
-  const currentTerm = getCurrentTerm();
 
   useEffect(() => {
     const navMenus = userState === 'sign-out' ? NAV_MENUS : AUTH_NAV_MENUS;
@@ -166,8 +165,8 @@ export default function MobileNav({
                           search={
                             submenu.href === '/studies'
                               ? {
-                                  year: Number(currentTerm.year),
-                                  semester: Number(currentTerm.semester),
+                                  year: CURRENT_YEAR,
+                                  semester: CURRENT_SEMESTER,
                                 }
                               : undefined
                           }

@@ -1,6 +1,6 @@
 import { SelectOption } from '@packages/components/Select';
 
-const POSSIBLE_YEARS = [2024, 2023, 2022, 2021, 2020, 2019, 2018];
+const POSSIBLE_YEARS = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018];
 const SEMESTERS = [1, 2];
 
 export const YEAR_OPTIONS: SelectOption[] = POSSIBLE_YEARS.map((year) => ({

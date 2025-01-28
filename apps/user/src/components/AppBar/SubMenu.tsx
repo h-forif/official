@@ -1,8 +1,8 @@
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/system';
 
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { Link } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { motion } from 'framer-motion';
 
 import { SubMenuItem } from '../../types/app-bar.type';
@@ -10,8 +10,6 @@ import { SubMenuItem } from '../../types/app-bar.type';
 interface SubMenuProps {
   items: SubMenuItem[];
 }
-
-const currentTerm = getCurrentTerm();
 
 export default function SubMenu({ items }: SubMenuProps) {
   const theme = useTheme();
@@ -48,8 +46,8 @@ export default function SubMenu({ items }: SubMenuProps) {
             <Link
               to={subItem.href}
               search={{
-                year: Number(currentTerm.year),
-                semester: Number(currentTerm.semester),
+                year: CURRENT_YEAR,
+                semester: CURRENT_SEMESTER,
               }}
               role='navigation'
               aria-label='Go to studies page'

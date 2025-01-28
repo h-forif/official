@@ -5,12 +5,12 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { Table } from '@packages/components/table/Table';
 import { User } from '@packages/components/types/user';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { getMentees } from '@services/admin.service';
 import { getAttendance } from '@services/attendance.service';
 import { getAllStudies } from '@services/study.service';
 import { useQueries } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 interface WeekAttendance {
   [key: string]: boolean;
@@ -19,11 +19,10 @@ type UserWithAttendance = User & WeekAttendance & { count: number };
 
 export const Route = createFileRoute('/members/attendance')({
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     try {
       const studies = await getAllStudies({
-        year: Number(currentTerm.year),
-        semester: Number(currentTerm.semester),
+        year: Number(CURRENT_YEAR),
+        semester: Number(CURRENT_SEMESTER),
       });
 
       const studyIds = studies.map((study) => study.id);

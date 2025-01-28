@@ -14,8 +14,8 @@ import { Link, useNavigate } from '@tanstack/react-router';
 
 const DIFFICULTY_OPTIONS: SelectOption[] = Object.entries(DIFFICULTY).map(
   ([key, value]) => ({
-    value: value.toString(), // Convert the value to a string
-    label: key.replace(/_/g, ' '), // Convert key to a more readable label
+    value: value.toString(),
+    label: key.replace(/_/g, ' '),
   }),
 );
 

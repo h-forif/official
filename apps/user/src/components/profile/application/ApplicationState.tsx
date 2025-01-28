@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { Box, CardContent, Divider, Typography, styled } from '@mui/material';
 
-import { REVIEW_END_DATE, REVIEW_START_DATE } from '@constants/apply.constant';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { REVIEW_END_DATE, REVIEW_START_DATE } from '@packages/constants';
 import dayjs from '@utils/dayjs';
 import { Application } from 'src/types/apply.schema';
 

@@ -28,6 +28,7 @@
     "@mui/utils": "^5.16.6",
     "@mui/x-date-pickers": "^7.11.0",
     "@packages/components": "workspace:*",
+    "@packages/constants": "workspace:*",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-router": "^1.40.0",
     "axios": "^1.7.2",

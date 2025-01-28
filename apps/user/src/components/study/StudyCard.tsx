@@ -6,9 +6,9 @@ import MUICardActions from '@mui/material/CardActions';
 import MUICardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Button } from '@packages/components/Button';
 import Image from '@packages/components/Image';
+import { TAG_OPTIONS } from '@packages/constants';
 import { Link } from '@tanstack/react-router';
 
 export interface StudyCardProps {

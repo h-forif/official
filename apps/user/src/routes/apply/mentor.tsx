@@ -3,13 +3,15 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { Box, Stack } from '@mui/material';
 
-import {
-  MENTOR_RECRUIT_END_DATE,
-  MENTOR_RECRUIT_START_DATE,
-} from '@constants/apply.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { UserProfile } from '@packages/components/types/user';
+import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  MENTOR_RECRUIT_END_DATE,
+  MENTOR_RECRUIT_START_DATE,
+} from '@packages/constants';
 import { applyStudy } from '@services/apply.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import {
@@ -18,7 +20,6 @@ import {
   useNavigate,
 } from '@tanstack/react-router';
 import dayjs from '@utils/dayjs';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { handleGlobalError } from '@utils/handleGlobalError';
 import { getUser } from 'src/services/user.service';
 import { ApplyMentorSchema } from 'src/types/apply.schema';
@@ -55,7 +56,6 @@ const steps = [
 
 function ApplyMember() {
   const user = Route.useLoaderData();
-  const currentTerm = getCurrentTerm();
   const [activeStep, setActiveStep] = useState(0);
   const { closeDialog, openSingleButtonDialog } = useDialogStore();
   const navigate = useNavigate();
@@ -224,7 +224,7 @@ function ApplyMember() {
     <>
       <Box mt={8}>
         <Title
-          title={`${currentTerm.year}년도 ${currentTerm.semester}학기 스터디 개설`}
+          title={`${CURRENT_YEAR}년도 ${CURRENT_SEMESTER}학기 스터디 개설`}
           label='2024-08-13 ~ 2024-08-16'
           mb={3}
         />

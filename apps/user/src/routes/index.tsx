@@ -1,36 +1,23 @@
 import AddchartIcon from '@mui/icons-material/Addchart';
 import CloudIcon from '@mui/icons-material/Cloud';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import ShareIcon from '@mui/icons-material/Share';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Chip,
-  Grid,
-  useTheme,
-} from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box, Stack, useMediaQuery } from '@mui/system';
 
-import Box1 from '@assets/images/main/box1.svg';
-import Box2 from '@assets/images/main/box2.svg';
-import Box3 from '@assets/images/main/box3.svg';
-import Box4 from '@assets/images/main/box4.svg';
-import Box5 from '@assets/images/main/box5.svg';
+import { Button } from '@packages/components/Button';
+import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { Layout } from '@packages/components/elements/Layout';
 import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
   MENTOR_RECRUIT_END_DATE,
   MENTOR_RECRUIT_START_DATE,
   RECRUIT_END_DATE,
   RECRUIT_START_DATE,
-} from '@constants/apply.constant';
-import { Button } from '@packages/components/Button';
-import { CenteredBox } from '@packages/components/elements/CenteredBox';
-import { Layout } from '@packages/components/elements/Layout';
-import { getFaqs } from '@services/post.service';
+} from '@packages/constants';
 import { getUserState } from '@stores/user.store';
 import { Link, createFileRoute } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import GravityBox from '@components/main/GravityBox';
 import JourneyImageList from '@components/main/JourneyImageList';
@@ -39,12 +26,10 @@ import { usePeriod } from '@hooks/usePeriod';
 import { useSignIn } from '@hooks/useSignIn';
 
 export const Route = createFileRoute('/')({
-  loader: () => getFaqs(),
   component: Home,
 });
 
 function Home() {
-  const faq = Route.useLoaderData();
   const userState = getUserState();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -58,7 +43,6 @@ function Home() {
     RECRUIT_END_DATE,
   );
 
-  // const studyIds = studies.map((study) => study.id).filter((id) => id !== 0);
   const { handleSignIn } = useSignIn();
   const titleVariant = isMobile ? 'titleSmall' : 'titleLarge';
 
@@ -85,7 +69,7 @@ function Home() {
           Upgrade your passion
         </Typography>
         <Typography variant={titleVariant} fontWeight={400}>
-          SEASON 2 : {RECRUIT_START_DATE} ~ {RECRUIT_END_DATE}
+          {RECRUIT_START_DATE} ~ {RECRUIT_END_DATE}
         </Typography>
         <Stack direction={'row'} alignItems={'center'} gap={1}>
           {userState === 'sign-out' && (
@@ -96,8 +80,8 @@ function Home() {
           <Link
             to='/studies'
             search={{
-              year: Number(getCurrentTerm().year),
-              semester: Number(getCurrentTerm().semester),
+              year: CURRENT_YEAR,
+              semester: CURRENT_SEMESTER,
             }}
           >
             <Button variant='outlined'>스터디 보러가기</Button>
@@ -120,9 +104,7 @@ function Home() {
           )}
         </Stack>
       </CenteredBox>
-      <Box sx={{ backgroundColor: 'primary.light' }}>
-        <GravityBox images={[Box1, Box2, Box3, Box4, Box5]} />
-      </Box>
+      <GravityBox />
       <Layout>
         <Box py={16} mb={8} textAlign={'center'}>
           <Typography variant={'titleLarge'} mb={2}>
@@ -268,82 +250,6 @@ function Home() {
             </Stack>
             <JourneyImageList />
           </Box>
-        </Layout>
-      </Box>
-
-      <Box py={16} textAlign={'center'}>
-        <Layout>
-          <Stack
-            direction={isMobile ? 'column' : 'row'}
-            justifyContent={'space-between'}
-            mb={4}
-          >
-            <Typography
-              variant={isMobile ? 'titleLarge' : 'headlineSmall'}
-              mb={2}
-              textAlign={isMobile ? 'center' : 'left'}
-              width={isMobile ? '100%' : '40%'}
-              sx={{ wordBreak: 'keep-all' }}
-            >
-              일반적으로 자주 묻는 질문을 확인해보세요.
-            </Typography>
-            <Layout
-              display={'flex'}
-              flexDirection={'column'}
-              gap={2}
-              minHeight={320}
-              px={isMobile ? '0!important' : ''}
-            >
-              {faq.slice(0, 3).map((faq, index) => (
-                <Accordion
-                  key={index}
-                  disableGutters
-                  elevation={0}
-                  sx={{
-                    '&.MuiAccordion-root': {
-                      backgroundColor: 'transparent',
-                    },
-
-                    '&:before': {
-                      display: 'none',
-                    },
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMore />}
-                    aria-controls={`panel${index}-content`}
-                    id={`panel${index}-header`}
-                    sx={{
-                      '&.MuiAccordionSummary-root': {
-                        padding: isMobile ? '0!important' : '',
-                      },
-                    }}
-                  >
-                    <Stack direction={'row'} alignItems={'center'} gap={1.5}>
-                      <Typography variant='labelLarge' fontWeight={'300'}>
-                        Q. {faq.title}
-                      </Typography>
-                      <Chip
-                        label={faq.tag}
-                        color='primary'
-                        variant='outlined'
-                      />
-                    </Stack>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant='bodyMedium' textAlign={'left'}>
-                      A. {faq.content}
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-              <Link to='/faq'>
-                <Button fullWidth variant='outlined' size='large'>
-                  더 많은 자주 묻는 질문 보러가기
-                </Button>
-              </Link>
-            </Layout>
-          </Stack>
         </Layout>
       </Box>
     </main>

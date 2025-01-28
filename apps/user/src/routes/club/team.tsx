@@ -4,8 +4,8 @@ import Box from '@mui/system/Box';
 
 import { SEMESTER_OPTIONS, YEAR_OPTIONS } from '@constants/filter.constant';
 import { Select } from '@packages/components/Select';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Title } from '@components/Title';
 import { TeamList } from '@components/club/TeamList';
@@ -15,13 +15,11 @@ export interface TeamSearch {
   semester: number;
 }
 
-const currentTerm = getCurrentTerm();
-
 export const Route = createFileRoute('/club/team')({
   validateSearch: (search: Record<string, unknown>): TeamSearch => {
     return {
-      year: Number(search?.year ?? currentTerm.year),
-      semester: Number(search?.semester ?? currentTerm.semester),
+      year: Number(search?.year ?? CURRENT_YEAR),
+      semester: Number(search?.semester ?? CURRENT_SEMESTER),
     };
   },
   component: TeamPage,

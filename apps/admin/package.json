@@ -21,6 +21,7 @@
     "@mui/x-data-grid": "^7.8.0",
     "@mui/x-date-pickers": "^7.11.0",
     "@packages/components": "workspace:*",
+    "@packages/constants": "workspace:*",
     "@react-oauth/google": "^0.12.1",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-router": "^1.40.0",

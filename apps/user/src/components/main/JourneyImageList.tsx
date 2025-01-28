@@ -5,13 +5,8 @@ import ImageListItem from '@mui/material/ImageListItem';
 import Hackathon2 from '@assets/images/main/hackathon2.jpg';
 import OT from '@assets/images/main/ot_2024_1.jpeg';
 import Study2 from '@assets/images/main/study2.jpg';
-import {
-  RECRUIT_END_DATE,
-  RECRUIT_START_DATE,
-} from '@constants/apply.constant';
+import { RECRUIT_END_DATE, RECRUIT_START_DATE } from '@packages/constants';
 import { motion } from 'framer-motion';
-
-import OutwardBtn from '@components/button/outward-btn';
 
 import useDeviceSize from '@hooks/useDeviceSize';
 
@@ -77,26 +72,17 @@ export default function JourneyImageList() {
                 }}
               />
               <ImageListItemBar
-                sx={{ mt: isMobile ? 1 : 4 }}
+                sx={{ mt: isMobile ? 1 : 2 }}
                 title={
                   <Typography
-                    variant='titleSmall'
+                    variant='titleMedium'
                     color={'black'}
-                    textAlign={'left'}
+                    textAlign={'center'}
                   >
                     {item.title}
                   </Typography>
                 }
                 position='below'
-                actionIcon={
-                  <OutwardBtn
-                    width={isMobile ? 24 : 48}
-                    height={isMobile ? 24 : 48}
-                    to={item.link}
-                    label={`${item.title}에 대해 더 자세히 알아보세요.`}
-                  />
-                }
-                actionPosition='right'
               />
             </motion.div>
           </ImageListItem>

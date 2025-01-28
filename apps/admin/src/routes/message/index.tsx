@@ -22,7 +22,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-import { REVIEW_END_DATE } from '@constants/apply.constant';
 import {
   ALL_MESSAGE_TEMPLATE_OPTIONS,
   ETC_MESSAGE_TEMPLATE_OPTIONS,
@@ -34,6 +33,7 @@ import { Input } from '@packages/components/Input';
 import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import { REVIEW_END_DATE } from '@packages/constants';
 import { AllApplication, getAllApplications } from '@services/admin.service';
 import {
   MessageBody,

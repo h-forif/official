@@ -5,10 +5,10 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 
-import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Input } from '@packages/components/Input';
 import { Select } from '@packages/components/Select';
 import { FormInput } from '@packages/components/form/FormInput';
+import { TAG_OPTIONS } from '@packages/constants';
 import dayjs from '@utils/dayjs';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';

@@ -23,12 +23,12 @@ import {
 import { TransitionProps } from '@mui/material/transitions';
 import { GridRowId } from '@mui/x-data-grid';
 
-import { TAG_OPTIONS, WEEKDAYS_OPTIONS } from '@constants/apply.constant';
 import { MENTOR_DIFFICULTY_OPTIONS } from '@constants/filter.constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@packages/components/Button';
 import { FormInput } from '@packages/components/form/FormInput';
 import { FormSelect } from '@packages/components/form/FormSelect';
+import { TAG_OPTIONS, WEEKDAYS_OPTIONS } from '@packages/constants';
 import { ApprovedApplication } from '@routes/studies/approve';
 import { editNotApprovedStudy } from '@services/admin.service';
 import { approveStudies } from '@services/study.service';

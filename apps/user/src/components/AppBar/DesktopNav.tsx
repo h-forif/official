@@ -8,14 +8,12 @@ import {
   NavMenu,
 } from '@constants/nav-menu.constant';
 import { User } from '@packages/components/types/user';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { Link } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import { AnimatePresence } from 'framer-motion';
 
 import NavItem from './NavItem';
 import SubMenu from './SubMenu';
-
-const currentTerm = getCurrentTerm();
 
 interface DesktopNavProps {
   activeMenu: string | null;
@@ -55,8 +53,8 @@ export function DesktopNav({
               <Link
                 to={menu.href}
                 search={{
-                  year: Number(currentTerm.year),
-                  semester: Number(currentTerm.semester),
+                  year: CURRENT_YEAR,
+                  semester: CURRENT_SEMESTER,
                 }}
               >
                 <NavItem label={`Go to studies page`}>{menu.title}</NavItem>

@@ -22,13 +22,14 @@ import {
 } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 
-import { TAG_OPTIONS } from '@constants/apply.constant';
 import { Study } from '@packages/components/types/study';
+import {
+  CURRENT_SEMESTER,
+  CURRENT_YEAR,
+  TAG_OPTIONS,
+} from '@packages/constants';
 import { Question } from '@routes/studies/guide';
 import { Link } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
-
-const currentTerm = getCurrentTerm();
 
 interface StudyRecommendationModalProps {
   questions: Question[];
@@ -392,8 +393,8 @@ export function StudyRecommendationModal({
               <Link
                 to={'/studies'}
                 search={{
-                  year: Number(currentTerm.year),
-                  semester: Number(currentTerm.semester),
+                  year: CURRENT_YEAR,
+                  semester: CURRENT_SEMESTER,
                 }}
               >
                 <Button variant='contained' onClick={onClose} size='large'>

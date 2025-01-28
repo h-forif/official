@@ -1,6 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
 import BackgroundImage from '@assets/images/main/banner.png';
+import Box1 from '@assets/images/main/box1.svg';
+import Box2 from '@assets/images/main/box2.svg';
+import Box3 from '@assets/images/main/box3.svg';
+import Box4 from '@assets/images/main/box4.svg';
+import Box5 from '@assets/images/main/box5.svg';
 import Matter, {
   Bodies,
   Common,
@@ -12,11 +17,9 @@ import Matter, {
   Runner,
 } from 'matter-js';
 
-interface GravityImageProps {
-  images: string[]; // Array of image URLs
-}
+const images = [Box1, Box2, Box3, Box4, Box5];
 
-const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
+const GravityImage: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const renderRef = useRef<Matter.Render | null>(null);
@@ -40,8 +43,8 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
       options: {
         width,
         height,
+        background: 'transparent',
         wireframes: false,
-        background: `url(${BackgroundImage}) no-repeat`,
         showVelocity: true,
       },
     });
@@ -85,12 +88,19 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
     engine.gravity.y = 1; // Default downward gravity
 
     // Add images as falling bodies
-    images.forEach((src) => {
+    images.forEach((src, index) => {
+      // 짝수 인덱스는 왼쪽, 홀수 인덱스는 오른쪽에서 생성
+      const isLeft = index % 2 === 0;
+
+      const xPosition = isLeft
+        ? Common.random(50, 150) // 왼쪽 영역
+        : Common.random(width - 150, width - 50); // 오른쪽 영역
+
       const imageBody = Bodies.rectangle(
-        Common.random(width - 150, width - 50), // Random X position near the right edge
-        Common.random(100, 400), // Random Y position
-        80, // Width of image
-        80, // Height of image
+        xPosition,
+        Common.random(100, 400),
+        80,
+        80,
         {
           render: {
             sprite: {
@@ -131,48 +141,6 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
     // Keep the mouse in sync with rendering
     render.mouse = mouse;
 
-    // Handle window resize
-    const handleResize = () => {
-      if (sceneRef.current && renderRef.current) {
-        const newWidth = sceneRef.current.clientWidth;
-
-        // Update render options
-        Render.setPixelRatio(render, newWidth);
-
-        // Update boundaries
-        Composite.clear(world, false, true); // Clear existing boundaries
-
-        Composite.add(world, [
-          Bodies.rectangle(width / 2, 0, width, 50, {
-            isStatic: true,
-            render: {
-              fillStyle: 'red', // 상단 벽의 색상
-            },
-          }), // Top boundary
-          Bodies.rectangle(width / 2, height, width, 50.5, {
-            isStatic: true,
-            render: {
-              fillStyle: 'green', // 하단 벽의 색상
-            },
-          }), // Bottom boundary
-          Bodies.rectangle(width, height / 2, 50, height, {
-            isStatic: true,
-            render: {
-              fillStyle: 'blue', // 우측 벽의 색상
-            },
-          }), // Right boundary
-          Bodies.rectangle(0, height / 2, 50, height, {
-            isStatic: true,
-            render: {
-              fillStyle: 'yellow', // 좌측 벽의 색상
-            },
-          }), // Left boundary
-        ]);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     // Cleanup on component unmount
     return () => {
       Render.stop(render);
@@ -181,17 +149,20 @@ const GravityImage: React.FC<GravityImageProps> = ({ images }) => {
       Composite.clear(world, false);
       render.canvas.remove();
       render.textures = {};
-      window.removeEventListener('resize', handleResize);
     };
-  }, [images]);
+  }, []);
 
   return (
     <div
       ref={sceneRef}
       style={{
-        width: '100%', // Full width, responsive
-        height: '400px', // Fixed height
+        width: '100vw',
+        height: '400px',
         position: 'relative',
+        backgroundImage: `url(${BackgroundImage})`,
+        backgroundSize: 'cover', // 추가
+        backgroundPosition: 'center', // 추가
+        backgroundRepeat: 'no-repeat', // 추가
       }}
     />
   );

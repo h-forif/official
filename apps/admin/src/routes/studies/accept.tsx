@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid';
 
 import { Table } from '@packages/components/table/Table';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import {
   Application,
   acceptStudies,
@@ -19,7 +20,6 @@ import { getMyStudyId } from '@services/study.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 
 import { Layout } from '@components/common/Layout';
 import { Title } from '@components/common/Title';
@@ -27,14 +27,13 @@ import AcceptDialog from '@components/study/AcceptDialog';
 
 export const Route = createFileRoute('/studies/accept')({
   loader: async () => {
-    const currentTerm = getCurrentTerm();
     try {
       const ids = await getMyStudyId();
 
       const currentId = ids.find(
         (studyId) =>
-          studyId.act_year.toString() === currentTerm.year &&
-          studyId.act_semester.toString() === currentTerm.semester,
+          studyId.act_year === CURRENT_YEAR &&
+          studyId.act_semester === CURRENT_SEMESTER,
       );
       return currentId;
     } catch (err) {

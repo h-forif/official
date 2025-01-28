@@ -5,11 +5,11 @@ import { Stack, Typography } from '@mui/material';
 
 import { Button } from '@packages/components/Button';
 import { CenteredBox } from '@packages/components/elements/CenteredBox';
+import { CURRENT_SEMESTER, CURRENT_YEAR } from '@packages/constants';
 import { useGoogleLogin } from '@react-oauth/google';
 import { signIn } from '@services/auth.service';
 import { DialogIconType, useDialogStore } from '@stores/dialog.store';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { getCurrentTerm } from '@utils/getCurrentTerm';
 import axios from 'axios';
 import { motion, useDragControls } from 'framer-motion';
 
@@ -25,7 +25,6 @@ function Home() {
   const navigate = useNavigate();
   const { openSingleButtonDialog } = useDialogStore();
   const constraintsRef = useRef(null);
-  const { semester, year } = getCurrentTerm();
   const handleSignIn = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
@@ -126,9 +125,9 @@ function Home() {
         <Stack gap={2} width={'100%'}>
           <Typography variant={'displaySmall'}>FORIF-ADMIN</Typography>
           <Typography variant={'bodyMedium'}>
-            {year}학년도 {semester}학기 멘토 및 운영진을 위한 페이지입니다.
-            부원용 페이지에서 학교계정으로 회원가입 후 해당 계정으로
-            로그인해주세요. 로그인이 되지 않는다면 SW팀 혹은 회장단에게
+            {CURRENT_YEAR}학년도 {CURRENT_SEMESTER}학기 멘토 및 운영진을 위한
+            페이지입니다. 부원용 페이지에서 학교계정으로 회원가입 후 해당
+            계정으로 로그인해주세요. 로그인이 되지 않는다면 SW팀 혹은 회장단에게
             문의해주세요.
           </Typography>
           <Button
